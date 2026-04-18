@@ -1,15 +1,17 @@
 "use client";
 
-import React, { Suspense, useState, useTransition } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense, useState, useTransition, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryState, parseAsString } from "nuqs";
 import { GENRES, YEARS, COUNTRIES } from "@/components/home/GenreFilters/filters";
 import styles from "./GenreFilters.module.css";
 
 function FilterContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
+  // Додаємо shallow: false, щоб nuqs робив реальний перехід по URL
   const [genre, setGenre] = useQueryState(
     "genre",
     parseAsString.withDefault("").withOptions({ shallow: false, startTransition })
@@ -27,7 +29,15 @@ function FilterContent() {
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
-  const toggleDropdown = (name: string) => {
+  // Скидаємо відкриті списки при кліку поза ними
+  useEffect(() => {
+    const handleClick = () => setOpenDropdown(null);
+    window.addEventListener("click", handleClick);
+    return () => window.removeEventListener("click", handleClick);
+  }, []);
+
+  const toggleDropdown = (e: React.MouseEvent, name: string) => {
+    e.stopPropagation(); // Важливо, щоб не спрацьовував useEffect вище
     setOpenDropdown((prev) => (prev === name ? null : name));
   };
 
@@ -38,12 +48,13 @@ function FilterContent() {
     setOpenDropdown(null);
   };
 
-  const isActive = !genre && (year === "Усі роки" || !year) && !country;
+  // Перевірка активності кнопки "Новинки"
+  const isHomeActive = !genre && (year === "Усі роки" || !year) && !country;
 
   return (
     <div className={`${styles.flexWrapper} ${isPending ? styles.loading : ""}`}>
       <button
-        className={`${styles.filterBtn} ${isActive ? styles.active : ""}`}
+        className={`${styles.filterBtn} ${isHomeActive ? styles.active : ""}`}
         onClick={() => {
           setGenre(null);
           setYear(null);
@@ -56,11 +67,14 @@ function FilterContent() {
 
       {/* Жанри */}
       <div className={styles.dropdown}>
-        <button onClick={() => toggleDropdown("genre")} className={styles.filterBtn}>
-          🎭 {GENRES.find((g) => g.id === genre)?.name || "Жанри"}
+        <button 
+          onClick={(e) => toggleDropdown(e, "genre")} 
+          className={`${styles.filterBtn} ${genre ? styles.active : ""}`}
+        >
+          🎭 {GENRES.find((g) => g.id === genre)?.name || "Усі жанри"}
         </button>
         {openDropdown === "genre" && (
-          <div className={`${styles.menu} ${styles.wideMenu}`}>
+          <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
             {GENRES.map((g) => (
               <button
                 key={g.id}
@@ -76,11 +90,14 @@ function FilterContent() {
 
       {/* Роки */}
       <div className={styles.dropdown}>
-        <button onClick={() => toggleDropdown("year")} className={styles.filterBtn}>
+        <button 
+          onClick={(e) => toggleDropdown(e, "year")} 
+          className={`${styles.filterBtn} ${year && year !== "Усі роки" ? styles.active : ""}`}
+        >
           📅 {!year || year === "Усі роки" ? "Рік" : year}
         </button>
         {openDropdown === "year" && (
-          <div className={styles.menu}>
+          <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
             {YEARS.map((y) => (
               <button
                 key={y}
@@ -96,11 +113,14 @@ function FilterContent() {
 
       {/* Країни */}
       <div className={styles.dropdown}>
-        <button onClick={() => toggleDropdown("country")} className={styles.filterBtn}>
-          🌍 {COUNTRIES.find((c) => c.id === country)?.name || "Країни"}
+        <button 
+          onClick={(e) => toggleDropdown(e, "country")} 
+          className={`${styles.filterBtn} ${country ? styles.active : ""}`}
+        >
+          🌍 {COUNTRIES.find((c) => c.id === country)?.name || "Усі країни"}
         </button>
         {openDropdown === "country" && (
-          <div className={styles.menu}>
+          <div className={styles.menu} onClick={(e) => e.stopPropagation()}>
             {COUNTRIES.map((c) => (
               <button
                 key={c.id}
@@ -113,20 +133,14 @@ function FilterContent() {
           </div>
         )}
       </div>
-      
-      {isPending && <div className={styles.smallLoader}>Оновлення...</div>}
     </div>
   );
 }
 
 export default function GenreFilters() {
   return (
-    <section className={styles.filterSection}>
-      <div className="container">
-        <Suspense fallback={null}>
-          <FilterContent />
-        </Suspense>
-      </div>
-    </section>
+    <Suspense fallback={null}>
+      <FilterContent />
+    </Suspense>
   );
 }

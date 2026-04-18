@@ -2,13 +2,13 @@
 :root {
   --heading-font: "Montserrat", sans-serif;
   --body-font: "Manrope", sans-serif;
+
+  /* Світла тема за твоїм запитом */
   --bg-color: #ffffff;
   --text-color: #1a1a1a;
-  --accent-color: #dc2626;
-  --secondary-text: #6b7280;
 }
 
-/* 2. БАЗОВЕ СКИДАННЯ */
+/* 2. БАЗОВЕ СКИДАННЯ ТА ГЛОБАЛЬНІ СТИЛІ */
 * {
   box-sizing: border-box;
   margin: 0;
@@ -17,15 +17,24 @@
 
 body {
   font-family: var(--body-font);
-  color: var(--text-color);
   background-color: var(--bg-color);
-  line-height: 1.5;
+  color: var(--text-color);
+
+  /* Аналог antialiased */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
   /* Заборона виділення тексту */
   user-select: none;
   -webkit-user-select: none;
 }
 
-/* 3. КОНТЕЙНЕР (Твій ступінчастий варіант) */
+/* Аналог min-h-screen для головного контенту */
+main {
+  min-height: 100vh;
+}
+
+/* 3. КОНТЕЙНЕР (Ступінчастий) */
 .container {
   margin-left: auto;
   margin-right: auto;
@@ -55,15 +64,15 @@ body {
   }
 }
 
-/* 4. КЛАС ДЛЯ ЛОАДЕРА (Замість інлайн-стилю) */
+/* 4. ДОДАТКОВІ КЛАСИ */
 .catalog-loader {
-  color: var(--text-color);
   padding: 40px;
   text-align: center;
   font-weight: 500;
 }
 
-/* Заборона перетягування зображень */
 img {
   pointer-events: none;
+  max-width: 100%;
+  height: auto;
 }
