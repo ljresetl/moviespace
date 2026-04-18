@@ -1,0 +1,150 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Movie } from "@/types/movie";
+import { getImageUrl } from "@/lib/tmdb";
+import styles from "./Header.module.css";
+
+export default function Header() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  
+  // 1. Отримуємо актуальне значення з URL безпосередньо під час рендеру
+  const urlSearch = searchParams.get("search") || "";
+
+  // 2. Стан лише для поточного введення користувача
+  const [query, setQuery] = useState(urlSearch);
+  const [results, setResults] = useState<Movie[]>([]);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 3. Синхронізуємо локальний query з URL, ТІЛЬКИ якщо urlSearch змінився ззовні
+  // Використовуємо перевірку, щоб уникнути зациклення під час введення
+  if (urlSearch !== query && !isDropdownOpen && query === "") {
+     setQuery(urlSearch);
+  }
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Логіка підказок (Autocomplete)
+  useEffect(() => {
+    const searchMovies = async () => {
+      if (query.trim().length < 2) {
+        setResults([]);
+        setIsDropdownOpen(false);
+        return;
+      }
+
+      try {
+        const res = await fetch(
+          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=uk-UA`,
+          {
+            headers: { 
+              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
+              accept: 'application/json'
+            }
+          }
+        );
+        const data = await res.json();
+        setResults(data.results?.slice(0, 6) || []);
+        setIsDropdownOpen(true);
+      } catch (error) {
+        console.error("Помилка підказок:", error);
+      }
+    };
+
+    const debounceTimer = setTimeout(searchMovies, 300);
+    return () => clearTimeout(debounceTimer);
+  }, [query]);
+
+  const executeSearch = (searchQuery: string) => {
+    if (!searchQuery.trim()) return;
+    setIsDropdownOpen(false);
+    router.push(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      executeSearch(query);
+    }
+  };
+
+  const handleSelectMovie = (movieId: number) => {
+    setQuery("");
+    setIsDropdownOpen(false);
+    router.push(`/movie/${movieId}`);
+  };
+
+  return (
+    <header className={styles.header}>
+      <div className={`container ${styles.headerInner}`}>
+        
+        <Link href="/" className={styles.logo}>
+          MOVIE<span>SPACE</span>
+        </Link>
+
+        <div className={styles.searchWrapper} ref={dropdownRef}>
+          <input 
+            key={urlSearch} // Ключ змушує React оновити інпут, якщо URL змінився (напр. кнопка Назад)
+            type="text" 
+            placeholder="Пошук фільмів..." 
+            className={styles.searchInput}
+            defaultValue={query} // Використовуємо defaultValue для стабільності
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => query.length >= 2 && setIsDropdownOpen(true)}
+            onKeyDown={handleKeyDown}
+          />
+          <span 
+            className={styles.searchIcon} 
+            onClick={() => executeSearch(query)}
+            style={{ cursor: 'pointer' }}
+          >
+            🔍
+          </span>
+
+          {isDropdownOpen && results.length > 0 && (
+            <div className={styles.dropdown}>
+              {results.map((movie) => (
+                <div 
+                  key={movie.id} 
+                  className={styles.dropdownItem}
+                  onClick={() => handleSelectMovie(movie.id)}
+                >
+                  <div className={styles.miniPoster}>
+                    <Image 
+                      src={getImageUrl(movie.poster_path || "")} 
+                      alt={movie.title}
+                      fill
+                      sizes="40px"
+                    />
+                  </div>
+                  <div className={styles.movieInfo}>
+                    <span className={styles.movieName}>{movie.title}</span>
+                    <span className={styles.movieYear}>
+                      {movie.release_date ? movie.release_date.split("-")[0] : ""}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* <div className={styles.actions}>
+          <button className={styles.loginBtn}>Увійти</button>
+        </div> */}
+      </div>
+    </header>
+  );
+}

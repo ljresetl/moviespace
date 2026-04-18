@@ -1,0 +1,92 @@
+.section {
+  padding: 10px 0;
+  background-color: var(--bg-color);
+}
+
+.title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: var(--text-color);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.relativeWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sliderContainer {
+  display: flex;
+  gap: 6px; /* Відступ між картками */
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  padding: 5px 0;
+  width: 100%;
+}
+
+.sliderContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 128px; /* Фіксована ширина для 3 карток на 400px (мінус падінги та gap) */
+  scroll-snap-align: start;
+  text-decoration: none;
+}
+
+.imageWrapper {
+  position: relative;
+  height: 180px; /* Фіксована висота */
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.image {
+  object-fit: cover;
+}
+
+.rating {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--accent-color);
+  color: white;
+  padding: 1px 4px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: bold;
+}
+
+.movieTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: 6px;
+  color: var(--text-color);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.2;
+}
+
+/* Адаптив під більші екрани */
+@media (min-width: 768px) {
+  .card {
+    flex: 0 0 160px;
+  }
+  .imageWrapper {
+    height: 240px;
+  }
+}
+
+.sliderPadding {
+  flex: 0 0 2px;
+}

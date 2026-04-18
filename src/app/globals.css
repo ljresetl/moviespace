@@ -1,0 +1,107 @@
+/* 1. ЗМІННІ ТА НАЛАШТУВАННЯ */
+:root {
+  --heading-font: "Montserrat", sans-serif;
+  --body-font: "Manrope", sans-serif;
+
+  /* Світла тема */
+  --bg-color: #ffffff;
+  --text-color: #1a1a1a;
+  --accent-color: #dc2626; /* Акцентний червоний */
+  --border-color: #e5e7eb; /* Світло-сіра межа */
+  --secondary-text: #6b7280; /* Сірий текст для описів */
+  --card-bg: #f9fafb; /* Легкий сірий фон для карток */
+}
+
+/* 2. БАЗОВЕ СКИДАННЯ */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-size-adjust: 100%;
+  background-color: var(--bg-color);
+}
+
+body {
+  font-family: var(--body-font);
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* 3. ТИПОГРАФІКА */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading-font);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--text-color);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s ease;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 4. СТУПІНЧАСТИЙ КОНТЕЙНЕР (STEP-BASED) */
+/* Mobile First: від 0 до 767px */
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  padding-left: 2px;
+  padding-right: 2px;
+  max-width: 400px; /* Фіксуємо на 400px для мобільних */
+}
+
+/* Tablet: 768px - 1023px */
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+
+/* Desktop: 1024px - 1279px */
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+/* Large Desktop: 1280px+ */
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+/* 5. СПЕЦІАЛЬНІ КЛАСИ */
+.heroText {
+  font-family: var(--heading-font);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.secondaryText {
+  color: var(--secondary-text);
+  font-size: 0.9rem;
+}

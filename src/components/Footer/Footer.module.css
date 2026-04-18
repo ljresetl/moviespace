@@ -1,0 +1,41 @@
+.footer {
+  padding: 30px 0;
+  background: var(--bg-color, #0a0a0a);
+  border-top: 1px solid var(--border-color, #222);
+  text-align: center;
+}
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.logo span {
+  color: var(--accent-color, #e50914);
+}
+
+.copy {
+  font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.author {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+  color: #e50914;
+}
+
+.link:hover {
+  color: var(--accent-color, #e50914);
+  text-decoration: underline;
+}

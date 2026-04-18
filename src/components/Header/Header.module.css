@@ -1,0 +1,154 @@
+.header {
+  background: var(--bg-color, #0a0a0a);
+  border-bottom: 1px solid var(--border-color, #222);
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.headerInner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-decoration: none;
+  color: #fff;
+  letter-spacing: -0.5px;
+  color: #0a0a0a;
+}
+
+.logo span {
+  color: var(--accent-color, #e50914);
+}
+
+.searchWrapper {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 8px 15px 8px 35px;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 20px;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.searchInput:focus {
+  border-color: var(--accent-color, #e50914);
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  font-size: 0.8rem;
+  opacity: 0.5;
+}
+
+.loginBtn {
+  background: var(--accent-color, #e50914);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.loginBtn:active {
+  transform: scale(0.95);
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border-bottom: 1px solid #222;
+}
+
+.dropdownItem:last-child {
+  border-bottom: none;
+}
+
+.dropdownItem:hover {
+  background: #252525;
+}
+
+.miniPoster {
+  position: relative;
+  width: 40px;
+  height: 60px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #333;
+}
+
+.movieInfo {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.movieName {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.movieYear {
+  font-size: 0.75rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+/* Мобільна адаптація */
+@media (max-width: 600px) {
+  .logo {
+    font-size: 1.1rem;
+  }
+
+  .searchWrapper {
+    max-width: none;
+  }
+
+  /* Якщо на дуже малих екранах затісно, можна приховати текст кнопки */
+  .loginBtn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+}

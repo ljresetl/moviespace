@@ -1,0 +1,194 @@
+/* Основний контейнер */
+.main {
+  min-height: 100vh;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  padding: 40px 0;
+}
+
+/* Кнопка повернення */
+.backBtn {
+  background: transparent;
+  border: 1px solid #e50914;
+  color: #e50914;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 30px;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.backBtn:hover {
+  background: #e50914;
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+}
+
+/* Контентна частина */
+.movieContent {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+.posterWrapper {
+  flex: 0 0 300px;
+  height: fit-content;
+}
+
+.poster {
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.info {
+  flex: 1;
+}
+
+.title {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 800;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.tagline {
+  font-style: italic;
+  color: #888;
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+}
+
+/* Мета-дані (рейтинг, рік) */
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-size: 1.1rem;
+  margin-bottom: 24px;
+  color: #ccc;
+}
+
+.rating {
+  color: #ffc107;
+  font-weight: bold;
+}
+
+/* Жанри */
+.genres {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.genreTag {
+  background: #333;
+  color: #eee;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  border: 1px solid #444;
+}
+
+.overview {
+  line-height: 1.8;
+  color: #bbb;
+  font-size: 1.05rem;
+  max-width: 800px;
+}
+
+/* Секція плеєра / заглушки */
+.playerSection {
+  margin-top: 40px;
+}
+
+.playerTitle {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  border-left: 4px solid #e50914;
+  padding-left: 15px;
+}
+
+.playerPlaceholder {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  background-color: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #333;
+}
+
+.placeholderOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  text-align: center;
+  padding: 20px;
+}
+
+.playIcon {
+  font-size: clamp(40px, 10vw, 80px);
+  color: #e50914;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 0 10px rgba(229, 9, 20, 0.5));
+}
+
+.placeholderImg {
+  object-fit: cover;
+  opacity: 0.3;
+}
+
+/* Стани завантаження та помилок */
+.loader,
+.errorContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  gap: 20px;
+  text-align: center;
+}
+
+/* Адаптивність */
+@media (max-width: 992px) {
+  .movieContent {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  .posterWrapper {
+    flex: 0 0 auto;
+    width: 260px;
+  }
+
+  .info {
+    text-align: center;
+  }
+
+  .meta,
+  .genres {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .main {
+    padding: 20px 0;
+  }
+
+  .backBtn {
+    width: 100%;
+  }
+}

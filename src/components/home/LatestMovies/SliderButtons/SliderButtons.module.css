@@ -1,0 +1,37 @@
+.navBtn {
+  position: absolute;
+  top: 40%;
+  transform: translateY(-50%);
+  z-index: 20;
+  background: white;
+  border: 1px solid var(--border-color);
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: var(--text-color);
+  padding: 0;
+  line-height: 1;
+}
+
+/* Для мобілок (падінг контейнера 2px) */
+.prev {
+  left: 2px;
+}
+.next {
+  right: 2px;
+}
+
+/* Для планшетів (виносимо за межі контенту) */
+@media (min-width: 768px) {
+  .prev {
+    left: -15px;
+  }
+  .next {
+    right: -15px;
+  }
+}
