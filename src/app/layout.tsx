@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { NuqsAdapter } from "nuqs/adapters/next/app"; // 1. Додаємо імпорт адаптера
 import "./globals.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
@@ -18,7 +19,10 @@ export default function RootLayout({
       <body className="bg-black text-white antialiased">
         <Header />
         <main className="min-h-screen">
-          {children}
+          {/* 2. Обгортаємо children в NuqsAdapter */}
+          <NuqsAdapter>
+            {children}
+          </NuqsAdapter>
         </main>
         <Footer />
       </body>
