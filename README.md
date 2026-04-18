@@ -1,36 +1,29 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 MovieSpace — Cinema Discovery Platform
 
-## Getting Started
+**MovieSpace** — це сучасний веб-додаток для пошуку та перегляду інформації про фільми. Проект побудований на базі **Next.js 16** та використовує **TMDB API** для отримання актуальних даних про світовий кінематограф.
 
-First, run the development server:
+🚀 **Живий демо-лінк:** [moviespace-qd6p.vercel.app](https://moviespace-qd6p.vercel.app)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠 Технологічний стек
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** CSS Modules (з адаптивною версткою)
+- **Data Fetching:** Fetch API з інтеграцією TMDB
+- **State Management:** React Hooks (useState, useEffect, useRef)
+- **Deployment:** Vercel
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## ✨ Основні можливості
 
-To learn more about Next.js, take a look at the following resources:
+- **Розумний пошук:** Живий пошук з випадаючим списком підказок (Autocomplete).
+- **Динамічна фільтрація:** Фільтрація за жанрами, роками випуску та країнами виробництва.
+- **Синхронізація з URL:** Всі фільтри зберігаються в URL-параметрах, що дозволяє ділитися результатами пошуку.
+- **Детальна сторінка фільму:** Опис, рейтинг, акторський склад та візуальні матеріали.
+- **Оптимізація:** Використання Suspense boundaries для швидкого завантаження контенту та стабільної збірки (build).
+- **Responsive Design:** Повна адаптивність під мобільні пристрої, планшети та десктопи.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
