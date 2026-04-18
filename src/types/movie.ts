@@ -14,7 +14,6 @@ export interface Movie {
   video: boolean;
 }
 
-// Тип для детальної інформації про фільм (коли отримуєш дані за ID)
 export interface MovieDetails extends Movie {
   genres: Genre[];
   runtime: number | null;
@@ -42,7 +41,6 @@ export interface SpokenLanguage {
   name: string;
 }
 
-// Тип для відповіді TMDB (Pagination)
 export interface TMDBResponse {
   page: number;
   results: Movie[];
