@@ -17,35 +17,42 @@ export default function MovieCardAll() {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Отримуємо всі параметри з URL
   const genre = searchParams.get("genre");
   const year = searchParams.get("year");
   const country = searchParams.get("country");
   const searchQuery = searchParams.get("search");
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  // Логіка скидання пошуку при першому завантаженні (оновленні) сторінки
-  useEffect(() => {
-    if (searchQuery || genre || (year && year !== "Усі роки") || country || currentPage !== 1) {
-      router.replace("/", { scroll: false });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Функція транслітерації для SEO-friendly URL (без повторів властивостей)
+  const transliterate = (text: string) => {
+    const map: { [key: string]: string } = {
+      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye',
+      'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l',
+      'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
+      'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '',
+      'ю': 'yu', 'я': 'ya'
+    };
+
+    return text
+      .toLowerCase()
+      .split('')
+      .map(char => map[char] || char)
+      .join('')
+      .replace(/[^\w\s-]/g, '') // Видаляємо спецсимволи
+      .replace(/\s+/g, '-')     // Пробіли в дефіси
+      .replace(/-+/g, '-')      // Видаляємо подвійні дефіси
+      .trim();
+  };
 
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true);
-      
       const params = new URLSearchParams();
       params.set("language", "uk-UA");
       params.set("page", currentPage.toString());
 
       let endpoint = "/movie/popular";
 
-      /** * ПРІОРИТЕТИЗАЦІЯ ФІЛЬТРІВ:
-       * Якщо вибрано будь-який фільтр (жанр, рік, країна), використовуємо /discover/movie.
-       * Це дозволяє фільтрам "перебивати" результати текстового пошуку.
-       */
       if (genre || (year && year !== "Усі роки") || country) {
         endpoint = "/discover/movie";
         params.set("sort_by", "popularity.desc");
@@ -53,7 +60,6 @@ export default function MovieCardAll() {
         if (year && year !== "Усі роки") params.set("primary_release_year", year);
         if (country) params.set("with_origin_country", country);
       } else if (searchQuery) {
-        // Якщо фільтрів немає, але є текст — використовуємо пошук
         endpoint = "/search/movie";
         params.set("query", searchQuery);
       }
@@ -67,21 +73,14 @@ export default function MovieCardAll() {
             accept: 'application/json'
           }
         });
-
-        if (!res.ok) throw new Error("Failed to fetch movies");
-
         const data: TMDBResponse = await res.json();
         setMovies(data.results || []);
-        
-        // Обмеження TMDB у 500 сторінок
         const maxPages = data.total_pages > 500 ? 500 : data.total_pages;
         setTotalPages(maxPages);
-
       } catch (error) {
         console.error("Fetch error:", error);
       } finally {
         setLoading(false);
-        // Плавний скрол вгору при зміні сторінки або фільтрів
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     };
@@ -98,7 +97,6 @@ export default function MovieCardAll() {
   return (
     <section className={styles.section}>
       <div className="container">
-        {/* Заголовок результатів пошуку показується лише якщо не застосовані фільтри */}
         {searchQuery && !genre && !year && !country && (
           <h2 className={styles.searchTitle}>
             Результати пошуку: &ldquo;{searchQuery}&rdquo;
@@ -110,7 +108,11 @@ export default function MovieCardAll() {
             <div className={styles.loader}>Завантаження...</div>
           ) : movies.length > 0 ? (
             movies.map((movie) => (
-              <Link href={`/movie/${movie.id}`} key={movie.id} className={styles.card}>
+              <Link 
+                href={`/movie/${movie.id}-${transliterate(movie.title)}`} 
+                key={movie.id} 
+                className={styles.card}
+              >
                 <div className={styles.imageWrapper}>
                   {movie.poster_path ? (
                     <Image 
@@ -119,7 +121,6 @@ export default function MovieCardAll() {
                       fill 
                       sizes="(max-width: 400px) 33vw, 128px" 
                       className={styles.image} 
-                      priority={false}
                     />
                   ) : (
                     <div className={styles.noImage}>Постер відсутній</div>
@@ -132,7 +133,7 @@ export default function MovieCardAll() {
               </Link>
             ))
           ) : (
-            <div className={styles.empty}>Нічого не знайдено за вашим запитом</div>
+            <div className={styles.empty}>Нічого не знайдено</div>
           )}
         </div>
 

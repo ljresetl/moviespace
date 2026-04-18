@@ -71,6 +71,20 @@ img {
   max-width: 400px; /* Фіксуємо на 400px для мобільних */
 }
 
+/* Заборона виділення тексту та копіювання */
+body {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Стандарт */
+}
+
+/* Заборона перетягування зображень */
+img {
+  pointer-events: none;
+}
+
 /* Tablet: 768px - 1023px */
 @media (min-width: 768px) {
   .container {
