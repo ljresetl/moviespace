@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -8,23 +8,19 @@ import { Movie } from "@/types/movie";
 import { getImageUrl } from "@/lib/tmdb";
 import styles from "./Header.module.css";
 
-export default function Header() {
+// 1. Виносимо логіку пошуку в окремий компонент
+function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  // 1. Отримуємо актуальне значення з URL безпосередньо під час рендеру
   const urlSearch = searchParams.get("search") || "";
-
-  // 2. Стан лише для поточного введення користувача
   const [query, setQuery] = useState(urlSearch);
   const [results, setResults] = useState<Movie[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // 3. Синхронізуємо локальний query з URL, ТІЛЬКИ якщо urlSearch змінився ззовні
-  // Використовуємо перевірку, щоб уникнути зациклення під час введення
   if (urlSearch !== query && !isDropdownOpen && query === "") {
-     setQuery(urlSearch);
+      setQuery(urlSearch);
   }
 
   useEffect(() => {
@@ -37,7 +33,6 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Логіка підказок (Autocomplete)
   useEffect(() => {
     const searchMovies = async () => {
       if (query.trim().length < 2) {
@@ -87,63 +82,67 @@ export default function Header() {
   };
 
   return (
+    <div className={styles.searchWrapper} ref={dropdownRef}>
+      <input 
+        key={urlSearch}
+        type="text" 
+        placeholder="Пошук фільмів..." 
+        className={styles.searchInput}
+        defaultValue={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onFocus={() => query.length >= 2 && setIsDropdownOpen(true)}
+        onKeyDown={handleKeyDown}
+      />
+      <span 
+        className={styles.searchIcon} 
+        onClick={() => executeSearch(query)}
+        style={{ cursor: 'pointer' }}
+      >
+        🔍
+      </span>
+
+      {isDropdownOpen && results.length > 0 && (
+        <div className={styles.dropdown}>
+          {results.map((movie) => (
+            <div 
+              key={movie.id} 
+              className={styles.dropdownItem}
+              onClick={() => handleSelectMovie(movie.id)}
+            >
+              <div className={styles.miniPoster}>
+                <Image 
+                  src={getImageUrl(movie.poster_path || "")} 
+                  alt={movie.title}
+                  fill
+                  sizes="40px"
+                />
+              </div>
+              <div className={styles.movieInfo}>
+                <span className={styles.movieName}>{movie.title}</span>
+                <span className={styles.movieYear}>
+                  {movie.release_date ? movie.release_date.split("-")[0] : ""}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// 2. Основний компонент Header, який обгортає пошук у Suspense
+export default function Header() {
+  return (
     <header className={styles.header}>
       <div className={`container ${styles.headerInner}`}>
-        
         <Link href="/" className={styles.logo}>
           MOVIE<span>SPACE</span>
         </Link>
 
-        <div className={styles.searchWrapper} ref={dropdownRef}>
-          <input 
-            key={urlSearch} // Ключ змушує React оновити інпут, якщо URL змінився (напр. кнопка Назад)
-            type="text" 
-            placeholder="Пошук фільмів..." 
-            className={styles.searchInput}
-            defaultValue={query} // Використовуємо defaultValue для стабільності
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => query.length >= 2 && setIsDropdownOpen(true)}
-            onKeyDown={handleKeyDown}
-          />
-          <span 
-            className={styles.searchIcon} 
-            onClick={() => executeSearch(query)}
-            style={{ cursor: 'pointer' }}
-          >
-            🔍
-          </span>
-
-          {isDropdownOpen && results.length > 0 && (
-            <div className={styles.dropdown}>
-              {results.map((movie) => (
-                <div 
-                  key={movie.id} 
-                  className={styles.dropdownItem}
-                  onClick={() => handleSelectMovie(movie.id)}
-                >
-                  <div className={styles.miniPoster}>
-                    <Image 
-                      src={getImageUrl(movie.poster_path || "")} 
-                      alt={movie.title}
-                      fill
-                      sizes="40px"
-                    />
-                  </div>
-                  <div className={styles.movieInfo}>
-                    <span className={styles.movieName}>{movie.title}</span>
-                    <span className={styles.movieYear}>
-                      {movie.release_date ? movie.release_date.split("-")[0] : ""}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* <div className={styles.actions}>
-          <button className={styles.loginBtn}>Увійти</button>
-        </div> */}
+        <Suspense fallback={<div className={styles.searchPlaceholder}>Завантаження...</div>}>
+          <SearchInput />
+        </Suspense>
       </div>
     </header>
   );
