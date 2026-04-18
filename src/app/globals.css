@@ -1,15 +1,11 @@
-/* 1. ЗМІННІ ТА НАЛАШТУВАННЯ */
+/* 1. ЗМІННІ */
 :root {
   --heading-font: "Montserrat", sans-serif;
   --body-font: "Manrope", sans-serif;
-
-  /* Світла тема */
   --bg-color: #ffffff;
   --text-color: #1a1a1a;
-  --accent-color: #dc2626; /* Акцентний червоний */
-  --border-color: #e5e7eb; /* Світло-сіра межа */
-  --secondary-text: #6b7280; /* Сірий текст для описів */
-  --card-bg: #f9fafb; /* Легкий сірий фон для карток */
+  --accent-color: #dc2626;
+  --secondary-text: #6b7280;
 }
 
 /* 2. БАЗОВЕ СКИДАННЯ */
@@ -19,103 +15,55 @@
   padding: 0;
 }
 
-html {
-  scroll-behavior: smooth;
-  text-size-adjust: 100%;
-  background-color: var(--bg-color);
-}
-
 body {
   font-family: var(--body-font);
   color: var(--text-color);
   background-color: var(--bg-color);
   line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  /* Заборона виділення тексту */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
-/* 3. ТИПОГРАФІКА */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--heading-font);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  color: var(--text-color);
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-  transition: color 0.2s ease;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* 4. СТУПІНЧАСТИЙ КОНТЕЙНЕР (STEP-BASED) */
-/* Mobile First: від 0 до 767px */
+/* 3. КОНТЕЙНЕР (Твій ступінчастий варіант) */
 .container {
   margin-left: auto;
   margin-right: auto;
   width: 100%;
-  padding-left: 2px;
-  padding-right: 2px;
-  max-width: 400px; /* Фіксуємо на 400px для мобільних */
+  padding-left: 15px;
+  padding-right: 15px;
 }
 
-/* Заборона виділення тексту та копіювання */
-body {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Стандарт */
+@media (min-width: 480px) {
+  .container {
+    max-width: 480px;
+  }
 }
-
-/* Заборона перетягування зображень */
-img {
-  pointer-events: none;
-}
-
-/* Tablet: 768px - 1023px */
 @media (min-width: 768px) {
   .container {
     max-width: 768px;
-    padding-left: 24px;
-    padding-right: 24px;
   }
 }
-
-/* Desktop: 1024px - 1279px */
 @media (min-width: 1024px) {
   .container {
     max-width: 1024px;
   }
 }
-
-/* Large Desktop: 1280px+ */
 @media (min-width: 1280px) {
   .container {
     max-width: 1280px;
   }
 }
 
-/* 5. СПЕЦІАЛЬНІ КЛАСИ */
-.heroText {
-  font-family: var(--heading-font);
-  font-weight: 900;
-  text-transform: uppercase;
+/* 4. КЛАС ДЛЯ ЛОАДЕРА (Замість інлайн-стилю) */
+.catalog-loader {
+  color: var(--text-color);
+  padding: 40px;
+  text-align: center;
+  font-weight: 500;
 }
 
-.secondaryText {
-  color: var(--secondary-text);
-  font-size: 0.9rem;
+/* Заборона перетягування зображень */
+img {
+  pointer-events: none;
 }

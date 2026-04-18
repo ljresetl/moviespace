@@ -7,22 +7,16 @@ import TextGolovna from "@/components/home/TextGolovna/TextGolovna";
 export default function HomePage() {
   return (
     <div className="container">
-      {/* Слайдер з новинками (зазвичай не залежить від searchParams) */}
+      {/* Слайдер з новинками */}
       <LatestMovies />
 
-      {/* Загортаємо фільтри та каталог у Suspense. 
-          Це критично важливо для успішної команди npm run build.
-      */}
-      <Suspense fallback={
-        <div style={{ color: "white", padding: "40px", textAlign: "center" }}>
-          Завантаження каталогу...
-        </div>
-      }>
+      {/* Фільтри та каталог */}
+      <Suspense fallback={<div className="catalog-loader">Завантаження каталогу...</div>}>
         <GenreFilters />
         <MovieCardAll />
       </Suspense>
 
-      {/* Секція з текстом про сайт */}
+      {/* Текстова секція */}
       <TextGolovna />
     </div>
   );
