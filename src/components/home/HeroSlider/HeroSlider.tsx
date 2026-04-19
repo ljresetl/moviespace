@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image"; // Імпортуємо Image для оптимізації
 import styles from "./HeroSlider.module.css";
 
 interface FeaturedMovie {
@@ -14,14 +15,14 @@ interface FeaturedMovie {
 export default function HeroSlider() {
   const [movie, setMovie] = useState<FeaturedMovie | null>(null);
 
-  // Функція транслітерації без дублікатів властивостей
+  // Функція транслітерації
   const slugify = (text: string) => {
     const cyrillicToLatin: { [key: string]: string } = {
       'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye',
       'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l',
       'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-      'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ю': 'yu', 
-      'я': 'ya', 'ы': 'y', 'э': 'e', 'ё': 'yo', 'ъ': ''
+      'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '',
+      'ю': 'yu', 'я': 'ya', 'ы': 'y', 'э': 'e', 'ё': 'yo', 'ъ': ''
     };
 
     return text
@@ -37,7 +38,6 @@ export default function HeroSlider() {
 
   useEffect(() => {
     const fetchTrending = async () => {
-      // Використовуємо тренди тижня для автоматичного оновлення контенту
       const url = `https://api.themoviedb.org/3/trending/movie/week?language=uk-UA`;
       
       const options = {
@@ -53,7 +53,6 @@ export default function HeroSlider() {
         const data = await res.json();
         
         if (data.results && data.results.length > 0) {
-          // Беремо найпопулярніший фільм тижня (перший у списку)
           setMovie(data.results[0]);
         }
       } catch (err) {
@@ -65,17 +64,22 @@ export default function HeroSlider() {
 
   if (!movie) return null;
 
-  // Формуємо SEO-friendly посилання з ID та транслітерованою назвою
   const movieSlug = `${movie.id}-${slugify(movie.title)}`;
 
   return (
     <div className={styles.heroSection}>
       <div className={styles.container}>
-        <img 
-          src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`} 
-          className={styles.backgroundImage}
+        {/* Оптимізоване зображення */}
+        <Image 
+          src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} 
           alt={movie.title}
+          fill // Заповнює батьківський контейнер
+          priority // Завантажується максимально швидко (LCP)
+          sizes="100vw"
+          className={styles.backgroundImage}
+          style={{ objectFit: 'cover' }} // Зберігає пропорції
         />
+        
         <div className={styles.overlay}>
           <h1 className={styles.movieTitle}>{movie.title}</h1>
           <p className={styles.movieInfo}>{movie.overview}</p>

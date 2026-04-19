@@ -1,4 +1,4 @@
-import { getMovies, getImageUrl } from "@/lib/tmdb";
+import { getMovies } from "@/lib/tmdb"; // Прибираємо getImageUrl, якщо він повертає /original/
 import { Movie } from "@/types/movie";
 import styles from "./LatestMovies.module.css";
 import Image from "next/image";
@@ -25,9 +25,9 @@ export default async function LatestMovies() {
       .split('')
       .map(char => map[char] || char)
       .join('')
-      .replace(/[^\w\s-]/g, '') // Видаляємо спецсимволи
-      .replace(/\s+/g, '-')     // Пробіли в дефіси
-      .replace(/-+/g, '-')      // Видаляємо подвійні дефіси
+      .replace(/[^\w\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
       .trim();
   };
 
@@ -48,12 +48,16 @@ export default async function LatestMovies() {
               >
                 <div className={styles.imageWrapper}>
                   <Image 
-                    src={getImageUrl(movie.poster_path || "")} 
+                    // ВИПРАВЛЕННЯ: використовуємо w342 замість оригінального розміру
+                    src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`} 
                     alt={movie.title}
                     fill
-                    sizes="128px"
+                    // ВИПРАВЛЕННЯ: вказуємо реальний розмір картки в макеті
+                    sizes="(max-width: 768px) 150px, 200px" 
                     className={styles.image}
-                    priority={index < 3}
+                    // Пріоритет тільки для перших карток, які видно відразу
+                    priority={index < 4}
+                    quality={75} // Оптимальна якість для малих зображень
                   />
                   <div className={styles.rating}>
                     {movie.vote_average > 0 ? movie.vote_average.toFixed(1) : "—"}
