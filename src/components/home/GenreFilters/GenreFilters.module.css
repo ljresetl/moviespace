@@ -5,6 +5,7 @@
 
 /* Флекс-контейнер для кнопок */
 .flexWrapper {
+  /* width: 100%; */
   display: flex;
   flex-wrap: wrap; /* Дозволяє кнопкам перескакувати на новий рядок */
   gap: 8px; /* Відступи між кнопками */
@@ -17,6 +18,7 @@
 }
 
 .filterBtn {
+  width: 106px;
   display: flex;
   align-items: center;
   justify-content: center;

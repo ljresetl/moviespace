@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import Pagination from "./../Pagination/Pagination";
 import styles from "./MovieCardAll.module.css";
 
 interface Movie {
@@ -23,10 +24,13 @@ interface MovieCardAllProps {
 export default function MovieCardAll({ filters }: MovieCardAllProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [page, setPage] = useState<number>(1);
 
+  const sectionRef = useRef<HTMLHeadingElement>(null);
+  const isFirstRender = useRef(true); // Для контролю першого завантаження
   const { genre, year, country } = filters;
 
-  // Функція транслітерації БЕЗ дублікатів властивостей
   const slugify = (text: string) => {
     const cyrillicToLatin: { [key: string]: string } = {
       'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye',
@@ -35,24 +39,26 @@ export default function MovieCardAll({ filters }: MovieCardAllProps) {
       'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '',
       'ю': 'yu', 'я': 'ya', 'ы': 'y', 'э': 'e', 'ё': 'yo', 'ъ': ''
     };
-
-    return text
-      .toLowerCase()
-      .split('')
-      .map(char => cyrillicToLatin[char] || char)
-      .join('')
-      .replace(/[^\w\s-]/g, '') // Видаляємо все, крім англ. букв, цифр і дефісів
-      .trim()
-      .replace(/\s+/g, '-')     // Пробіли в дефіси
-      .replace(/-+/g, '-');     // Подвійні дефіси в один
+    return text.toLowerCase().split('').map(char => cyrillicToLatin[char] || char).join('')
+      .replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
   };
+
+  // Видаляємо окремий useEffect для setPage(1). 
+  // Замість нього використовуємо цей ефект для скидання сторінки при зміні фільтрів
+  // БЕЗ виклику зайвого рендеру до запиту.
+  useEffect(() => {
+    if (!isFirstRender.current) {
+      setPage(1);
+    }
+  }, [genre, year, country]);
 
   useEffect(() => {
     const fetchMovies = async () => {
       setLoading(true);
       try {
         const filterYear = year === "Усі роки" ? "" : year;
-        const url = `https://api.themoviedb.org/3/discover/movie?language=uk-UA&page=1&with_genres=${genre || ""}&primary_release_year=${filterYear || ""}&with_origin_country=${country || ""}`;
+        
+        const url = `https://api.themoviedb.org/3/discover/movie?language=uk-UA&page=${page}&with_genres=${genre || ""}&primary_release_year=${filterYear || ""}&with_origin_country=${country || ""}&sort_by=popularity.desc`;
 
         const options = {
           method: "GET",
@@ -64,58 +70,54 @@ export default function MovieCardAll({ filters }: MovieCardAllProps) {
 
         const response = await fetch(url, options);
         const data = await response.json();
+        
         setMovies(data.results || []);
+        setTotalPages(data.total_pages > 500 ? 500 : data.total_pages);
+
+        // Скрол робимо тільки якщо це НЕ перше завантаження сторінки
+        if (!isFirstRender.current && sectionRef.current) {
+          const yOffset = -100;
+          const y = sectionRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+        
+        isFirstRender.current = false;
       } catch (error) {
-        console.error("Помилка завантаження фільмів:", error);
+        console.error("Помилка:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchMovies();
-  }, [genre, year, country]);
-
-  if (loading) return <div className={styles.loader}>Завантаження фільмів...</div>;
+  }, [genre, year, country, page]);
 
   return (
     <section className={styles.section}>
-      <h2 className={styles.titleText}>
+      <h2 ref={sectionRef} className={styles.titleText}>
         {genre || (year && year !== "Усі роки") || country ? "Результати пошуку" : "Усі фільми"}
       </h2>
 
       <div className={styles.flexContainer}>
-        {movies.length > 0 ? (
+        {loading ? (
+          <div style={{ width: '100%', textAlign: 'center', padding: '100px', color: 'white' }}>
+             <div className={styles.loader}>Завантаження...</div>
+          </div>
+        ) : movies.length > 0 ? (
           movies.map((movie) => {
-            // Формуємо slug: /movie/ID-nazva-filmu
             const movieSlug = `${movie.id}-${slugify(movie.title)}`;
-            
             return (
-              <Link 
-                key={movie.id} 
-                href={`/movie/${movieSlug}`} 
-                className={styles.card}
-              >
+              <Link key={movie.id} href={`/movie/${movieSlug}`} className={styles.card}>
                 <div className={styles.imageWrapper}>
-                  <div className={styles.rating}>
-                    {movie.vote_average.toFixed(1)}
-                  </div>
-                  
+                  <div className={styles.rating}>{movie.vote_average.toFixed(1)}</div>
                   <img 
                     className={styles.image}
-                    src={movie.poster_path 
-                      ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
-                      : "/no-poster.png"
-                    } 
+                    src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "/no-poster.png"} 
                     alt={movie.title} 
-                    loading="lazy"
                   />
                 </div>
-                
                 <h3 className={styles.movieTitle}>{movie.title}</h3>
-                
-                <span className={styles.movieYear}>
-                  {movie.release_date?.split("-")[0]}
-                </span>
+                <span className={styles.movieYear}>{movie.release_date?.split("-")[0]}</span>
               </Link>
             );
           })
@@ -123,6 +125,12 @@ export default function MovieCardAll({ filters }: MovieCardAllProps) {
           <p className={styles.loader}>Фільмів не знайдено</p>
         )}
       </div>
+
+      <Pagination 
+        currentPage={page} 
+        totalPages={totalPages} 
+        onPageChange={(p) => setPage(p)} 
+      />
     </section>
   );
 }

@@ -3,6 +3,7 @@ import GenreFilters from "@/components/home/GenreFilters/GenreFilters";
 import LatestMovies from "@/components/home/LatestMovies/LatestMovies";
 import MovieCardAll from "@/components/home/MovieCardAll/MovieCardAll";
 import TextGolovna from "@/components/home/TextGolovna/TextGolovna";
+import HeroSlider from "@/components/home/HeroSlider/HeroSlider";
 
 // Описуємо типи для пропсів сторінки
 interface HomePageProps {
@@ -19,6 +20,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <div className="container">
+      <HeroSlider />
       {/* Слайдер з новинками */}
       <LatestMovies />
 

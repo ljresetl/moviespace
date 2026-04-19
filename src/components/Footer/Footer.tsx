@@ -16,7 +16,7 @@ export default function Footer() {
         </p>
         
         <p className={styles.author}>
-          Створено з ❤️ автором сайту — <a 
+          Створено з ❤️ до України — <a 
             href="https://webdevcompass.com" 
             target="_blank" 
             className={styles.link}

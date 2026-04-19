@@ -1,32 +1,43 @@
 .section {
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
   padding: 60px 0;
-  background: transparent;
+  background-color: #111; /* Можна змінити на transparent, якщо фон сайту білий */
+  border-top: 1px solid #222;
+  border-bottom: 1px solid #222;
+}
+
+.container {
   width: 100%;
+  max-width: 1000px; /* Обмежуємо ширину тексту для зручності читання */
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .contentWrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  max-width: 900px;
-  margin: 0 auto;
   text-align: center;
 }
 
 .title {
-  font-size: 2rem;
-  font-weight: 800;
+  font-size: 2.2rem;
+  font-weight: 900;
   color: #fff;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: black;
+  letter-spacing: 1.5px;
 }
 
 .description {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 22px;
 }
 
 .description p {
@@ -34,10 +45,11 @@
   line-height: 1.8;
   color: #b0b0b0;
   margin: 0;
+  font-weight: 300;
 }
 
 .description strong {
-  color: var(--accent-color, #e50914);
+  color: #e50914; /* Твій червоний акцент */
 }
 
 /* Адаптація для мобільних пристроїв */
@@ -47,11 +59,11 @@
   }
 
   .title {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
   }
 
   .description p {
     font-size: 1rem;
-    text-align: justify; /* Для кращого вигляду на малих екранах */
+    text-align: left; /* Текст зліва легше читати на телефонах */
   }
 }

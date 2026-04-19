@@ -33,7 +33,7 @@ export default async function LatestMovies() {
 
   return (
     <section className={styles.section}>
-      <div className="container">
+      <div className={styles.container}>
         <h2 className={styles.title}>ОСТАННІ НОВИНКИ</h2>
         
         <div className={styles.relativeWrapper}>

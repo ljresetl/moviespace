@@ -3,7 +3,7 @@ import styles from "./TextGolovna.module.css";
 export default function TextGolovna() {
   return (
     <section className={styles.section}>
-      <div className="container">
+      <div className={styles.container}>
         <div className={styles.contentWrapper}>
           <h2 className={styles.title}>MovieSpace — Твій провідник у світі кіно</h2>
           <div className={styles.description}>

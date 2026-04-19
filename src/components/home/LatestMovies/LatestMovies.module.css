@@ -3,6 +3,11 @@
   background-color: var(--bg-color);
 }
 
+.container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
 .title {
   font-size: 1.2rem;
   font-weight: 800;
@@ -25,7 +30,7 @@
   scroll-behavior: smooth;
   scrollbar-width: none;
   scroll-snap-type: x mandatory;
-  padding: 5px 0;
+  padding: 0px;
   width: 100%;
 }
 
@@ -34,16 +39,26 @@
 }
 
 .card {
-  flex: 0 0 128px; /* Фіксована ширина для 3 карток на 400px (мінус падінги та gap) */
+  flex: 0 0 146px;
+  width: 146px; /* Додай це */
+  min-width: 146px; /* І це, щоб флекс не стискав картку */
   scroll-snap-align: start;
   text-decoration: none;
+}
+
+@media screen and (min-width: 1024px) {
+  .card {
+    flex: 0 0 204px;
+    width: 204px; /* Оновлюй і тут */
+    min-width: 204px;
+  }
 }
 
 .imageWrapper {
   position: relative;
   height: 180px; /* Фіксована висота */
   width: 100%;
-  border-radius: 6px;
+  border-radius: 2px;
   overflow: hidden;
   background-color: var(--card-bg);
   border: 1px solid var(--border-color);
@@ -80,7 +95,7 @@
 /* Адаптив під більші екрани */
 @media (min-width: 768px) {
   .card {
-    flex: 0 0 160px;
+    flex: 0 0 142px;
   }
   .imageWrapper {
     height: 240px;
