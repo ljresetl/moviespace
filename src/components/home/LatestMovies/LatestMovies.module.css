@@ -42,9 +42,9 @@
 }
 
 .card {
-  flex: 0 0 146px;
-  width: 146px;
-  min-width: 146px;
+  flex: 0 0 120px;
+  width: 120px;
+  min-width: 120px;
   scroll-snap-align: start;
   text-decoration: none;
   /* Запобігаємо зміні висоти при появі тексту */
