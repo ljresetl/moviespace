@@ -1,27 +1,28 @@
 .section {
   padding: 15px 0;
   width: 100%;
+  /* Резервуємо місце під сітку (приблизно на 2-3 ряди) */
+  min-height: 800px;
 }
 
 .flexContainer {
   display: flex;
   max-width: 400px;
   margin: 0 auto;
-  flex-wrap: wrap; /* Дозволяє карткам перескакувати вниз */
-  gap: 8px; /* Відступ між картками */
-  justify-content: center; /* Центрування, якщо в останньому ряду менше 3 карток */
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
 }
 
 @media screen and (min-width: 768px) {
   .flexContainer {
-    /* margin: 0; */
-    max-width: 768px; /* Збільшуємо максимальну ширину для маленьких екранів */
+    max-width: 768px;
   }
 }
 
 @media screen and (min-width: 1024px) {
   .flexContainer {
-    max-width: 1024px; /* Збільшуємо максимальну ширину для середніх екранів */
+    max-width: 1024px;
   }
 }
 
@@ -29,16 +30,38 @@
   display: flex;
   flex-direction: column;
   text-decoration: none;
-  /* Розрахунок: 100% ширини мінус відступи (8px * 2 гапи), поділено на 3 */
   width: calc((100% - 16px) / 3);
-  min-width: 100px; /* Мінімальна ширина, нижче якої вони почнуть перескакувати */
-  max-width: 128px; /* Щоб не розтягувалися занадто сильно на великих екранах */
+  min-width: 100px;
+  max-width: 128px;
+}
+
+/* СТИЛЬ ДЛЯ СКЕЛЕТОНА (додайте це в компонент MovieCardAll.tsx під час loading) */
+.skeletonCard {
+  width: calc((100% - 16px) / 3);
+  max-width: 128px;
+  height: 200px; /* Приблизна висота карти */
+  background: #2a2a2a;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 .imageWrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 3; /* Пропорції постерів */
+  aspect-ratio: 2 / 3;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--border-color, #ccc);
@@ -48,6 +71,7 @@
 .titleText {
   text-align: center;
   margin-bottom: 20px;
+  min-height: 1.5rem; /* Місце під заголовок */
 }
 
 .image {
@@ -74,18 +98,27 @@
   color: var(--text-color, #000);
   text-align: left;
   line-height: 1.2;
-
-  /* Обмеження назви двома рядками */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  height: 1.8rem; /* Щоб вирівняти картки по висоті */
+  height: 1.8rem;
+}
+
+/* Додаємо рік під назвою, щоб він теж не рухав макет */
+.movieYear {
+  font-size: 0.7rem;
+  color: gray;
+  margin-top: 2px;
+  height: 1rem;
 }
 
 .loader {
   width: 100%;
   text-align: center;
-  padding: 40px 0;
+  padding: 100px 0;
   color: gray;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }

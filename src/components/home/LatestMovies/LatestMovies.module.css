@@ -1,6 +1,8 @@
 .section {
   padding: 10px 0;
   background-color: var(--bg-color);
+  /* Резервуємо мінімальну висоту секції, щоб вона не стрибала */
+  min-height: 380px;
 }
 
 .container {
@@ -21,11 +23,12 @@
   position: relative;
   display: flex;
   align-items: center;
+  min-height: 250px; /* Мінімальна висота для зони слайдера */
 }
 
 .sliderContainer {
   display: flex;
-  gap: 6px; /* Відступ між картками */
+  gap: 6px;
   overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
@@ -40,27 +43,31 @@
 
 .card {
   flex: 0 0 146px;
-  width: 146px; /* Додай це */
-  min-width: 146px; /* І це, щоб флекс не стискав картку */
+  width: 146px;
+  min-width: 146px;
   scroll-snap-align: start;
   text-decoration: none;
+  /* Запобігаємо зміні висоти при появі тексту */
+  display: flex;
+  flex-direction: column;
 }
 
 @media screen and (min-width: 1024px) {
   .card {
     flex: 0 0 204px;
-    width: 204px; /* Оновлюй і тут */
+    width: 204px;
     min-width: 204px;
   }
 }
 
 .imageWrapper {
   position: relative;
-  height: 180px; /* Фіксована висота */
+  /* Використовуємо aspect-ratio замість просто height для кращої адаптивності */
+  aspect-ratio: 2 / 3;
   width: 100%;
   border-radius: 2px;
   overflow: hidden;
-  background-color: var(--card-bg);
+  background-color: #222; /* Темний фон як заглушка */
   border: 1px solid var(--border-color);
 }
 
@@ -78,6 +85,7 @@
   border-radius: 4px;
   font-size: 0.65rem;
   font-weight: bold;
+  z-index: 2;
 }
 
 .movieTitle {
@@ -90,15 +98,16 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   line-height: 1.2;
+  /* Фіксуємо висоту контейнера тексту, щоб картки були однакові */
+  height: 1.8rem;
 }
 
-/* Адаптив під більші екрани */
 @media (min-width: 768px) {
+  .section {
+    min-height: 450px;
+  }
   .card {
     flex: 0 0 142px;
-  }
-  .imageWrapper {
-    height: 240px;
   }
 }
 
