@@ -1,46 +1,46 @@
-/* Основний контейнер */
+/* --- ОСНОВНИЙ КОНТЕЙНЕР (Mobile First) --- */
 .main {
   min-height: 100vh;
-  background-color: #121212; /* Темніший фон для преміального вигляду */
+  background-color: #0f0f0f;
   color: #ffffff;
-  padding: 20px 0 60px;
+  padding: 15px 15px 60px;
+  font-family: "Inter", sans-serif;
 }
 
-/* Кнопка повернення */
 .backBtn {
   background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #e50914;
-  color: #e50914;
-  padding: 6px 16px;
-  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  margin-bottom: 25px;
-  font-size: 0.85rem;
-  font-weight: 600;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
 .backBtn:hover {
   background: #e50914;
-  color: #ffffff;
+  border-color: #e50914;
 }
 
-/* Контентна частина */
+/* --- КОНТЕНТ ФІЛЬМУ --- */
 .movieContent {
   display: flex;
-  gap: 50px;
-  margin-bottom: 50px;
-  align-items: flex-start;
+  flex-direction: column; /* Мобільна версія: все в стовпчик */
+  gap: 25px;
+  margin-bottom: 40px;
 }
 
 .posterWrapper {
-  flex: 0 0 320px;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
 .poster {
-  border-radius: 16px;
-  object-fit: cover;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   width: 100%;
   height: auto;
 }
@@ -50,257 +50,186 @@
 }
 
 .title {
-  font-size: 3rem;
-  font-weight: 900;
-  margin-bottom: 5px;
-  letter-spacing: -0.5px;
-}
-
-.tagline {
-  font-style: italic;
-  color: #888;
-  font-size: 1.1rem;
-  margin-bottom: 25px;
-  display: block;
-}
-
-/* Мета-дані */
-.meta {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  font-size: 1rem;
-  margin-bottom: 30px;
-  color: #eee;
-}
-
-.rating {
-  color: #ffc107;
+  font-size: 2rem;
   font-weight: 800;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.metaInfo {
+  color: #cccccc;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+
+/* Рейтинг у колі (як на фото) */
+.ratingCircle {
   display: flex;
   align-items: center;
-  gap: 6px;
-}
-
-/* Жанри */
-.genres {
-  display: flex;
-  flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 35px;
+  margin-bottom: 25px;
 }
 
-.genreTag {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ccc;
-  padding: 5px 18px;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+.ratingCircle span {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #21d07a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: #081c22;
 }
 
 .description h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin-bottom: 15px;
-  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 10px;
 }
 
 .overview {
-  line-height: 1.7;
-  color: #aaa;
-  font-size: 1.05rem;
-  max-width: 900px;
-  margin-bottom: 30px;
-}
-
-/* Кнопки Дій (як на фото) */
-.actionButtons {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.telegramBtn,
-.shareBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: transform 0.2s;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.telegramBtn {
-  color: #0088cc; /* Синій колір тільки для іконки/тексту за бажанням */
-}
-
-.telegramBtn:hover,
-.shareBtn:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-/* Секція плеєра */
-.playerSection {
-  margin-top: 60px;
-}
-
-.playerTitle {
-  font-size: 1.6rem;
+  line-height: 1.6;
+  color: #dddddd;
   margin-bottom: 25px;
-  border-left: 5px solid #e50914;
-  padding-left: 18px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
 }
 
-.playerPlaceholder {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  background-color: #000;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8);
-}
-
-.placeholderOverlay {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(
-    circle,
-    rgba(0, 0, 0, 0.4) 0%,
-    rgba(0, 0, 0, 0.9) 100%
-  );
-}
-
-.playIcon {
-  font-size: 90px;
-  color: #e50914;
-  margin-bottom: 20px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.playIcon:hover {
-  transform: scale(1.1);
-}
-
-.placeholderImg {
-  object-fit: cover;
-  opacity: 0.4;
-}
-
-/* Коментарі */
-.commentsSection {
-  margin-top: 80px;
-  max-width: 900px;
-}
-
-.commentForm {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin: 30px 0;
-}
-
-.commentInput {
-  background: #1a1a1a;
-  border: 1px solid #333;
-  color: #fff;
-  padding: 18px;
-  border-radius: 12px;
-  min-height: 100px;
-  font-size: 1rem;
-  resize: none;
-}
-
-.commentInput:focus {
-  outline: none;
-  border-color: #e50914;
-}
-
-.submitCommentBtn {
-  align-self: flex-end;
-  background: #e50914;
-  color: #fff;
-  border: none;
-  padding: 10px 30px;
-  border-radius: 6px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.submitCommentBtn:hover {
-  background: #b20710;
-}
-
-.commentItem {
-  background: #1a1a1a;
+/* --- ПРАВА КОЛОНКА (ДЕТАЛІ) --- */
+.sideDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* На мобілці у два стовпчики */
+  gap: 20px;
   padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #222;
 }
 
-.commentMeta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
+.detailItem strong {
+  display: block;
   font-size: 0.85rem;
+  color: #888;
+  margin-bottom: 4px;
 }
 
-.commentAuthor {
-  color: #e50914;
+.detailItem p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* --- СЕКЦІЯ АКТОРІВ --- */
+.castSection {
+  margin: 40px 0;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.castGrid {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto; /* Скрол для акторів на мобілці */
+  padding-bottom: 15px;
+  scrollbar-width: thin;
+  scrollbar-color: #e50914 #1a1a1a;
+}
+
+.actorCard {
+  flex: 0 0 140px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.actorCard img {
+  width: 100%;
+  height: 175px;
+  object-fit: cover;
+}
+
+.actorInfo {
+  padding: 10px;
+}
+
+.actorName {
   font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0;
 }
 
-.commentDate {
-  color: #666;
+.characterName {
+  font-size: 0.8rem;
+  color: #999;
+  margin: 4px 0 0;
 }
 
-/* Адаптивність */
-@media (max-width: 1024px) {
+/* --- ПЛЕЄР --- */
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  background: #000;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* --- МЕДІА ЗАПИТИ (ДЕСКТОП) --- */
+@media (min-width: 1024px) {
+  .main {
+    padding: 40px 0;
+  }
+
   .movieContent {
-    gap: 30px;
+    flex-direction: row; /* Текст стає праворуч від постера */
+    align-items: flex-start;
+    gap: 40px;
   }
+
   .posterWrapper {
-    flex: 0 0 280px;
+    flex: 0 0 300px;
+    position: sticky;
+    top: 40px;
   }
+
   .title {
-    font-size: 2.5rem;
+    font-size: 3rem;
+  }
+
+  .sideDetails {
+    display: block; /* Повертаємо в колонку для десктопа */
+    background: transparent;
+    padding: 0;
+  }
+
+  .detailItem {
+    margin-bottom: 20px;
+  }
+
+  .castGrid {
+    flex-wrap: wrap; /* На десктопі актори йдуть рядами, а не скролом */
+    overflow-x: visible;
+  }
+
+  .actorCard {
+    flex: 0 0 calc(20% - 12px); /* 5 акторів в ряд */
   }
 }
 
-@media (max-width: 768px) {
-  .movieContent {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  .posterWrapper {
-    width: 240px;
-  }
-  .meta,
-  .genres,
-  .actionButtons {
-    justify-content: center;
-  }
-  .overview {
-    margin-inline: auto;
-  }
+/* Приховуємо скроллбар для чистішого вигляду */
+.castGrid::-webkit-scrollbar {
+  height: 6px;
+}
+.castGrid::-webkit-scrollbar-thumb {
+  background: #e50914;
+  border-radius: 10px;
 }

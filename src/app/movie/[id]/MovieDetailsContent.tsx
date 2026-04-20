@@ -3,77 +3,43 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { MovieDetails, Video, MovieVideosResponse } from "@/types/movie";
+import { MovieDetails, Video, MovieVideosResponse, Cast, CreditsResponse } from "@/types/movie";
 import styles from "./MoviePage.module.css";
 
 export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) {
   const router = useRouter();
-  
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
-  const [comments, setComments] = useState<{id: number, text: string, date: string}[]>([]);
-  const [newComment, setNewComment] = useState("");
+  const [cast, setCast] = useState<Cast[]>([]);
+  const [director, setDirector] = useState<string>("");
 
   useEffect(() => {
-    const fetchVideo = async (): Promise<void> => {
+    const fetchData = async (): Promise<void> => {
       const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
-      
-      if (!apiKey) {
-        console.error("API Key is missing in .env.local");
-        return;
-      }
+      if (!apiKey) return;
 
       try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=uk-UA`
-        );
-        
-        // Якщо українською немає, спробуємо знайти оригінал (англійською)
-        let data: MovieVideosResponse = await res.json();
-        
-        if (!data.results || data.results.length === 0) {
-          const fallbackRes = await fetch(
-            `https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}`
-          );
-          data = await fallbackRes.json();
+        // 1. Завантаження відео
+        const videoRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=uk-UA`);
+        let videoData: MovieVideosResponse = await videoRes.json();
+        if (!videoData.results?.length) {
+          const fb = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}`);
+          videoData = await fb.json();
         }
+        setTrailerKey(videoData.results?.find(v => v.type === "Trailer")?.key || videoData.results?.[0]?.key || null);
 
-        const trailer = data.results?.find(
-          (v: Video) => v.type === "Trailer" && v.site === "YouTube"
-        );
+        // 2. Завантаження акторів та режисера
+        const creditsRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/credits?api_key=${apiKey}&language=uk-UA`);
+        const creditsData: CreditsResponse = await creditsRes.json();
+        setCast(creditsData.cast.slice(0, 10)); // Беремо перших 10 акторів
+        setDirector(creditsData.crew.find(person => person.job === "Director")?.name || "Невідомо");
 
-        if (trailer) {
-          setTrailerKey(trailer.key);
-        } else if (data.results?.length > 0) {
-          setTrailerKey(data.results[0].key);
-        }
       } catch (err) {
-        console.error("Помилка запиту:", err);
+        console.error("Помилка завантаження даних:", err);
       }
     };
 
-    fetchVideo();
+    fetchData();
   }, [movie.id]);
-
-  const handleShare = async (): Promise<void> => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: movie.title,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.error(err);
-      }
-    }
-  };
-
-  const addComment = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    if (!newComment.trim()) return;
-    const comment = { id: Date.now(), text: newComment, date: new Date().toLocaleDateString("uk-UA") };
-    setComments([comment, ...comments]);
-    setNewComment("");
-  };
 
   return (
     <main className={styles.main}>
@@ -83,63 +49,94 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
         <div className={styles.movieContent}>
           <div className={styles.posterWrapper}>
             {movie.poster_path && (
-              <Image
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                alt={movie.title}
-                width={300}
-                height={450}
-                className={styles.poster}
-                priority
+              <Image 
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+                alt={movie.title} 
+                width={300} height={450} 
+                className={styles.poster} 
+                priority 
               />
             )}
           </div>
 
           <div className={styles.info}>
-            <h1 className={styles.title}>{movie.title}</h1>
-            <div className={styles.meta}>
-              <span className={styles.rating}>⭐ {movie.vote_average.toFixed(1)}</span>
-              <span className={styles.year}>📅 {movie.release_date.split("-")[0]}</span>
+            <h1 className={styles.title}>{movie.title} ({movie.release_date.split("-")[0]})</h1>
+            <p className={styles.metaInfo}>
+              {movie.release_date} • {movie.genres.map(g => g.name).join(", ")} • {movie.runtime}хв
+            </p>
+            
+            <div className={styles.ratingCircle}>
+              <span>{Math.round(movie.vote_average * 10)}%</span> Оцінка
             </div>
+
             <div className={styles.description}>
-              <p className={styles.overview}>{movie.overview || "Опис відсутній."}</p>
+              <h3>Опис</h3>
+              <p>{movie.overview || "Опис відсутній."}</p>
             </div>
-            <div className={styles.actionButtons}>
-              <a href="https://t.me/your_channel" target="_blank" className={styles.telegramBtn}>🚀 Telegram</a>
-              <button onClick={handleShare} className={styles.shareBtn}>📢 Поділитися</button>
+
+            <div className={styles.creditsSummary}>
+              <div><strong>Режисер:</strong> {director}</div>
             </div>
           </div>
+
+          {/* Права колонка з деталями */}
+          <aside className={styles.sideDetails}>
+            <div className={styles.detailItem}>
+              <strong>Оригінальна назва</strong>
+              <p>{movie.original_title}</p>
+            </div>
+            <div className={styles.detailItem}>
+              <strong>Статус</strong>
+              <p>{movie.status === "Released" ? "Випущено" : movie.status}</p>
+            </div>
+            <div className={styles.detailItem}>
+              <strong>Мова оригіналу</strong>
+              <p>{movie.original_language.toUpperCase()}</p>
+            </div>
+            <div className={styles.detailItem}>
+              <strong>Бюджет</strong>
+              <p>{movie.budget > 0 ? `$${movie.budget.toLocaleString()}` : "-"}</p>
+            </div>
+          </aside>
         </div>
 
-        <div className={styles.playerSection}>
-          <h2 className={styles.playerTitle}>Трейлер</h2>
-          <div className={styles.playerPlaceholder}>
-            {trailerKey ? (
-              <iframe
-                src={`https://www.youtube.com/embed/${trailerKey}?rel=0&showinfo=0`}
-                title="Trailer"
-                allowFullScreen
-                className={styles.iframePlayer}
-                style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none" }}
-              />
-            ) : (
-              <div className={styles.noTrailer}>Трейлер завантажується або недоступний</div>
-            )}
+        {/* Секція акторів */}
+        <section className={styles.castSection}>
+          <h2 className={styles.sectionTitle}>У головних ролях</h2>
+          <div className={styles.castGrid}>
+            {cast.map(actor => (
+              <div key={actor.id} className={styles.actorCard}>
+                {actor.profile_path ? (
+                  <Image 
+                    src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`} 
+                    alt={actor.name} 
+                    width={150} height={225} 
+                  />
+                ) : (
+                  <div className={styles.noPhoto}>Немає фото</div>
+                )}
+                <div className={styles.actorInfo}>
+                  <p className={styles.actorName}>{actor.name}</p>
+                  <p className={styles.characterName}>{actor.character}</p>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
-
-        <section className={styles.commentsSection}>
-          <h2 className={styles.playerTitle}>Відгуки ({comments.length})</h2>
-          <form onSubmit={addComment} className={styles.commentForm}>
-            <textarea 
-              value={newComment}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewComment(e.target.value)}
-              className={styles.commentInput}
-              placeholder="Напишіть відгук..."
-            />
-            <button type="submit" className={styles.submitCommentBtn}>Надіслати</button>
-          </form>
-          {/* Список коментарів залишається таким самим */}
         </section>
+
+        {/* Трейлер */}
+        <div className={styles.playerSection}>
+          <h2 className={styles.sectionTitle}>Відтворити трейлер</h2>
+          <div className={styles.videoWrapper}>
+            {trailerKey ? (
+              <iframe 
+                src={`https://www.youtube.com/embed/${trailerKey}`} 
+                allowFullScreen 
+                className={styles.iframe}
+              />
+            ) : <p>Трейлер недоступний</p>}
+          </div>
+        </div>
       </div>
     </main>
   );
