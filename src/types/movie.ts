@@ -47,3 +47,21 @@ export interface TMDBResponse {
   total_pages: number;
   total_results: number;
 }
+
+export interface Video {
+  id: string;
+  iso_639_1: string;
+  iso_3116_1: string;
+  key: string;      // Це головне — ID відео на YouTube
+  name: string;
+  site: string;     // Зазвичай "YouTube"
+  size: number;
+  type: string;     // "Trailer", "Teaser", "Featurette" тощо
+  official: boolean;
+  published_at: string;
+}
+
+export interface MovieVideosResponse {
+  id: number;
+  results: Video[];
+}
