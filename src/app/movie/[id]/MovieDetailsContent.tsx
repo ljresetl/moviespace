@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { MovieDetails, Video, MovieVideosResponse, Cast, CreditsResponse } from "@/types/movie";
 import styles from "./MoviePage.module.css";
 
-// Тип для коментаря
 interface Comment {
   id: number;
   author: string;
@@ -20,7 +19,8 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
   const [cast, setCast] = useState<Cast[]>([]);
   const [director, setDirector] = useState<string>("");
   
-  // Стан для коментарів
+  // Стан для плеєра та коментарів
+  const [showFullMovie, setShowFullMovie] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
 
@@ -51,7 +51,6 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
     fetchData();
   }, [movie.id]);
 
-  // Функція "Поділитися"
   const handleShare = async () => {
     if (navigator.share) {
       try {
@@ -61,27 +60,23 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
           url: window.location.href,
         });
       } catch (err) {
-        console.log("Помилка при спробі поділитися:", err);
+        console.log("Error sharing:", err);
       }
     } else {
-      // Fallback якщо браузер не підтримує Web Share API
       navigator.clipboard.writeText(window.location.href);
-      alert("Посилання скопійовано в буфер обміну!");
+      alert("Посилання скопійовано!");
     }
   };
 
-  // Додавання коментаря
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
-
     const commentObj: Comment = {
       id: Date.now(),
       author: "Гість",
       text: newComment,
       date: new Date().toLocaleDateString("uk-UA"),
     };
-
     setComments([commentObj, ...comments]);
     setNewComment("");
   };
@@ -147,12 +142,11 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
           </aside>
         </div>
 
-        {/* Актори */}
         <section className={styles.castSection}>
           <h2 className={styles.sectionTitle}>У головних ролях</h2>
           <div className={styles.castGrid}>
             {cast.map(actor => (
-              <div key={actor.id} className={actor.profile_path ? styles.actorCard : styles.actorCardNoPhoto}>
+              <div key={actor.id} className={styles.actorCard}>
                 {actor.profile_path ? (
                   <Image 
                     src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`} 
@@ -171,13 +165,13 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
           </div>
         </section>
 
-        {/* Трейлер */}
+        {/* СЕКЦІЯ ТРЕЙЛЕРА */}
         <div className={styles.playerSection}>
-          <h2 className={styles.sectionTitle}>Відтворити трейлер</h2>
+          <h2 className={styles.sectionTitle}>Трейлер</h2>
           <div className={styles.videoWrapper}>
             {trailerKey ? (
               <iframe 
-                src={`https://www.youtube.com/embed/${trailerKey}?rel=0&showinfo=0`} 
+                src={`https://www.youtube.com/embed/${trailerKey}?rel=0`} 
                 allowFullScreen 
                 className={styles.iframe}
               />
@@ -185,10 +179,41 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
           </div>
         </div>
 
-        {/* КОМЕНТАРІ */}
+        {/* НОВА СЕКЦІЯ: ПОВНИЙ ФІЛЬМ */}
+        <section className={styles.fullMovieSection}>
+          <h2 className={styles.sectionTitle}>Дивитися фільм онлайн</h2>
+          {!showFullMovie ? (
+            <div className={styles.watchPlaceholder}>
+              <div className={styles.watchContent}>
+                <h3>Готові до перегляду?</h3>
+                <p>Натисніть кнопку нижче, щоб розгорнути плеєр</p>
+                <button 
+                  className={styles.watchBtn}
+                  onClick={() => setShowFullMovie(true)}
+                >
+                  ▶ Переглянути повний фільм
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.fullMoviePlayer}>
+               <div className={styles.playerHeader}>
+                  <span>Ви переглядаєте: {movie.title}</span>
+                  <button onClick={() => setShowFullMovie(false)}>Закрити плеєр ✕</button>
+               </div>
+               <div className={styles.videoWrapper}>
+                  {/* Сюди потім вставите код реального плеєра */}
+                  <div className={styles.placeholderOverlay}>
+                    <p>Тут буде основний плеєр фільму</p>
+                    <small>Заглушка активована</small>
+                  </div>
+               </div>
+            </div>
+          )}
+        </section>
+
         <section className={styles.commentsSection}>
           <h2 className={styles.sectionTitle}>Відгуки</h2>
-          
           <form onSubmit={handleSubmitComment} className={styles.commentForm}>
             <textarea 
               placeholder="Напишіть свою думку про фільм..."

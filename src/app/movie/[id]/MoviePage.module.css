@@ -1,24 +1,18 @@
-/* --- ОСНОВНИЙ КОНТЕЙНЕР (Mobile First) --- */
 .main {
   min-height: 100vh;
   background-color: #0f0f0f;
   color: #ffffff;
   padding: 15px 15px 60px;
-  font-family:
-    "Inter",
-    -apple-system,
-    sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
-/* Верхня панель з кнопками */
 .topActions {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 25px;
 }
 
 .backBtn,
@@ -40,32 +34,20 @@
   color: #ffffff;
 }
 
-.backBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #e50914;
-}
-
 .shareBtn {
   background: #e50914;
   border: none;
   color: white;
-  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
 }
 
-.shareBtn:hover {
-  background: #b20710;
-  transform: translateY(-2px);
-}
-
-/* --- КОНТЕНТ ФІЛЬМУ --- */
+/* --- КОНТЕНТ --- */
 .movieContent {
   display: flex;
   flex-direction: column;
   gap: 30px;
   margin-bottom: 50px;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto 50px;
 }
 
 .posterWrapper {
@@ -79,34 +61,27 @@
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   width: 100%;
   height: auto;
-  display: block;
 }
 
 .info {
   flex: 1;
 }
-
 .title {
   font-size: 2.2rem;
   font-weight: 800;
   margin-bottom: 12px;
-  line-height: 1.1;
 }
-
 .metaInfo {
   color: #aaa;
-  font-size: 1rem;
   margin-bottom: 25px;
 }
 
-/* Рейтинг у колі */
 .ratingCircle {
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 30px;
 }
-
 .ratingCircle span {
   width: 55px;
   height: 55px;
@@ -116,32 +91,16 @@
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 1.1rem;
   background: #081c22;
-  color: #fff;
-}
-
-.description h3 {
-  font-size: 1.4rem;
-  margin-bottom: 12px;
-  color: #fff;
 }
 
 .overview {
   line-height: 1.7;
   color: #d1d1d1;
-  font-size: 1.05rem;
   margin-bottom: 30px;
 }
 
-.creditsSummary {
-  background: rgba(255, 255, 255, 0.05);
-  padding: 15px;
-  border-radius: 10px;
-  display: inline-block;
-}
-
-/* --- ПРАВА КОЛОНКА (ДЕТАЛІ) --- */
+/* --- ДЕТАЛІ --- */
 .sideDetails {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -149,7 +108,6 @@
   padding: 25px;
   background: #161616;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .detailItem strong {
@@ -157,23 +115,19 @@
   font-size: 0.8rem;
   color: #777;
   text-transform: uppercase;
-  letter-spacing: 1px;
   margin-bottom: 6px;
 }
-
 .detailItem p {
   font-size: 1rem;
-  font-weight: 500;
   margin: 0;
   color: #efefef;
 }
 
-/* --- СЕКЦІЯ АКТОРІВ --- */
+/* --- АКТОРИ --- */
 .castSection {
   margin: 60px auto;
   max-width: 1200px;
 }
-
 .sectionTitle {
   font-size: 1.8rem;
   font-weight: 700;
@@ -181,7 +135,6 @@
   position: relative;
   padding-bottom: 10px;
 }
-
 .sectionTitle::after {
   content: "";
   position: absolute;
@@ -198,8 +151,6 @@
   gap: 20px;
   overflow-x: auto;
   padding-bottom: 20px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 }
 
 .actorCard {
@@ -207,12 +158,7 @@
   background: #1a1a1a;
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.actorCard:hover {
-  transform: translateY(-8px);
 }
 
 .actorCard img {
@@ -220,36 +166,21 @@
   height: 220px;
   object-fit: cover;
 }
-
-.noPhoto {
-  width: 100%;
-  height: 220px;
-  background: #252525;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 3rem;
-}
-
 .actorInfo {
   padding: 12px;
 }
-
 .actorName {
   font-weight: 700;
   font-size: 0.95rem;
-  margin: 0;
-  color: #fff;
 }
-
 .characterName {
   font-size: 0.8rem;
   color: #888;
-  margin: 5px 0 0;
 }
 
-/* --- ПЛЕЄР --- */
-.playerSection {
+/* --- ПЛЕЄРИ (ТРЕЙЛЕР ТА ФІЛЬМ) --- */
+.playerSection,
+.fullMovieSection {
   margin: 60px auto;
   max-width: 1200px;
 }
@@ -261,7 +192,6 @@
   background: #000;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
 .iframe {
@@ -273,19 +203,84 @@
   border: none;
 }
 
-/* --- КОМЕНТАРІ (Заготовка) --- */
+/* НОВІ СТИЛІ ДЛЯ ПОВНОГО ФІЛЬМУ */
+.watchPlaceholder {
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+    url("https://www.themoviedb.org/t/p/original/6EL63AnMvYHogfkpS7hgL7C9Z8P.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 2px dashed #333;
+}
+
+.watchBtn {
+  background: #e50914;
+  color: white;
+  border: none;
+  padding: 15px 40px;
+  border-radius: 30px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: transform 0.2s;
+}
+
+.watchBtn:hover {
+  transform: scale(1.05);
+  background: #ff0a16;
+}
+
+.fullMoviePlayer {
+  background: #161616;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid #e50914;
+}
+
+.playerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.playerHeader button {
+  background: transparent;
+  color: #888;
+  border: 1px solid #333;
+  padding: 5px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.placeholderOverlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: #555;
+}
+
+/* --- КОМЕНТАРІ --- */
 .commentsSection {
   margin: 80px auto;
   max-width: 800px;
 }
-
 .commentForm {
   display: flex;
   flex-direction: column;
   gap: 15px;
   margin-bottom: 40px;
 }
-
 .textarea {
   background: #161616;
   border: 1px solid #333;
@@ -293,69 +288,47 @@
   padding: 20px;
   color: #fff;
   min-height: 120px;
-  font-size: 1rem;
-  transition: border-color 0.3s;
 }
-
-.textarea:focus {
-  outline: none;
-  border-color: #e50914;
-}
-
 .submitBtn {
   align-self: flex-end;
   background: #21d07a;
   color: #000;
-  border: none;
   padding: 12px 30px;
   border-radius: 8px;
   font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s;
 }
-
-.submitBtn:hover {
-  transform: scale(1.05);
-  background: #1db96c;
-}
-
 .commentCard {
   background: #161616;
-  padding: 25px;
-  border-radius: 16px;
-  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 15px;
   border-left: 4px solid #e50914;
 }
-
 .commentHeader {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
-
 .commentAuthor {
   font-weight: 700;
   color: #21d07a;
 }
 
-/* --- МЕДІА ЗАПИТИ (ДЕСКТОП) --- */
+/* --- ДЕСКТОП --- */
 @media (min-width: 1024px) {
   .movieContent {
     flex-direction: row;
     gap: 60px;
-    align-items: flex-start;
   }
-
   .posterWrapper {
     flex: 0 0 350px;
     position: sticky;
     top: 40px;
   }
-
   .title {
     font-size: 3.5rem;
   }
-
   .sideDetails {
     display: flex;
     flex-direction: column;
@@ -363,33 +336,10 @@
     border: none;
     padding: 0;
   }
-
-  .detailItem {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 15px;
-  }
-
   .castGrid {
     flex-wrap: wrap;
-    overflow-x: visible;
   }
-
   .actorCard {
-    flex: 0 0 calc(20% - 16px); /* 5 в ряд */
+    flex: 0 0 calc(20% - 16px);
   }
-}
-
-/* Стилізація скролбару */
-.castGrid::-webkit-scrollbar {
-  height: 8px;
-}
-.castGrid::-webkit-scrollbar-track {
-  background: #0f0f0f;
-}
-.castGrid::-webkit-scrollbar-thumb {
-  background: #333;
-  border-radius: 10px;
-}
-.castGrid::-webkit-scrollbar-thumb:hover {
-  background: #e50914;
 }
