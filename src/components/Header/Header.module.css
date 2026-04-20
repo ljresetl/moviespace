@@ -1,6 +1,6 @@
 /* --- БАЗОВІ МОБІЛЬНІ СТИЛІ (Mobile First) --- */
 .header {
-  background-color: #ffffff; /* */
+  background-color: #ffffff;
   border-bottom: 1px solid #e0e0e0;
   padding: 8px 0;
   position: sticky;
@@ -29,11 +29,13 @@
 
 .fullLogo {
   display: none;
-} /* */
+}
+
 .mobileLogo {
   display: block;
   color: #000000;
 }
+
 .mobileLogo span {
   color: #e50914;
 }
@@ -47,7 +49,7 @@
 .searchInput {
   width: 100%;
   padding: 10px 15px 10px 40px;
-  background: #1a1a1a; /* */
+  background: #1a1a1a;
   border: 1px solid #333;
   border-radius: 25px;
   color: #ffffff;
@@ -64,7 +66,7 @@
   opacity: 0.5;
 }
 
-/* Випадаючий список результатів пошуку */
+/* Випадаючий список результатів */
 .dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -103,11 +105,13 @@
   display: flex;
   flex-direction: column;
 }
+
 .movieName {
   color: #fff;
   font-size: 0.9rem;
   font-weight: 600;
 }
+
 .movieYear {
   color: #888;
   font-size: 0.8rem;
@@ -137,37 +141,39 @@
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Анімація перетворення в хрестик */
+/* Хрестик (анімація бургера) */
 .line1 {
   transform: translateY(7px) rotate(45deg);
 }
+
 .line2 {
   opacity: 0;
 }
+
 .line3 {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* --- МОБІЛЬНЕ МЕНЮ --- */
+/* --- МОБІЛЬНЕ МЕНЮ (80% ширини) --- */
 .mobileMenu {
   position: fixed;
   top: 0;
-  right: -100%;
-  width: 100%;
-  max-width: 300px;
+  right: -80%;
+  width: 80%;
+  max-width: 400px;
   height: 100vh;
-  background-color: #ffffff; /* */
+  background-color: #ffffff;
   padding: 80px 24px 40px;
   display: flex;
   flex-direction: column;
   gap: 25px;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1050;
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
 }
 
 .menuActive {
-  transform: translateX(-100%);
+  right: 0;
 }
 
 .mobileNavLinks {
@@ -178,14 +184,14 @@
 }
 
 .mobileNavLinks a {
-  color: #000000; /* Чорний текст всередині меню */
+  color: #000000;
   text-decoration: none;
   font-size: 1.2rem;
   font-weight: 600;
 }
 
 .loginBtnMobile {
-  background-color: #e50914; /* */
+  background-color: #e50914;
   color: #ffffff;
   border: none;
   padding: 14px 24px;
@@ -197,7 +203,7 @@
   width: 100%;
 }
 
-/* --- ПЛАНШЕТИ ТА ДЕСКТОПИ (min-width: 851px) --- */
+/* --- ПЛАНШЕТИ ТА ДЕСКТОПИ (від 768px) --- */
 @media (min-width: 768px) {
   .header {
     padding: 10px 0;
@@ -207,21 +213,24 @@
     display: block;
     color: #000000;
   }
+
   .fullLogo span {
     color: #e50914;
   }
+
   .mobileLogo {
     display: none;
   }
 
   .searchWrapper {
-    max-width: 450px;
+    max-width: 400px;
     margin-left: 20px;
   }
 
   .burger {
     display: none;
   }
+
   .mobileMenu {
     display: none;
   }
@@ -229,7 +238,7 @@
   .desktopNav {
     display: flex;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
   }
 
   .desktopNav a {
@@ -248,7 +257,7 @@
     background: #e50914;
     color: #ffffff;
     border: none;
-    padding: 8px 20px;
+    padding: 8px 18px;
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
@@ -293,11 +302,6 @@
   color: #888;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: color 0.2s;
-}
-
-.closeModal:hover {
-  color: #fff;
 }
 
 .googleBtn {

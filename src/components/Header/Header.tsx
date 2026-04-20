@@ -116,7 +116,8 @@ export default function Header() {
           {/* Навігація для Планшетів/Десктопів */}
           <nav className={styles.desktopNav}>
             <Link href="/">Головна</Link>
-            <Link href="/popular">Популярні</Link>
+            {/* Змінено шлях на якір #popular */}
+            <Link href="/#popular">Популярні</Link>
             <button className={styles.loginBtn} onClick={openModal}>Вхід</button>
           </nav>
 
@@ -132,7 +133,8 @@ export default function Header() {
         <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.menuActive : ""}`}>
           <nav className={styles.mobileNavLinks}>
             <Link href="/" onClick={toggleMenu}>Головна</Link>
-            <Link href="/popular" onClick={toggleMenu}>Популярні</Link>
+            {/* Змінено шлях на якір #popular для мобільного меню */}
+            <Link href="/#popular" onClick={toggleMenu}>Популярні</Link>
             <button className={styles.loginBtnMobile} onClick={openModal}>
               Увійти через Google
             </button>
