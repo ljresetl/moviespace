@@ -6,11 +6,23 @@ import { useRouter } from "next/navigation";
 import { MovieDetails, Video, MovieVideosResponse, Cast, CreditsResponse } from "@/types/movie";
 import styles from "./MoviePage.module.css";
 
+// Тип для коментаря
+interface Comment {
+  id: number;
+  author: string;
+  text: string;
+  date: string;
+}
+
 export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) {
   const router = useRouter();
   const [trailerKey, setTrailerKey] = useState<string | null>(null);
   const [cast, setCast] = useState<Cast[]>([]);
   const [director, setDirector] = useState<string>("");
+  
+  // Стан для коментарів
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -18,7 +30,6 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
       if (!apiKey) return;
 
       try {
-        // 1. Завантаження відео
         const videoRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/videos?api_key=${apiKey}&language=uk-UA`);
         let videoData: MovieVideosResponse = await videoRes.json();
         if (!videoData.results?.length) {
@@ -27,10 +38,9 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
         }
         setTrailerKey(videoData.results?.find(v => v.type === "Trailer")?.key || videoData.results?.[0]?.key || null);
 
-        // 2. Завантаження акторів та режисера
         const creditsRes = await fetch(`https://api.themoviedb.org/3/movie/${movie.id}/credits?api_key=${apiKey}&language=uk-UA`);
         const creditsData: CreditsResponse = await creditsRes.json();
-        setCast(creditsData.cast.slice(0, 10)); // Беремо перших 10 акторів
+        setCast(creditsData.cast.slice(0, 10));
         setDirector(creditsData.crew.find(person => person.job === "Director")?.name || "Невідомо");
 
       } catch (err) {
@@ -41,10 +51,48 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
     fetchData();
   }, [movie.id]);
 
+  // Функція "Поділитися"
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: movie.title,
+          text: `Переглянь фільм "${movie.title}" на нашому сайті!`,
+          url: window.location.href,
+        });
+      } catch (err) {
+        console.log("Помилка при спробі поділитися:", err);
+      }
+    } else {
+      // Fallback якщо браузер не підтримує Web Share API
+      navigator.clipboard.writeText(window.location.href);
+      alert("Посилання скопійовано в буфер обміну!");
+    }
+  };
+
+  // Додавання коментаря
+  const handleSubmitComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim()) return;
+
+    const commentObj: Comment = {
+      id: Date.now(),
+      author: "Гість",
+      text: newComment,
+      date: new Date().toLocaleDateString("uk-UA"),
+    };
+
+    setComments([commentObj, ...comments]);
+    setNewComment("");
+  };
+
   return (
     <main className={styles.main}>
       <div className="container">
-        <button onClick={() => router.back()} className={styles.backBtn}>← Назад</button>
+        <div className={styles.topActions}>
+          <button onClick={() => router.back()} className={styles.backBtn}>← Назад</button>
+          <button onClick={handleShare} className={styles.shareBtn}>📤 Поділитися</button>
+        </div>
 
         <div className={styles.movieContent}>
           <div className={styles.posterWrapper}>
@@ -79,7 +127,6 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
             </div>
           </div>
 
-          {/* Права колонка з деталями */}
           <aside className={styles.sideDetails}>
             <div className={styles.detailItem}>
               <strong>Оригінальна назва</strong>
@@ -100,12 +147,12 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
           </aside>
         </div>
 
-        {/* Секція акторів */}
+        {/* Актори */}
         <section className={styles.castSection}>
           <h2 className={styles.sectionTitle}>У головних ролях</h2>
           <div className={styles.castGrid}>
             {cast.map(actor => (
-              <div key={actor.id} className={styles.actorCard}>
+              <div key={actor.id} className={actor.profile_path ? styles.actorCard : styles.actorCardNoPhoto}>
                 {actor.profile_path ? (
                   <Image 
                     src={`https://image.tmdb.org/t/p/w185${actor.profile_path}`} 
@@ -113,7 +160,7 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
                     width={150} height={225} 
                   />
                 ) : (
-                  <div className={styles.noPhoto}>Немає фото</div>
+                  <div className={styles.noPhoto}>👤</div>
                 )}
                 <div className={styles.actorInfo}>
                   <p className={styles.actorName}>{actor.name}</p>
@@ -130,13 +177,45 @@ export default function MovieDetailsContent({ movie }: { movie: MovieDetails }) 
           <div className={styles.videoWrapper}>
             {trailerKey ? (
               <iframe 
-                src={`https://www.youtube.com/embed/${trailerKey}`} 
+                src={`https://www.youtube.com/embed/${trailerKey}?rel=0&showinfo=0`} 
                 allowFullScreen 
                 className={styles.iframe}
               />
-            ) : <p>Трейлер недоступний</p>}
+            ) : <p className={styles.noVideo}>Трейлер недоступний</p>}
           </div>
         </div>
+
+        {/* КОМЕНТАРІ */}
+        <section className={styles.commentsSection}>
+          <h2 className={styles.sectionTitle}>Відгуки</h2>
+          
+          <form onSubmit={handleSubmitComment} className={styles.commentForm}>
+            <textarea 
+              placeholder="Напишіть свою думку про фільм..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className={styles.textarea}
+              required
+            />
+            <button type="submit" className={styles.submitBtn}>Надіслати відгук</button>
+          </form>
+
+          <div className={styles.commentsList}>
+            {comments.length === 0 ? (
+              <p className={styles.emptyComments}>Будьте першим, хто залишить відгук!</p>
+            ) : (
+              comments.map(c => (
+                <div key={c.id} className={styles.commentCard}>
+                  <div className={styles.commentHeader}>
+                    <span className={styles.commentAuthor}>{c.author}</span>
+                    <span className={styles.commentDate}>{c.date}</span>
+                  </div>
+                  <p className={styles.commentText}>{c.text}</p>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
       </div>
     </main>
   );

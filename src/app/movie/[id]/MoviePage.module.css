@@ -4,45 +4,82 @@
   background-color: #0f0f0f;
   color: #ffffff;
   padding: 15px 15px 60px;
-  font-family: "Inter", sans-serif;
+  font-family:
+    "Inter",
+    -apple-system,
+    sans-serif;
+}
+
+/* Верхня панель з кнопками */
+.topActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.backBtn,
+.shareBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .backBtn {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
 }
 
 .backBtn:hover {
-  background: #e50914;
+  background: rgba(255, 255, 255, 0.1);
   border-color: #e50914;
+}
+
+.shareBtn {
+  background: #e50914;
+  border: none;
+  color: white;
+  box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3);
+}
+
+.shareBtn:hover {
+  background: #b20710;
+  transform: translateY(-2px);
 }
 
 /* --- КОНТЕНТ ФІЛЬМУ --- */
 .movieContent {
   display: flex;
-  flex-direction: column; /* Мобільна версія: все в стовпчик */
-  gap: 25px;
-  margin-bottom: 40px;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 50px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .posterWrapper {
   width: 100%;
-  max-width: 300px;
+  max-width: 320px;
   margin: 0 auto;
 }
 
 .poster {
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
   width: 100%;
   height: auto;
+  display: block;
 }
 
 .info {
@@ -50,128 +87,181 @@
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 800;
-  margin-bottom: 10px;
-  line-height: 1.2;
+  margin-bottom: 12px;
+  line-height: 1.1;
 }
 
 .metaInfo {
-  color: #cccccc;
-  font-size: 0.95rem;
-  margin-bottom: 20px;
-}
-
-/* Рейтинг у колі (як на фото) */
-.ratingCircle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  color: #aaa;
+  font-size: 1rem;
   margin-bottom: 25px;
 }
 
+/* Рейтинг у колі */
+.ratingCircle {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
 .ratingCircle span {
-  width: 50px;
-  height: 50px;
+  width: 55px;
+  height: 55px;
   border: 3px solid #21d07a;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
+  font-weight: 800;
+  font-size: 1.1rem;
   background: #081c22;
+  color: #fff;
 }
 
 .description h3 {
-  font-size: 1.3rem;
-  margin-bottom: 10px;
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: #fff;
 }
 
 .overview {
-  line-height: 1.6;
-  color: #dddddd;
-  margin-bottom: 25px;
+  line-height: 1.7;
+  color: #d1d1d1;
+  font-size: 1.05rem;
+  margin-bottom: 30px;
+}
+
+.creditsSummary {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 15px;
+  border-radius: 10px;
+  display: inline-block;
 }
 
 /* --- ПРАВА КОЛОНКА (ДЕТАЛІ) --- */
 .sideDetails {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* На мобілці у два стовпчики */
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
-  padding: 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
+  padding: 25px;
+  background: #161616;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .detailItem strong {
   display: block;
-  font-size: 0.85rem;
-  color: #888;
-  margin-bottom: 4px;
+  font-size: 0.8rem;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
 }
 
 .detailItem p {
   font-size: 1rem;
+  font-weight: 500;
   margin: 0;
+  color: #efefef;
 }
 
 /* --- СЕКЦІЯ АКТОРІВ --- */
 .castSection {
-  margin: 40px 0;
+  margin: 60px auto;
+  max-width: 1200px;
 }
 
 .sectionTitle {
-  font-size: 1.5rem;
-  margin-bottom: 20px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.sectionTitle::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: #e50914;
+  border-radius: 2px;
 }
 
 .castGrid {
   display: flex;
-  gap: 15px;
-  overflow-x: auto; /* Скрол для акторів на мобілці */
-  padding-bottom: 15px;
-  scrollbar-width: thin;
-  scrollbar-color: #e50914 #1a1a1a;
+  gap: 20px;
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
 
 .actorCard {
-  flex: 0 0 140px;
+  flex: 0 0 160px;
   background: #1a1a1a;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.actorCard:hover {
+  transform: translateY(-8px);
 }
 
 .actorCard img {
   width: 100%;
-  height: 175px;
+  height: 220px;
   object-fit: cover;
 }
 
+.noPhoto {
+  width: 100%;
+  height: 220px;
+  background: #252525;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
 .actorInfo {
-  padding: 10px;
+  padding: 12px;
 }
 
 .actorName {
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin: 0;
+  color: #fff;
 }
 
 .characterName {
   font-size: 0.8rem;
-  color: #999;
-  margin: 4px 0 0;
+  color: #888;
+  margin: 5px 0 0;
 }
 
 /* --- ПЛЕЄР --- */
+.playerSection {
+  margin: 60px auto;
+  max-width: 1200px;
+}
+
 .videoWrapper {
   position: relative;
   padding-bottom: 56.25%;
   height: 0;
   background: #000;
-  border-radius: 12px;
+  border-radius: 20px;
   overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
 .iframe {
@@ -183,53 +273,123 @@
   border: none;
 }
 
+/* --- КОМЕНТАРІ (Заготовка) --- */
+.commentsSection {
+  margin: 80px auto;
+  max-width: 800px;
+}
+
+.commentForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
+}
+
+.textarea {
+  background: #161616;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 20px;
+  color: #fff;
+  min-height: 120px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #e50914;
+}
+
+.submitBtn {
+  align-self: flex-end;
+  background: #21d07a;
+  color: #000;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 8px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.submitBtn:hover {
+  transform: scale(1.05);
+  background: #1db96c;
+}
+
+.commentCard {
+  background: #161616;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  border-left: 4px solid #e50914;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.commentAuthor {
+  font-weight: 700;
+  color: #21d07a;
+}
+
 /* --- МЕДІА ЗАПИТИ (ДЕСКТОП) --- */
 @media (min-width: 1024px) {
-  .main {
-    padding: 40px 0;
-  }
-
   .movieContent {
-    flex-direction: row; /* Текст стає праворуч від постера */
+    flex-direction: row;
+    gap: 60px;
     align-items: flex-start;
-    gap: 40px;
   }
 
   .posterWrapper {
-    flex: 0 0 300px;
+    flex: 0 0 350px;
     position: sticky;
     top: 40px;
   }
 
   .title {
-    font-size: 3rem;
+    font-size: 3.5rem;
   }
 
   .sideDetails {
-    display: block; /* Повертаємо в колонку для десктопа */
+    display: flex;
+    flex-direction: column;
     background: transparent;
+    border: none;
     padding: 0;
   }
 
   .detailItem {
-    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 15px;
   }
 
   .castGrid {
-    flex-wrap: wrap; /* На десктопі актори йдуть рядами, а не скролом */
+    flex-wrap: wrap;
     overflow-x: visible;
   }
 
   .actorCard {
-    flex: 0 0 calc(20% - 12px); /* 5 акторів в ряд */
+    flex: 0 0 calc(20% - 16px); /* 5 в ряд */
   }
 }
 
-/* Приховуємо скроллбар для чистішого вигляду */
+/* Стилізація скролбару */
 .castGrid::-webkit-scrollbar {
-  height: 6px;
+  height: 8px;
+}
+.castGrid::-webkit-scrollbar-track {
+  background: #0f0f0f;
 }
 .castGrid::-webkit-scrollbar-thumb {
-  background: #e50914;
+  background: #333;
   border-radius: 10px;
+}
+.castGrid::-webkit-scrollbar-thumb:hover {
+  background: #e50914;
 }
