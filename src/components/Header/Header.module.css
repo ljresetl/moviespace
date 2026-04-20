@@ -1,7 +1,7 @@
 .header {
-  background: var(--bg-color, #0a0a0a);
-  border-bottom: 1px solid var(--border-color, #222);
-  padding: 12px 0;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid #222;
+  padding: 8px 0;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -11,144 +11,221 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15px;
+  gap: 12px;
+  padding: 0 15px;
 }
 
+/* Логотип як на фото 4 */
 .logo {
-  font-size: 1.4rem;
-  font-weight: 900;
   text-decoration: none;
-  color: #fff;
+  font-family: "Inter", sans-serif; /* Або твій основний шрифт */
+  font-weight: 900;
+  font-size: 1.3rem;
   letter-spacing: -0.5px;
-  color: #0a0a0a;
+  text-transform: uppercase;
+  flex-shrink: 0;
 }
 
-.logo span {
-  color: var(--accent-color, #e50914);
+.fullLogo {
+  display: block;
+  color: #e50914; /* Білий для MOVIE на темному фоні */
 }
 
+.mobileLogo {
+  display: none;
+  color: #ffffff;
+}
+
+.fullLogo span {
+  color: #020202; /* Той самий червоний акцент SPACE */
+}
+
+/* Пошук як на фото 4 (овальний, темний) */
 .searchWrapper {
   flex: 1;
-  max-width: 500px;
+  max-width: 450px;
   position: relative;
-  display: flex;
-  align-items: center;
+  margin-left: 10px;
 }
 
 .searchInput {
   width: 100%;
-  padding: 8px 15px 8px 35px;
-  background: #1a1a1a;
+  padding: 10px 15px 10px 40px;
+  background: #1a1a1a; /* Темний колір інпуту */
   border: 1px solid #333;
-  border-radius: 20px;
-  color: #fff;
+  border-radius: 25px; /* Максимальне заокруглення */
+  color: #888; /* Колір тексту плейсхолдера */
   font-size: 0.9rem;
   outline: none;
-  transition: border-color 0.2s;
+  transition: 0.2s;
 }
 
 .searchInput:focus {
-  border-color: var(--accent-color, #e50914);
+  border-color: #e50914;
+  color: #fff;
 }
 
 .searchIcon {
   position: absolute;
-  left: 12px;
-  font-size: 0.8rem;
-  opacity: 0.5;
+  left: 14px;
+  top: 52%;
+  transform: translateY(-50%);
+  font-size: 0.9rem;
+  filter: grayscale(1) opacity(0.5); /* Вигляд як на скриншоті */
+}
+
+/* Десктопна навігація */
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.desktopNav a {
+  color: #bbb;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.desktopNav a:hover {
+  color: #fff;
 }
 
 .loginBtn {
-  background: var(--accent-color, #e50914);
+  background: #e50914;
   color: #fff;
   border: none;
-  padding: 8px 20px;
-  border-radius: 8px;
+  padding: 7px 18px;
+  border-radius: 6px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   cursor: pointer;
-  transition: transform 0.2s;
 }
 
-.loginBtn:active {
-  transform: scale(0.95);
-}
-
-.dropdown {
-  position: absolute;
-  top: calc(100% + 10px);
-  left: 0;
-  width: 100%;
-  background: #1a1a1a;
-  border: 1px solid #333;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-  z-index: 1100;
-}
-
-.dropdownItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px;
-  cursor: pointer;
-  transition: background 0.2s;
-  border-bottom: 1px solid #222;
-}
-
-.dropdownItem:last-child {
-  border-bottom: none;
-}
-
-.dropdownItem:hover {
-  background: #252525;
-}
-
-.miniPoster {
-  position: relative;
-  width: 40px;
-  height: 60px;
-  flex-shrink: 0;
-  border-radius: 4px;
-  overflow: hidden;
-  background: #333;
-}
-
-.movieInfo {
-  display: flex;
+/* Бургер меню */
+.burger {
+  display: none;
   flex-direction: column;
-  overflow: hidden;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
 }
 
-.movieName {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #fff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.line {
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  transition: 0.3s;
 }
 
-.movieYear {
-  font-size: 0.75rem;
-  color: #888;
-  margin-top: 2px;
-}
+/* Адаптація для планшетів та мобілок */
+@media (max-width: 850px) {
+  .desktopNav {
+    display: none;
+  }
 
-/* Мобільна адаптація */
-@media (max-width: 600px) {
-  .logo {
-    font-size: 1.1rem;
+  .burger {
+    display: flex;
+  }
+
+  .fullLogo {
+    display: none;
+  }
+
+  .mobileLogo {
+    display: block;
+    font-size: 1.4rem;
   }
 
   .searchWrapper {
-    max-width: none;
+    max-width: none; /* Пошук розтягується */
   }
+}
 
-  /* Якщо на дуже малих екранах затісно, можна приховати текст кнопки */
-  .loginBtn {
-    padding: 8px 12px;
-    font-size: 0.8rem;
-  }
+/* Мобільна панель */
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: -100%;
+  width: 260px;
+  height: 100vh;
+  background: #111;
+  padding: 70px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+}
+
+.menuActive {
+  right: 0;
+}
+
+.mobileNavLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.mobileNavLinks a {
+  color: #eee;
+  text-decoration: none;
+  font-size: 1.1rem;
+  padding: 10px 0;
+  border-bottom: 1px solid #222;
+}
+
+.loginBtnMobile {
+  background: #fff; /* Біла кнопка входу в меню як акцент */
+  color: #000;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 700;
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+/* Модалка (Вхід через Google) */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 360px;
+  text-align: center;
+  border: 1px solid #333;
+}
+
+.googleBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  margin-top: 20px;
+  cursor: pointer;
 }

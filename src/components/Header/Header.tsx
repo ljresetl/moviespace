@@ -8,20 +8,14 @@ import { Movie } from "@/types/movie";
 import { getImageUrl } from "@/lib/tmdb";
 import styles from "./Header.module.css";
 
-// 1. Виносимо логіку пошуку в окремий компонент
+// --- Компонент Пошуку ---
 function SearchInput() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  
-  const urlSearch = searchParams.get("search") || "";
-  const [query, setQuery] = useState(urlSearch);
+  const [query, setQuery] = useState(searchParams.get("search") || "");
   const [results, setResults] = useState<Movie[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  if (urlSearch !== query && !isDropdownOpen && query === "") {
-      setQuery(urlSearch);
-  }
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -40,7 +34,6 @@ function SearchInput() {
         setIsDropdownOpen(false);
         return;
       }
-
       try {
         const res = await fetch(
           `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=uk-UA`,
@@ -55,73 +48,40 @@ function SearchInput() {
         setResults(data.results?.slice(0, 6) || []);
         setIsDropdownOpen(true);
       } catch (error) {
-        console.error("Помилка підказок:", error);
+        console.error("Помилка пошуку:", error);
       }
     };
-
-    const debounceTimer = setTimeout(searchMovies, 300);
-    return () => clearTimeout(debounceTimer);
+    const timer = setTimeout(searchMovies, 300);
+    return () => clearTimeout(timer);
   }, [query]);
 
-  const executeSearch = (searchQuery: string) => {
-    if (!searchQuery.trim()) return;
-    setIsDropdownOpen(false);
-    router.push(`/?search=${encodeURIComponent(searchQuery.trim())}`);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      executeSearch(query);
-    }
-  };
-
-  const handleSelectMovie = (movieId: number) => {
+  const handleSelect = (id: number) => {
     setQuery("");
     setIsDropdownOpen(false);
-    router.push(`/movie/${movieId}`);
+    router.push(`/movie/${id}`);
   };
 
   return (
     <div className={styles.searchWrapper} ref={dropdownRef}>
+      <span className={styles.searchIcon}>🔍</span>
       <input 
-        key={urlSearch}
         type="text" 
         placeholder="Пошук фільмів..." 
         className={styles.searchInput}
-        defaultValue={query}
+        value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => query.length >= 2 && setIsDropdownOpen(true)}
-        onKeyDown={handleKeyDown}
       />
-      <span 
-        className={styles.searchIcon} 
-        onClick={() => executeSearch(query)}
-        style={{ cursor: 'pointer' }}
-      >
-        🔍
-      </span>
-
       {isDropdownOpen && results.length > 0 && (
         <div className={styles.dropdown}>
-          {results.map((movie) => (
-            <div 
-              key={movie.id} 
-              className={styles.dropdownItem}
-              onClick={() => handleSelectMovie(movie.id)}
-            >
+          {results.map((m) => (
+            <div key={m.id} className={styles.dropdownItem} onClick={() => handleSelect(m.id)}>
               <div className={styles.miniPoster}>
-                <Image 
-                  src={getImageUrl(movie.poster_path || "")} 
-                  alt={movie.title}
-                  fill
-                  sizes="40px"
-                />
+                <Image src={getImageUrl(m.poster_path || "")} alt={m.title} fill sizes="40px" />
               </div>
               <div className={styles.movieInfo}>
-                <span className={styles.movieName}>{movie.title}</span>
-                <span className={styles.movieYear}>
-                  {movie.release_date ? movie.release_date.split("-")[0] : ""}
-                </span>
+                <span className={styles.movieName}>{m.title}</span>
+                <span className={styles.movieYear}>{m.release_date?.split("-")[0]}</span>
               </div>
             </div>
           ))}
@@ -131,19 +91,69 @@ function SearchInput() {
   );
 }
 
-// 2. Основний компонент Header, який обгортає пошук у Suspense
+// --- Основний компонент Header ---
 export default function Header() {
-  return (
-    <header className={styles.header}>
-      <div className={`container ${styles.headerInner}`}>
-        <Link href="/" className={styles.logo}>
-          MOVIE<span>SPACE</span>
-        </Link>
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
-        <Suspense fallback={<div className={styles.searchPlaceholder}>Завантаження...</div>}>
-          <SearchInput />
-        </Suspense>
-      </div>
-    </header>
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const openModal = () => { setIsAuthModalOpen(true); setIsMenuOpen(false); };
+
+  return (
+    <>
+      <header className={styles.header}>
+        <div className={`container ${styles.headerInner}`}>
+          
+          <Link href="/" className={styles.logo}>
+            <span className={styles.fullLogo}>MOVIE<span>SPACE</span></span>
+            <span className={styles.mobileLogo}>M<span>S</span></span>
+          </Link>
+
+          <Suspense fallback={<div className={styles.searchInput}>...</div>}>
+            <SearchInput />
+          </Suspense>
+
+          {/* Навігація для Планшетів/Десктопів */}
+          <nav className={styles.desktopNav}>
+            <Link href="/">Головна</Link>
+            <Link href="/popular">Популярні</Link>
+            <button className={styles.loginBtn} onClick={openModal}>Вхід</button>
+          </nav>
+
+          {/* Бургер (тільки для мобільних) */}
+          <button className={styles.burger} onClick={toggleMenu} aria-label="Меню">
+            <div className={`${styles.line} ${isMenuOpen ? styles.line1 : ""}`}></div>
+            <div className={`${styles.line} ${isMenuOpen ? styles.line2 : ""}`}></div>
+            <div className={`${styles.line} ${isMenuOpen ? styles.line3 : ""}`}></div>
+          </button>
+        </div>
+
+        {/* Мобільне меню */}
+        <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.menuActive : ""}`}>
+          <nav className={styles.mobileNavLinks}>
+            <Link href="/" onClick={toggleMenu}>Головна</Link>
+            <Link href="/popular" onClick={toggleMenu}>Популярні</Link>
+            <button className={styles.loginBtnMobile} onClick={openModal}>
+              Увійти через Google
+            </button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Модальне вікно входу */}
+      {isAuthModalOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsAuthModalOpen(false)}>
+          <div className={styles.modalContent} onClick={e => e.stopPropagation()}>
+            <button className={styles.closeModal} onClick={() => setIsAuthModalOpen(false)}>✕</button>
+            <h3>Увійти на сайт</h3>
+            <p>Використовуйте свій Google аккаунт для швидкого входу</p>
+            <button className={styles.googleBtn} onClick={() => alert("Інтеграція з Google...")}>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Logo.svg" alt="Google" />
+              Продовжити з Google
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
