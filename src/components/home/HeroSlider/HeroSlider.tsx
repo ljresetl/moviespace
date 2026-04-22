@@ -1,88 +1,60 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image"; // Імпортуємо Image для оптимізації
+import Image from "next/image";
 import styles from "./HeroSlider.module.css";
+import { Movie } from "@/types/movie";
+import { slugify } from "@/utils/slugify";
+import { getMovies } from "@/lib/tmdb"; // Додаємо імпорт для завантаження даних
 
-interface FeaturedMovie {
-  id: number;
-  title: string;
-  overview: string;
-  backdrop_path: string;
+interface HeroSliderProps {
+  // Додаємо ?, щоб TypeScript не лаявся у page.tsx
+  initialMovie?: Movie | null; 
 }
 
-export default function HeroSlider() {
-  const [movie, setMovie] = useState<FeaturedMovie | null>(null);
-
-  // Функція транслітерації
-  const slugify = (text: string) => {
-    const cyrillicToLatin: { [key: string]: string } = {
-      'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye',
-      'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l',
-      'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-      'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '',
-      'ю': 'yu', 'я': 'ya', 'ы': 'y', 'э': 'e', 'ё': 'yo', 'ъ': ''
-    };
-
-    return text
-      .toLowerCase()
-      .split('')
-      .map(char => cyrillicToLatin[char] || char)
-      .join('')
-      .replace(/[^\w\s-]/g, '')
-      .trim()
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-');
-  };
+export default function HeroSlider({ initialMovie }: HeroSliderProps) {
+  // Використовуємо стан, щоб слайдер міг сам завантажити фільм, якщо його не передали
+  const [movie, setMovie] = useState<Movie | null>(initialMovie || null);
 
   useEffect(() => {
-    const fetchTrending = async () => {
-      const url = `https://api.themoviedb.org/3/trending/movie/week?language=uk-UA`;
-      
-      const options = {
-        method: "GET",
-        headers: {
-          accept: "application/json",
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
-        },
-      };
-
-      try {
-        const res = await fetch(url, options);
-        const data = await res.json();
-        
-        if (data.results && data.results.length > 0) {
-          setMovie(data.results[0]);
+    // Якщо при першому рендері фільму немає, завантажуємо популярний фільм
+    if (!initialMovie) {
+      const fetchHeroMovie = async () => {
+        const movies = await getMovies('/movie/popular');
+        if (movies && movies.length > 0) {
+          setMovie(movies[0]);
         }
-      } catch (err) {
-        console.error("Помилка завантаження банера:", err);
-      }
-    };
-    fetchTrending();
-  }, []);
+      };
+      fetchHeroMovie();
+    }
+  }, [initialMovie]);
 
-  if (!movie) return null;
+  // Якщо фільму все ще немає (йде завантаження), повертаємо заглушку або null
+  if (!movie) return <div className={styles.heroPlaceholder} />;
 
   const movieSlug = `${movie.id}-${slugify(movie.title)}`;
 
   return (
     <div className={styles.heroSection}>
       <div className={styles.container}>
-        {/* Оптимізоване зображення */}
         <Image 
           src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} 
           alt={movie.title}
-          fill // Заповнює батьківський контейнер
-          priority // Завантажується максимально швидко (LCP)
+          fill 
+          priority 
           sizes="100vw"
           className={styles.backgroundImage}
-          style={{ objectFit: 'cover' }} // Зберігає пропорції
+          style={{ objectFit: 'cover' }} 
         />
         
         <div className={styles.overlay}>
           <h1 className={styles.movieTitle}>{movie.title}</h1>
-          <p className={styles.movieInfo}>{movie.overview}</p>
+          <p className={styles.movieInfo}>
+            {movie.overview?.length > 250 
+              ? `${movie.overview.substring(0, 250)}...` 
+              : movie.overview}
+          </p>
           <Link href={`/movie/${movieSlug}`} className={styles.watchBtn}>
             <span>▶</span> Дивитися зараз
           </Link>

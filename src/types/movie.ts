@@ -1,29 +1,6 @@
-export interface Movie {
-  id: number;
-  title: string;
-  original_title: string;
-  poster_path: string | null;
-  backdrop_path: string | null;
-  release_date: string;
-  vote_average: number;
-  vote_count: number;
-  overview: string;
-  genre_ids: number[];
-  popularity: number;
-  adult: boolean;
-  video: boolean;
-}
+// types/movie.ts
 
-export interface MovieDetails extends Movie {
-  genres: Genre[];
-  runtime: number | null;
-  budget: number;
-  revenue: number;
-  status: string;
-  tagline: string | null;
-  production_countries: ProductionCountry[];
-  spoken_languages: SpokenLanguage[];
-}
+// --- Базові сутності ---
 
 export interface Genre {
   id: number;
@@ -41,6 +18,38 @@ export interface SpokenLanguage {
   name: string;
 }
 
+// --- Фільми ---
+
+export interface Movie {
+  id: number;
+  title: string;
+  original_title: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  release_date: string;
+  vote_average: number;
+  vote_count: number;
+  overview: string;
+  genre_ids: number[];
+  popularity: number;
+  adult: boolean;
+  video: boolean;
+}
+
+export interface MovieDetails extends Omit<Movie, 'genre_ids'> {
+  genres: Genre[];
+  runtime: number; // В хвилинах
+  budget: number;
+  revenue: number;
+  status: string;
+  tagline: string | null;
+  original_language: string; 
+  production_countries: ProductionCountry[];
+  spoken_languages: SpokenLanguage[];
+}
+
+// --- Відповіді API (TMDB) ---
+
 export interface TMDBResponse {
   page: number;
   results: Movie[];
@@ -48,23 +57,27 @@ export interface TMDBResponse {
   total_results: number;
 }
 
+// --- Відео та Трейлери ---
+
 export interface Video {
-  id: string;
-  iso_639_1: string;
-  iso_3116_1: string;
-  key: string;      // Це головне — ID відео на YouTube
-  name: string;
-  site: string;     // Зазвичай "YouTube"
-  size: number;
-  type: string;     // "Trailer", "Teaser", "Featurette" тощо
-  official: boolean;
-  published_at: string;
+  id?: string;
+  iso_639_1?: string;
+  iso_3166_1?: string;
+  key: string;       // ID відео на YouTube
+  name?: string;
+  site: string;      // "YouTube"
+  size?: number;
+  type: string;      // "Trailer", "Teaser" тощо
+  official?: boolean;
+  published_at?: string;
 }
 
 export interface MovieVideosResponse {
   id: number;
   results: Video[];
 }
+
+// --- Актори та Команда ---
 
 export interface Cast {
   id: number;
@@ -85,15 +98,41 @@ export interface CreditsResponse {
   crew: Crew[];
 }
 
-// Оновлюємо MovieDetails, щоб додати відсутні поля
-export interface MovieDetails extends Movie {
-  genres: Genre[];
-  runtime: number | null;
-  budget: number;
-  revenue: number;
-  status: string;
-  tagline: string | null;
-  original_language: string; // додано
-  production_countries: ProductionCountry[];
-  spoken_languages: SpokenLanguage[];
+// --- Коментарі та Відгуки ---
+
+export interface Comment {
+  id: number;
+  author: string;
+  text: string;
+  date: string;
+}
+
+// --- Пропси для компонентів (Next.js 15) ---
+
+export interface DiscoverFilters {
+  genre?: string;
+  year?: string;
+  country?: string;
+}
+
+export interface HomePageFilters extends DiscoverFilters {
+  page?: string;
+}
+
+export interface HomePageProps {
+  searchParams: Promise<HomePageFilters>;
+}
+
+export interface MovieCardAllProps {
+  movies: Movie[];
+  totalPages: number;
+  currentPage: number;
+  hasFilters: boolean;
+}
+
+export interface MovieDetailsProps {
+  movie: MovieDetails;
+  trailerKey: string | null;
+  cast: Cast[];
+  director: string;
 }

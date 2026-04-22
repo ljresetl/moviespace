@@ -1,31 +1,27 @@
 "use client";
 
-import React, { Suspense, useState, useTransition, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useQueryState, parseAsString } from "nuqs";
+import React, { Suspense, useState, useEffect, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useQueryState, parseAsString, parseAsInteger } from "nuqs";
 import { GENRES, YEARS, COUNTRIES } from "@/components/home/GenreFilters/filters";
 import styles from "./GenreFilters.module.css";
 
 function FilterContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
 
-  // Додаємо shallow: false, щоб nuqs робив реальний перехід по URL
-  const [genre, setGenre] = useQueryState(
-    "genre",
-    parseAsString.withDefault("").withOptions({ shallow: false, startTransition })
-  );
+  // Налаштування для всіх фільтрів: shallow: false змушує Next.js робити серверний запит
+  const options = { 
+    shallow: false, 
+    startTransition 
+  };
 
-  const [year, setYear] = useQueryState(
-    "year",
-    parseAsString.withDefault("Усі роки").withOptions({ shallow: false, startTransition })
-  );
-
-  const [country, setCountry] = useQueryState(
-    "country",
-    parseAsString.withDefault("").withOptions({ shallow: false, startTransition })
-  );
+  const [genre, setGenre] = useQueryState("genre", parseAsString.withDefault("").withOptions(options));
+  const [year, setYear] = useQueryState("year", parseAsString.withDefault("Усі роки").withOptions(options));
+  const [country, setCountry] = useQueryState("country", parseAsString.withDefault("").withOptions(options));
+  
+  // Додаємо керування сторінкою, щоб скидати її при зміні фільтрів
+  const [, setPage] = useQueryState("page", parseAsInteger.withDefault(1).withOptions(options));
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -37,18 +33,23 @@ function FilterContent() {
   }, []);
 
   const toggleDropdown = (e: React.MouseEvent, name: string) => {
-    e.stopPropagation(); // Важливо, щоб не спрацьовував useEffect вище
+    e.stopPropagation();
     setOpenDropdown((prev) => (prev === name ? null : name));
   };
 
-  const handleUpdate = (key: string, value: string) => {
+  // Функція оновлення, яка автоматично скидає сторінку на першу
+  const handleUpdate = async (key: string, value: string) => {
+    // 1. Спочатку готуємо скидання сторінки
+    await setPage(null); 
+
+    // 2. Оновлюємо відповідний фільтр
     if (key === "genre") setGenre(value === "" ? null : value);
     if (key === "year") setYear(value === "Усі роки" ? null : value);
     if (key === "country") setCountry(value === "" ? null : value);
+    
     setOpenDropdown(null);
   };
 
-  // Перевірка активності кнопки "Новинки"
   const isHomeActive = !genre && (year === "Усі роки" || !year) && !country;
 
   return (
@@ -59,6 +60,7 @@ function FilterContent() {
           setGenre(null);
           setYear(null);
           setCountry(null);
+          setPage(null);
           router.push("/", { scroll: false });
         }}
       >
