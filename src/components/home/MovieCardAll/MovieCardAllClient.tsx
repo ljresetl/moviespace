@@ -1,4 +1,3 @@
-// components/home/MovieCardAll/MovieCardAllClient.tsx
 "use client";
 
 import React, { useRef, useEffect } from "react";
@@ -17,7 +16,7 @@ export default function MovieCardAllClient({
 }: MovieCardAllProps) {
   const sectionRef = useRef<HTMLHeadingElement>(null);
 
-  // Скрол до початку каталогу при зміні сторінки
+  // Плавний скрол до початку списку при зміні сторінки
   useEffect(() => {
     if (currentPage > 1 && sectionRef.current) {
       const yOffset = -100; 
@@ -72,11 +71,9 @@ export default function MovieCardAllClient({
         )}
       </div>
 
-      {/* Пагінація */}
+      {/* ПЕРЕВІР ТУТ: передаємо тільки totalPages */}
       {totalPages > 1 && (
-        <div className={styles.paginationWrapper}>
-          <Pagination totalPages={totalPages} />
-        </div>
+        <Pagination totalPages={totalPages} />
       )}
     </section>
   );

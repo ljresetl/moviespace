@@ -10,19 +10,17 @@ interface PaginationProps {
 export default function Pagination({ totalPages }: PaginationProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  
+  // Отримуємо поточну сторінку з URL
   const currentPage = Number(searchParams?.get("page")) || 1;
 
   if (totalPages <= 1) return null;
 
   const handlePageChange = (page: number) => {
-    // 1. Беремо всі існуючі параметри (жанр, рік, країну)
     const params = new URLSearchParams(searchParams?.toString() || "");
-    
-    // 2. Оновлюємо тільки номер сторінки
     params.set("page", page.toString());
     
-    // 3. Відправляємо на повне нове посилання
-    // scroll: false дозволяє нам контролювати скрол через useEffect у MovieCardAll
+    // Використовуємо scroll: false, бо скрол ми робимо через useEffect у MovieCardAll
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
@@ -37,7 +35,7 @@ export default function Pagination({ totalPages }: PaginationProps) {
       </button>
 
       <div className={styles.pagesList}>
-        <span className={styles.pageBtn + " " + styles.active}>{currentPage}</span>
+        <span className={`${styles.pageBtn} ${styles.active}`}>{currentPage}</span>
         <span className={styles.divider}>з</span>
         <span className={styles.pageBtn}>{totalPages}</span>
       </div>
