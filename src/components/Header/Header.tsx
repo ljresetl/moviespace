@@ -35,15 +35,11 @@ function SearchInput() {
         return;
       }
       try {
-        const res = await fetch(
-          `https://api.themoviedb.org/3/search/movie?query=${encodeURIComponent(query)}&language=uk-UA`,
-          {
-            headers: { 
-              Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN}`,
-              accept: 'application/json'
-            }
-          }
-        );
+        // ЗМІНА: Звертаємося до нашого API Route, щоб не світити токен
+        const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+        
+        if (!res.ok) throw new Error("Помилка сервера");
+        
         const data = await res.json();
         setResults(data.results?.slice(0, 6) || []);
         setIsDropdownOpen(true);
@@ -51,6 +47,7 @@ function SearchInput() {
         console.error("Помилка пошуку:", error);
       }
     };
+
     const timer = setTimeout(searchMovies, 300);
     return () => clearTimeout(timer);
   }, [query]);
@@ -58,6 +55,7 @@ function SearchInput() {
   const handleSelect = (id: number) => {
     setQuery("");
     setIsDropdownOpen(false);
+    // Використовуємо такий самий формат посилання, як у картках (id-slug)
     router.push(`/movie/${id}`);
   };
 
@@ -77,11 +75,18 @@ function SearchInput() {
           {results.map((m) => (
             <div key={m.id} className={styles.dropdownItem} onClick={() => handleSelect(m.id)}>
               <div className={styles.miniPoster}>
-                <Image src={getImageUrl(m.poster_path || "")} alt={m.title} fill sizes="40px" />
+                <Image 
+                  src={getImageUrl(m.poster_path || "", "w92")} 
+                  alt={m.title} 
+                  fill 
+                  sizes="40px" 
+                />
               </div>
               <div className={styles.movieInfo}>
                 <span className={styles.movieName}>{m.title}</span>
-                <span className={styles.movieYear}>{m.release_date?.split("-")[0]}</span>
+                <span className={styles.movieYear}>
+                  {m.release_date ? m.release_date.split("-")[0] : ""}
+                </span>
               </div>
             </div>
           ))}
@@ -109,19 +114,16 @@ export default function Header() {
             <span className={styles.mobileLogo}>M<span>S</span></span>
           </Link>
 
-          <Suspense fallback={<div className={styles.searchInput}>...</div>}>
+          <Suspense fallback={<div className={styles.searchInput}>Завантаження...</div>}>
             <SearchInput />
           </Suspense>
 
-          {/* Навігація для Планшетів/Десктопів */}
           <nav className={styles.desktopNav}>
             <Link href="/">Головна</Link>
-            {/* Змінено шлях на якір #popular */}
             <Link href="/#popular">Популярні</Link>
             <button className={styles.loginBtn} onClick={openModal}>Вхід</button>
           </nav>
 
-          {/* Бургер (тільки для мобільних) */}
           <button className={styles.burger} onClick={toggleMenu} aria-label="Меню">
             <div className={`${styles.line} ${isMenuOpen ? styles.line1 : ""}`}></div>
             <div className={`${styles.line} ${isMenuOpen ? styles.line2 : ""}`}></div>
@@ -129,11 +131,9 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Мобільне меню */}
         <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.menuActive : ""}`}>
           <nav className={styles.mobileNavLinks}>
             <Link href="/" onClick={toggleMenu}>Головна</Link>
-            {/* Змінено шлях на якір #popular для мобільного меню */}
             <Link href="/#popular" onClick={toggleMenu}>Популярні</Link>
             <button className={styles.loginBtnMobile} onClick={openModal}>
               Увійти через Google
@@ -142,7 +142,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Модальне вікно входу */}
       {isAuthModalOpen && (
         <div className={styles.modalOverlay} onClick={() => setIsAuthModalOpen(false)}>
           <div className={styles.modalContent} onClick={e => e.stopPropagation()}>

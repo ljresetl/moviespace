@@ -17,6 +17,11 @@ export default function MovieDetailsContent({
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
 
+  // Визначаємо, який плеєр показувати
+  // Для "Як приборкати дракона 2" використовуємо ID 82702 або 47021 (згідно вашого запиту)
+  const isTargetMovie = movie.id === 82702 || movie.id === 47021;
+  const PLAYER_TOKEN = "33a811c627033af901fb8aa5d449483c";
+
   const handleShare = async (): Promise<void> => {
     if (navigator.share) {
       try {
@@ -84,7 +89,6 @@ export default function MovieDetailsContent({
           </div>
         </div>
 
-        {/* Секція акторів */}
         <section className={styles.castSection}>
           <h2 className={styles.sectionTitle}>У головних ролях</h2>
           <div className={styles.castGrid}>
@@ -107,7 +111,6 @@ export default function MovieDetailsContent({
           </div>
         </section>
 
-        {/* Плеєр Трейлера */}
         <section className={styles.playerSection}>
           <h2 className={styles.sectionTitle}>Трейлер</h2>
           <div className={styles.videoWrapper}>
@@ -121,7 +124,7 @@ export default function MovieDetailsContent({
           </div>
         </section>
 
-        {/* Секція перегляду */}
+        {/* СЕКЦІЯ ПЛЕЄРА З ПЕРЕВІРКОЮ ТА ФІКСОМ */}
         <section className={styles.fullMovieSection}>
           <h2 className={styles.sectionTitle}>Дивитися фільм онлайн</h2>
           {!showFullMovie ? (
@@ -136,17 +139,30 @@ export default function MovieDetailsContent({
           ) : (
             <div className={styles.fullMoviePlayer}>
                <div className={styles.playerHeader}>
-                  <span>{movie.title}</span>
+                  <span>Ви дивитесь: {movie.title}</span>
                   <button onClick={() => setShowFullMovie(false)}>✕</button>
                </div>
                <div className={styles.videoWrapper}>
-                  <div className={styles.placeholderOverlay}>Тут буде ваш основний плеєр</div>
+                  {isTargetMovie ? (
+                    <iframe 
+                      src={`https://tv-1-kinoserial.net/embed/47021/?token=${PLAYER_TOKEN}`} 
+                      width="100%" 
+                      height="400" 
+                      frameBorder="0" 
+                      allowFullScreen={true}
+                      allow="autoplay *; fullscreen *"
+                      className={styles.iframe}
+                    ></iframe>
+                  ) : (
+                    <div className={styles.placeholderOverlay}>
+                       <p>Плеєр для цього фільму тимчасово недоступний (Заглушка)</p>
+                    </div>
+                  )}
                </div>
             </div>
           )}
         </section>
 
-        {/* Коментарі */}
         <section className={styles.commentsSection}>
           <h2 className={styles.sectionTitle}>Відгуки</h2>
           <form onSubmit={handleSubmitComment} className={styles.commentForm}>

@@ -136,3 +136,21 @@ export const getMovieVideos = async (id: number): Promise<string | null> => {
 export const getImageUrl = (path: string, size: string = 'w500'): string => {
   return path ? `https://image.tmdb.org/t/p/${size}${path}` : '/no-poster.png';
 };
+
+// 7. Пошук фільмів (для використання в Клієнтських компонентах)
+export const searchMoviesClient = async (query: string): Promise<Movie[]> => {
+  if (!query) return [];
+  
+  try {
+    // Ми робимо запит до НАШОГО сервера, а не до TMDB напряму
+    const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+    
+    if (!res.ok) throw new Error("Search failed");
+    
+    const data = await res.json();
+    return data.results || [];
+  } catch (error) {
+    console.error("Search error:", error);
+    return [];
+  }
+};
