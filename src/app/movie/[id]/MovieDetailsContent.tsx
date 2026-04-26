@@ -1,10 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { MovieDetailsProps, Comment } from "@/types/movie";
 import styles from "./MoviePage.module.css";
+
+// Типізація користувача Telegram
+interface TelegramUser {
+  id: number;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  photo_url?: string;
+  auth_date: number;
+  hash: string;
+}
+
+declare global {
+  interface Window {
+    onTelegramAuth: (user: TelegramUser) => void;
+  }
+}
 
 export default function MovieDetailsContent({ 
   movie, 
@@ -16,9 +33,39 @@ export default function MovieDetailsContent({
   const [showFullMovie, setShowFullMovie] = useState<boolean>(false);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
+  const widgetContainerRef = useRef<HTMLDivElement>(null);
 
-  // Визначаємо, який плеєр показувати
-  // Для "Як приборкати дракона 2" використовуємо ID 82702 або 47021 (згідно вашого запиту)
+  // Стан авторизації (перевірка в localStorage)
+  const [isAuthorized, setIsAuthorized] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("tg_user") === "true";
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    // Функція-колбек для Telegram
+    window.onTelegramAuth = (user: TelegramUser) => {
+      console.log("Авторизація через Telegram:", user);
+      localStorage.setItem("tg_user", "true");
+      localStorage.setItem("tg_user_data", JSON.stringify(user));
+      setIsAuthorized(true);
+    };
+
+    // Додаємо віджет Telegram, якщо не авторизовані
+    if (!isAuthorized && widgetContainerRef.current) {
+      widgetContainerRef.current.innerHTML = "";
+      const script = document.createElement("script");
+      script.src = "https://telegram.org/js/telegram-widget.js?22";
+      script.async = true;
+      script.setAttribute("data-telegram-login", "MovieSpaceAuthBot"); // Твій юзернейм бота
+      script.setAttribute("data-size", "large");
+      script.setAttribute("data-onauth", "onTelegramAuth(user)");
+      script.setAttribute("data-request-access", "write");
+      widgetContainerRef.current.appendChild(script);
+    }
+  }, [isAuthorized]);
+
   const isTargetMovie = movie.id === 82702 || movie.id === 47021;
   const PLAYER_TOKEN = "33a811c627033af901fb8aa5d449483c";
 
@@ -30,7 +77,7 @@ export default function MovieDetailsContent({
           url: window.location.href,
         });
       } catch (err) {
-        console.error("Помилка при поширенні:", err);
+        console.error("Помилка:", err);
       }
     } else {
       navigator.clipboard.writeText(window.location.href);
@@ -41,14 +88,12 @@ export default function MovieDetailsContent({
   const handleSubmitComment = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!newComment.trim()) return;
-
     const commentObj: Comment = {
       id: Date.now(),
       author: "Гість",
       text: newComment,
       date: new Date().toLocaleDateString("uk-UA"),
     };
-
     setComments([commentObj, ...comments]);
     setNewComment("");
   };
@@ -65,22 +110,13 @@ export default function MovieDetailsContent({
           <div className={styles.posterWrapper}>
             <Image 
               src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "/no-poster.png"} 
-              alt={movie.title} 
-              width={300} 
-              height={450} 
-              className={styles.poster} 
-              priority 
+              alt={movie.title} width={300} height={450} className={styles.poster} priority 
             />
           </div>
-
           <div className={styles.info}>
             <h1 className={styles.title}>{movie.title} ({movie.release_date.split("-")[0]})</h1>
-            <p className={styles.metaInfo}>
-              {movie.release_date} • {movie.genres.map(g => g.name).join(", ")} • {movie.runtime} хв
-            </p>
-            <div className={styles.ratingCircle}>
-              <span>{Math.round(movie.vote_average * 10)}%</span> Оцінка
-            </div>
+            <p className={styles.metaInfo}>{movie.release_date} • {movie.genres.map(g => g.name).join(", ")} • {movie.runtime} хв</p>
+            <div className={styles.ratingCircle}><span>{Math.round(movie.vote_average * 10)}%</span> Оцінка</div>
             <div className={styles.description}>
               <h3>Опис</h3>
               <p>{movie.overview || "Опис відсутній."}</p>
@@ -89,76 +125,47 @@ export default function MovieDetailsContent({
           </div>
         </div>
 
-        <section className={styles.castSection}>
-          <h2 className={styles.sectionTitle}>У головних ролях</h2>
-          <div className={styles.castGrid}>
-            {cast.map(actor => (
-              <div key={actor.id} className={styles.actorCard}>
-                <div className={styles.actorImage}>
-                   <Image 
-                     src={actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : "/no-avatar.png"} 
-                     alt={actor.name} 
-                     width={150} 
-                     height={225} 
-                   />
-                </div>
-                <div className={styles.actorInfo}>
-                  <p className={styles.actorName}>{actor.name}</p>
-                  <p className={styles.characterName}>{actor.character}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
+        {/* Секція Трейлера (Завжди доступна) */}
         <section className={styles.playerSection}>
           <h2 className={styles.sectionTitle}>Трейлер</h2>
           <div className={styles.videoWrapper}>
             {trailerKey ? (
-              <iframe 
-                src={`https://www.youtube.com/embed/${trailerKey}?rel=0`} 
-                allowFullScreen 
-                className={styles.iframe} 
-              />
+              <iframe src={`https://www.youtube.com/embed/${trailerKey}?rel=0`} allowFullScreen className={styles.iframe} />
             ) : <p className={styles.noVideo}>Трейлер відсутній</p>}
           </div>
         </section>
 
-        {/* СЕКЦІЯ ПЛЕЄРА З ПЕРЕВІРКОЮ ТА ФІКСОМ */}
+        {/* Секція Повного фільму (З доступом через Telegram) */}
         <section className={styles.fullMovieSection}>
-          <h2 className={styles.sectionTitle}>Дивитися фільм онлайн</h2>
-          {!showFullMovie ? (
-            <div className={styles.watchPlaceholder}>
-               <button 
-                 className={styles.watchBtn} 
-                 onClick={() => setShowFullMovie(true)}
-               >
-                 ▶ Дивитися онлайн
-               </button>
+          <h2 className={styles.sectionTitle}>Повний фільм</h2>
+          {!isAuthorized ? (
+            <div className={styles.lockOverlay}>
+              <div className={styles.lockContent}>
+                <div className={styles.lockIcon}>🔒</div>
+                <h3>Вхід через Telegram</h3>
+                <p>Авторизуйтесь, щоб отримати доступ до перегляду повного фільму.</p>
+                <div className={styles.tgWidgetWrapper} ref={widgetContainerRef}></div>
+              </div>
             </div>
           ) : (
             <div className={styles.fullMoviePlayer}>
-               <div className={styles.playerHeader}>
-                  <span>Ви дивитесь: {movie.title}</span>
-                  <button onClick={() => setShowFullMovie(false)}>✕</button>
-               </div>
-               <div className={styles.videoWrapper}>
+              {!showFullMovie ? (
+                <div className={styles.watchPlaceholder}>
+                  <button className={styles.watchBtn} onClick={() => setShowFullMovie(true)}>▶ Дивитися повну версію</button>
+                </div>
+              ) : (
+                <div className={styles.videoWrapper}>
                   {isTargetMovie ? (
                     <iframe 
                       src={`https://tv-1-kinoserial.net/embed/47021/?token=${PLAYER_TOKEN}`} 
-                      width="100%" 
-                      height="400" 
-                      frameBorder="0" 
-                      allowFullScreen={true}
-                      allow="autoplay *; fullscreen *"
+                      width="100%" height="450" frameBorder="0" allowFullScreen
                       className={styles.iframe}
                     ></iframe>
                   ) : (
-                    <div className={styles.placeholderOverlay}>
-                       <p>Плеєр для цього фільму тимчасово недоступний (Заглушка)</p>
-                    </div>
+                    <div className={styles.placeholderOverlay}><p>Плеєр додається...</p></div>
                   )}
-               </div>
+                </div>
+              )}
             </div>
           )}
         </section>
@@ -166,16 +173,9 @@ export default function MovieDetailsContent({
         <section className={styles.commentsSection}>
           <h2 className={styles.sectionTitle}>Відгуки</h2>
           <form onSubmit={handleSubmitComment} className={styles.commentForm}>
-            <textarea 
-              placeholder="Напишіть свою думку про фільм..."
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              className={styles.textarea}
-              required
-            />
+            <textarea placeholder="Ваш відгук..." value={newComment} onChange={(e) => setNewComment(e.target.value)} className={styles.textarea} required />
             <button type="submit" className={styles.submitBtn}>Надіслати</button>
           </form>
-
           <div className={styles.commentsList}>
             {comments.map(c => (
               <div key={c.id} className={styles.commentCard}>

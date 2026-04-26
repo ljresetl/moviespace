@@ -154,7 +154,7 @@
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* --- МОБІЛЬНЕ МЕНЮ (80% ширини) --- */
+/* --- МОБІЛЬНЕ МЕНЮ --- */
 .mobileMenu {
   position: fixed;
   top: 0;
@@ -190,7 +190,8 @@
   font-weight: 600;
 }
 
-.loginBtnMobile {
+/* Кнопка входу в мобільному меню */
+.tgLoginBtnMobile {
   background-color: #e50914;
   color: #ffffff;
   border: none;
@@ -201,9 +202,14 @@
   text-align: center;
   cursor: pointer;
   width: 100%;
+  transition: background 0.2s;
 }
 
-/* --- ПЛАНШЕТИ ТА ДЕСКТОПИ (від 768px) --- */
+.tgLoginBtnMobile:hover {
+  background-color: #b20710;
+}
+
+/* --- ПЛАНШЕТИ ТА ДЕСКТОПИ --- */
 @media (min-width: 768px) {
   .header {
     padding: 10px 0;
@@ -253,7 +259,8 @@
     color: #e50914;
   }
 
-  .loginBtn {
+  /* Кнопка входу/виходу в десктопній навігації */
+  .tgHeaderBtn {
     background: #e50914;
     color: #ffffff;
     border: none;
@@ -261,11 +268,12 @@
     border-radius: 8px;
     font-weight: 700;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: all 0.2s ease;
   }
 
-  .loginBtn:hover {
-    opacity: 0.9;
+  .tgHeaderBtn:hover {
+    background: #b20710;
+    transform: translateY(-1px);
   }
 }
 
@@ -283,8 +291,8 @@
 
 .modalContent {
   background: #1a1a1a;
-  padding: 30px;
-  border-radius: 12px;
+  padding: 40px 30px;
+  border-radius: 20px;
   width: 95%;
   max-width: 380px;
   text-align: center;
@@ -302,24 +310,49 @@
   color: #888;
   font-size: 1.2rem;
   cursor: pointer;
+  transition: color 0.2s;
 }
 
-.googleBtn {
+.closeModal:hover {
+  color: #fff;
+}
+
+.lockIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.modalContent h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.modalContent p {
+  color: #aaa;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: 25px;
+}
+
+/* Велика кнопка Google в модалці */
+.tgBigBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background: #ffffff;
   color: #000000;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  margin-top: 20px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.googleBtn img {
-  width: 20px;
+.tgBigBtn:hover {
+  background: #f0f0f0;
+  transform: scale(1.02);
 }

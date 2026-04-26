@@ -3,6 +3,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 import "./globals.css";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
+import { Providers } from "@/components/Providers"; // Імпортуємо наш новий провайдер
 
 export const metadata: Metadata = {
   title: "MovieSpace - Твій онлайн кінотеатр",
@@ -17,13 +18,15 @@ export default function RootLayout({
   return (
     <html lang="uk">
       <body>
-        <Header />
-        <main>
-          <NuqsAdapter>
-            {children}
-          </NuqsAdapter>
-        </main>
-        <Footer />
+        <Providers> {/* Обгортка для авторизації NextAuth */}
+          <Header />
+          <main>
+            <NuqsAdapter>
+              {children}
+            </NuqsAdapter>
+          </main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
