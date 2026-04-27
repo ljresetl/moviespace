@@ -13,12 +13,11 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   if (!rawId) return notFound();
 
-  // Витягуємо тільки цифри до першого дефіса (для валідного запиту до TMDB)
+  // Витягуємо ID
   const cleanId = parseInt(rawId.split("-")[0]);
-  
   if (isNaN(cleanId)) return notFound();
 
-  // Отримуємо дані від TMDB та токен з оточення паралельно
+  // Отримуємо дані паралельно
   const [movie, credits, trailerKey] = await Promise.all([
     getMovieDetails(cleanId),
     getMovieCredits(cleanId),
@@ -27,7 +26,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   if (!movie) return notFound();
 
-  // Отримуємо токен без префікса PUBLIC (безпечно, бо це серверний компонент)
+  // Отримуємо токен (безпечно на сервері)
   const token = process.env.PLAYER_TOKEN || ""; 
 
   const cast = credits?.cast.slice(0, 10) || [];
@@ -39,7 +38,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
       trailerKey={trailerKey} 
       cast={cast} 
       director={director} 
-      playerToken={token} // Передаємо токен як prop
+      playerToken={token} 
     />
   );
 }

@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
-import { MovieDetailsProps, Comment } from "@/types/movie";
+// Імпортуємо розширений інтерфейс
+import { ExtendedMovieDetailsProps, Comment } from "@/types/movie";
 import { movieEmbedLinks } from "@/lib/movieLinks";
 import styles from "./MoviePage.module.css";
 
@@ -12,14 +13,16 @@ export default function MovieDetailsContent({
   movie, 
   trailerKey, 
   cast, 
-  director 
-}: MovieDetailsProps) {
+  director,
+  playerToken // Додаємо цей проп, який ми передаємо з серверного компонента
+}: ExtendedMovieDetailsProps) { // Змінюємо тип на ExtendedMovieDetailsProps
   const router = useRouter();
   const { data: session, status } = useSession();
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
 
-  // Отримуємо повний код iframe з файлу конфігурації
+  // Отримуємо код плеєра. Якщо ви використовуєте динамічні посилання, 
+  // можна додати playerToken до URL тут.
   const fullIframeCode = movieEmbedLinks[Number(movie.id)];
 
   const handleShare = async (): Promise<void> => {
@@ -83,10 +86,15 @@ export default function MovieDetailsContent({
             {cast && cast.length > 0 && (
               <p><strong>У ролях:</strong> {cast.map(c => c.name).slice(0, 5).join(", ")}</p>
             )}
+            
+            {/* Технічний вивід токена (якщо потрібно для відладки плеєра) */}
+            {process.env.NODE_ENV === 'development' && playerToken && (
+              <p style={{fontSize: '10px', color: 'gray'}}>Token active</p>
+            )}
           </div>
         </div>
 
-        {/* 1. СЕКЦІЯ ТРЕЙЛЕРА (Вище для неавторизованих) */}
+        {/* 1. СЕКЦІЯ ТРЕЙЛЕРА (для неавторизованих) */}
         {status !== "authenticated" && (
           <section className={styles.playerSection}>
             <h2 className={styles.sectionTitle}>Трейлер фільму</h2>
@@ -103,12 +111,11 @@ export default function MovieDetailsContent({
           </section>
         )}
 
-        {/* 2. СЕКЦІЯ ПОВНОГО ФІЛЬМУ / АВТОРИЗАЦІЇ */}
+        {/* 2. СЕКЦІЯ ПОВНОГО ФІЛЬМУ */}
         <section className={styles.fullMovieSection}>
           <h2 className={styles.sectionTitle}>Повний фільм</h2>
           
           {status !== "authenticated" ? (
-            /* ЯКЩО НЕ АВТОРИЗОВАНИЙ: Блок із кнопкою входу */
             <div className={styles.lockOverlay}>
               <div className={styles.lockContent}>
                 <div className={styles.lockIcon} style={{ fontSize: "40px", marginBottom: "10px" }}>🔒</div>
@@ -134,11 +141,12 @@ export default function MovieDetailsContent({
               </div>
             </div>
           ) : (
-            /* ЯКЩО АВТОРИЗОВАНИЙ: Тільки плеєр із файлу */
             <div className={styles.fullMoviePlayer}>
               {fullIframeCode ? (
                 <div 
                   className={styles.videoWrapper}
+                  /* Якщо плеєр підтримує токени через атрибути, 
+                     ви можете модифікувати fullIframeCode перед вставкою */
                   dangerouslySetInnerHTML={{ __html: fullIframeCode }} 
                 />
               ) : (
@@ -165,15 +173,19 @@ export default function MovieDetailsContent({
             <button type="submit" className={styles.submitBtn} disabled={!session}>Надіслати відгук</button>
           </form>
           <div className={styles.commentsList}>
-            {comments.map(c => (
-              <div key={c.id} className={styles.commentCard}>
-                <div className={styles.commentHeader}>
-                  <span className={styles.commentAuthor}>{c.author}</span>
-                  <span className={styles.commentDate}>{c.date}</span>
+            {comments.length > 0 ? (
+              comments.map(c => (
+                <div key={c.id} className={styles.commentCard}>
+                  <div className={styles.commentHeader}>
+                    <span className={styles.commentAuthor}>{c.author}</span>
+                    <span className={styles.commentDate}>{c.date}</span>
+                  </div>
+                  <p className={styles.commentText}>{c.text}</p>
                 </div>
-                <p className={styles.commentText}>{c.text}</p>
-              </div>
-            ))}
+              ))
+            ) : (
+              <p className={styles.noComments}>Ще немає жодного відгуку. Будьте першим!</p>
+            )}
           </div>
         </section>
       </div>

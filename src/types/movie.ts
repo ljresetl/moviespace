@@ -29,12 +29,12 @@ export interface Movie {
   popularity: number;
   adult: boolean;
   video: boolean;
-  genre_ids?: number[]; // Опціонально, бо в деталях приходять об'єкти genres
+  genre_ids?: number[];
 }
 
 export interface MovieDetails extends Movie {
   genres: Genre[];
-  runtime: number; // В хвилинах
+  runtime: number;
   budget: number;
   revenue: number;
   status: string;
@@ -66,13 +66,13 @@ export interface CreditsResponse {
 
 // --- Відео та Трейлери ---
 export interface Video {
-  key: string;       // ID відео на YouTube
-  site: string;      // "YouTube"
-  type: string;      // "Trailer", "Teaser"
+  key: string;
+  site: string;
+  type: string;
   official: boolean;
 }
 
-// --- Коментарі та Користувачі ---
+// --- Коментарі (ОСЬ ЦЕЙ БЛОК МАЄ БУТИ ЕКСПОРТОВАНИЙ) ---
 export interface Comment {
   id: number;
   author: string;
@@ -80,24 +80,7 @@ export interface Comment {
   date: string;
 }
 
-export interface RegisteredUser {
-  email: string;
-  name?: string | null;
-  image?: string | null;
-  createdAt: string;
-}
-
-// --- Фільтри та Пропси (Next.js 15) ---
-export interface DiscoverFilters {
-  genre?: string;
-  year?: string;
-  country?: string;
-}
-
-export interface HomePageFilters extends DiscoverFilters {
-  page?: string;
-}
-
+// --- Пропси для компонентів ---
 export interface MovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
@@ -105,27 +88,14 @@ export interface MovieDetailsProps {
   cast: CastMember[];
 }
 
-// Розширений інтерфейс для клієнтського компонента
 export interface ExtendedMovieDetailsProps extends MovieDetailsProps {
   playerToken: string;
 }
 
-// Відповіді API
+// --- Відповіді API ---
 export interface TMDBResponse {
   page: number;
   results: Movie[];
   total_pages: number;
   total_results: number;
-}
-
-export interface MovieDetailsProps {
-  movie: MovieDetails;
-  trailerKey: string | null;
-  director: string;
-  cast: CastMember[];
-}
-
-// Цей інтерфейс має використовуватися там, де передається токен
-export interface ExtendedMovieDetailsProps extends MovieDetailsProps {
-  playerToken: string;
 }
