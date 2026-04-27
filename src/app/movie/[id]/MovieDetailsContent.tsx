@@ -20,7 +20,14 @@ export default function MovieDetailsContent({
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState<string>("");
 
-  const fullIframeCode = movieEmbedLinks[Number(movie.id)];
+  // 1. Отримуємо конфігурацію з нашого локального файлу movieLinks
+  const movieConfig = movieEmbedLinks[Number(movie.id)];
+
+  // 2. Визначаємо опис: спочатку кастомний, якщо порожньо — з TMDB, якщо зовсім порожньо — заглушка
+  const displayOverview = movieConfig?.customOverview || movie.overview || "Опис відсутній.";
+
+  // 3. Отримуємо код плеєра (iframe)
+  const fullIframeCode = movieConfig?.iframe || null;
 
   const handleShare = async (): Promise<void> => {
     if (navigator.share) {
@@ -77,13 +84,14 @@ export default function MovieDetailsContent({
             </div>
             <div className={styles.description}>
               <h3>Опис</h3>
-              <p>{movie.overview || "Опис відсутній."}</p>
+              {/* ВИКОРИСТОВУЄМО ПЕРЕВІРЕНИЙ ОПИС */}
+              <p>{displayOverview}</p>
             </div>
             <p className={styles.directorInfo}><strong>Режисер:</strong> <span>{director}</span></p>
           </div>
         </div>
 
-        {/* НОВА СЕКЦІЯ: АКТОРИ (З ФОТО) */}
+        {/* СЕКЦІЯ: АКТОРИ */}
         {cast && cast.length > 0 && (
           <section className={styles.castSection}>
             <h2 className={styles.sectionTitle}>У головних ролях</h2>
@@ -170,7 +178,17 @@ export default function MovieDetailsContent({
             />
             <button type="submit" className={styles.submitBtn} disabled={!session}>Надіслати відгук</button>
           </form>
-          {/* ... список коментарів */}
+          <div className={styles.commentsList}>
+            {comments.map(c => (
+              <div key={c.id} className={styles.commentCard}>
+                <div className={styles.commentHeader}>
+                  <span className={styles.commentAuthor}>{c.author}</span>
+                  <span className={styles.commentDate}>{c.date}</span>
+                </div>
+                <p className={styles.commentText}>{c.text}</p>
+              </div>
+            ))}
+          </div>
         </section>
       </div>
     </main>
