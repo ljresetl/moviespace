@@ -72,7 +72,7 @@ export interface Video {
   official: boolean;
 }
 
-// --- Коментарі та Користувачі (ВАЖЛИВО ДЛЯ AUTH ТА CONTENT) ---
+// --- Коментарі та Користувачі ---
 export interface Comment {
   id: number;
   author: string;
@@ -87,18 +87,20 @@ export interface RegisteredUser {
   createdAt: string;
 }
 
-// --- Фільтри ---
+// --- Фільтри та Пропси для Головної (Next.js 15/16) ---
 export interface DiscoverFilters {
   genre?: string;
   year?: string;
   country?: string;
-}
-
-export interface HomePageFilters extends DiscoverFilters {
   page?: string;
 }
 
-// --- Пропси для компонентів ---
+// ОСЬ ЦЕЙ ІНТЕРФЕЙС ВИПРАВЛЯЄ ВАШУ ПОМИЛКУ
+export interface HomePageProps {
+  searchParams: Promise<DiscoverFilters>;
+}
+
+// --- Пропси для компонентів фільму ---
 export interface MovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;

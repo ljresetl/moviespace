@@ -8,16 +8,16 @@ import { HomePageProps } from "@/types/movie";
 import { getMovies } from "@/lib/tmdb";
 
 export default async function HomePage({ searchParams }: HomePageProps) {
-  // 1. Очікуємо параметри (Next.js 15)
+  // 1. Очікуємо параметри (Next.js 15 обов'язково через await)
   const filters = await searchParams;
   const currentPage = Number(filters.page) || 1;
 
   // 2. Завантажуємо дані для HeroSlider на сервері
-  // Це фіксить помилку 401, бо на сервері є доступ до process.env.TMDB_ACCESS_TOKEN
+  // Використовуємо серверний запит, щоб уникнути помилок 401 на клієнті
   const trendingMovies = await getMovies('/trending/movie/day');
   const heroMovie = trendingMovies?.[0] || null;
 
-  // 3. Формуємо чистий об'єкт фільтрів
+  // 3. Формуємо об'єкт фільтрів для каталогу
   const activeFilters = {
     genre: filters.genre,
     year: filters.year,
@@ -26,12 +26,12 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <main className="container">
-      {/* Передаємо завантажений на сервері фільм у слайдер */}
+      {/* Передаємо завантажений фільм у слайдер */}
       <HeroSlider initialMovie={heroMovie} /> 
       
       <LatestMovies />
 
-      {/* Suspense реагує на зміну будь-якого фільтра або сторінки */}
+      {/* Suspense реагує на зміну ключів фільтрації */}
       <Suspense 
         key={JSON.stringify(filters)} 
         fallback={<div className="catalog-loader">Завантаження каталогу...</div>}
@@ -39,7 +39,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
         <section id="catalog" style={{ minHeight: '600px', paddingTop: '20px' }}>
           <GenreFilters />
           
-          {/* Серверний компонент, який сам завантажить список фільмів */}
+          {/* Серверний компонент каталогу */}
           <MovieCardAll 
             filters={activeFilters} 
             page={currentPage} 
