@@ -117,3 +117,15 @@ export interface TMDBResponse {
   total_pages: number;
   total_results: number;
 }
+
+export interface MovieDetailsProps {
+  movie: MovieDetails;
+  trailerKey: string | null;
+  director: string;
+  cast: CastMember[];
+}
+
+// Цей інтерфейс має використовуватися там, де передається токен
+export interface ExtendedMovieDetailsProps extends MovieDetailsProps {
+  playerToken: string;
+}
