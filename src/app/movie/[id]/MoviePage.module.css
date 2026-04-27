@@ -1,45 +1,62 @@
+/* MoviePage.module.css */
+
 .main {
   padding: 20px 0;
-  color: #fff;
-  background-color: #000;
   min-height: 100vh;
+  background-color: #000; /* Сторінка фільму традиційно залишається темною для кіно-ефекту */
+  color: #fff;
 }
 
+/* --- ВЕРХНІ КНОПКИ --- */
 .topActions {
   display: flex;
   justify-content: space-between;
+  gap: 10px;
   margin-bottom: 20px;
 }
 
 .backBtn,
 .shareBtn {
-  background: #222;
-  border: 1px solid #444;
+  background: #1a1a1a;
+  border: 1px solid #333;
   color: #fff;
-  padding: 8px 16px;
-  border-radius: 6px;
+  padding: 10px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
+  font-size: 14px;
+  font-family: var(--body-font);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .backBtn:hover,
 .shareBtn:hover {
-  background: #333;
+  background: #252525;
+  border-color: #e50914;
 }
 
+/* --- ОСНОВНИЙ КОНТЕНТ (MOBILE FIRST) --- */
 .movieContent {
   display: flex;
-  gap: 30px;
-  margin-bottom: 40px;
+  flex-direction: column; /* Стек для мобільних */
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
 .posterWrapper {
-  flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .poster {
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 300px; /* Обмежуємо ширину на мобільних */
+  height: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
 }
 
 .info {
@@ -47,46 +64,89 @@
 }
 
 .title {
-  font-size: 2rem;
-  margin-bottom: 10px;
+  font-family: var(--heading-font);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin-bottom: 12px;
+  color: #fff;
 }
 
 .metaInfo {
+  font-size: 14px;
   color: #aaa;
   margin-bottom: 15px;
+  line-height: 1.4;
 }
 
 .ratingCircle {
-  display: inline-block;
-  background: #1a1a1a;
-  padding: 10px 15px;
-  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(229, 9, 20, 0.1);
+  padding: 8px 16px;
+  border-radius: 50px;
   border: 1px solid #e50914;
   margin-bottom: 20px;
+  font-size: 14px;
 }
 
 .ratingCircle span {
-  font-weight: bold;
+  font-weight: 800;
+  color: #e50914;
+  font-size: 16px;
+}
+
+.description {
+  margin-bottom: 20px;
+}
+
+.description h3 {
+  font-family: var(--heading-font);
+  font-size: 18px;
+  margin-bottom: 8px;
   color: #e50914;
 }
 
+.description p {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #ddd;
+}
+
+.info p {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.info strong {
+  color: #e50914;
+}
+
+/* --- ПЛЕЄР ТА ТРЕЙЛЕР --- */
+.playerSection,
+.fullMovieSection {
+  margin-top: 40px;
+}
+
 .sectionTitle {
-  font-size: 1.5rem;
+  font-family: var(--heading-font);
+  font-size: 1.25rem;
   margin-bottom: 20px;
   border-left: 4px solid #e50914;
   padding-left: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* СТИЛІ ДЛЯ ПЛЕЄРА */
 .videoWrapper {
   position: relative;
   width: 100%;
-  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  padding-bottom: 56.25%; /* 16:9 */
   height: 0;
-  background: #000;
-  border-radius: 8px;
+  background: #111;
+  border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .videoWrapper iframe,
@@ -96,36 +156,44 @@
   left: 0;
   width: 100% !important;
   height: 100% !important;
+  border: none;
 }
 
-/* СТИЛІ ДЛЯ ЗАМОЧКА ТА ЗАГЛУШКИ */
+/* --- ЗАМОК (БЛОКУВАННЯ) --- */
 .lockOverlay {
   width: 100%;
-  min-height: 400px;
-  background:
-    linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9)),
-    url("/no-poster.png");
-  background-size: cover;
+  min-height: 300px;
+  background: linear-gradient(45deg, #0f0f0f, #1a1a1a);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   border-radius: 12px;
-  border: 1px dashed #444;
+  border: 1px solid #333;
+  padding: 20px;
 }
 
 .lockContent h3 {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   margin-bottom: 10px;
 }
 
 .lockContent p {
-  color: #ccc;
-  max-width: 400px;
+  font-size: 14px;
+  color: #aaa;
   margin-bottom: 20px;
 }
 
-/* КОМЕНТАРІ */
+/* --- КОМЕНТАРІ --- */
+.commentsSection {
+  margin-top: 50px;
+  padding-bottom: 40px;
+}
+
+.commentForm {
+  margin-bottom: 30px;
+}
+
 .textarea {
   width: 100%;
   background: #111;
@@ -134,19 +202,94 @@
   padding: 15px;
   border-radius: 8px;
   min-height: 100px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
+  font-family: var(--body-font);
+  font-size: 14px;
+  resize: vertical;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #e50914;
 }
 
 .submitBtn {
   background: #e50914;
   color: #fff;
   border: none;
-  padding: 10px 25px;
-  border-radius: 5px;
-  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
+  transition: transform 0.2s ease;
+  width: 100%; /* На мобільних на всю ширину */
+}
+
+.submitBtn:active {
+  transform: scale(0.98);
 }
 
 .submitBtn:disabled {
-  background: #555;
+  background: #444;
+  cursor: not-allowed;
+}
+
+.commentCard {
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border-left: 2px solid #333;
+}
+
+.commentHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.commentAuthor {
+  font-weight: 700;
+  color: #e50914;
+}
+
+.commentDate {
+  color: #666;
+}
+
+.commentText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: #eee;
+}
+
+.noComments {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+/* --- DESKTOP ADAPTATION (768px+) --- */
+@media (min-width: 768px) {
+  .movieContent {
+    flex-direction: row; /* Повертаємо в ряд */
+    align-items: flex-start;
+  }
+
+  .poster {
+    max-width: 300px;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .submitBtn {
+    width: auto; /* На десктопі кнопка за розміром тексту */
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
 }
