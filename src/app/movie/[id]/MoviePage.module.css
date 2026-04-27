@@ -270,6 +270,89 @@
   padding: 20px;
 }
 
+/* Секція акторів */
+.castSection {
+  margin-bottom: 40px;
+}
+
+.castScroll {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  padding-bottom: 15px;
+  /* Приховуємо стандартний scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: #e50914 #111;
+}
+
+.castScroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.castScroll::-webkit-scrollbar-thumb {
+  background: #e50914;
+  border-radius: 10px;
+}
+
+.castCard {
+  flex: 0 0 120px; /* Фіксована ширина картки */
+  text-align: center;
+}
+
+.castImageWrapper {
+  position: relative;
+  width: 120px;
+  height: 160px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  background: #1a1a1a;
+}
+
+.castImage {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.castCard:hover .castImage {
+  transform: scale(1.05);
+}
+
+.castName {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.castCharacter {
+  font-size: 12px;
+  color: #888;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.googleBtn {
+  background-color: #4285f4;
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.googleBtn:hover {
+  background-color: #357ae8;
+}
+
 /* --- DESKTOP ADAPTATION (768px+) --- */
 @media (min-width: 768px) {
   .movieContent {
