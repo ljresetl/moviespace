@@ -6,8 +6,8 @@ import Footer from "@/components/Footer/Footer";
 import { Providers } from "@/components/Providers"; // Імпортуємо наш новий провайдер
 
 export const metadata: Metadata = {
-  title: "MovieSpace - Твій онлайн кінотеатр",
-  description: "Найкращі фільми онлайн українською мовою. Відкрий для себе світ кіно з MovieSpace!",
+  title: "KinoShrot - Твій онлайн кінотеатр",
+  description: "Найкращі фільми онлайн українською мовою. Відкрий для себе світ кіно з KinoShrot!",
 };
 
 export default function RootLayout({
