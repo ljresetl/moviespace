@@ -87,7 +87,7 @@ export interface RegisteredUser {
   createdAt: string;
 }
 
-// --- Фільтри та Пропси для Головної (Next.js 15/16) ---
+// --- Фільтри та Пропси для Головної та Каталогу ---
 export interface DiscoverFilters {
   genre?: string;
   year?: string;
@@ -95,12 +95,19 @@ export interface DiscoverFilters {
   page?: string;
 }
 
-// ОСЬ ЦЕЙ ІНТЕРФЕЙС ВИПРАВЛЯЄ ВАШУ ПОМИЛКУ
 export interface HomePageProps {
   searchParams: Promise<DiscoverFilters>;
 }
 
-// --- Пропси для компонентів фільму ---
+// ОСЬ ЦЕЙ ІНТЕРФЕЙС ВИПРАВЛЯЄ ПОТОЧНУ ПОМИЛКУ
+export interface MovieCardAllProps {
+  movies: Movie[];
+  totalPages: number;
+  currentPage: number;
+  filters: DiscoverFilters;
+}
+
+// --- Пропси для деталей фільму ---
 export interface MovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
