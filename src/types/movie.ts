@@ -72,12 +72,30 @@ export interface Video {
   official: boolean;
 }
 
-// --- Коментарі (ОСЬ ЦЕЙ БЛОК МАЄ БУТИ ЕКСПОРТОВАНИЙ) ---
+// --- Коментарі та Користувачі (ВАЖЛИВО ДЛЯ AUTH ТА CONTENT) ---
 export interface Comment {
   id: number;
   author: string;
   text: string;
   date: string;
+}
+
+export interface RegisteredUser {
+  email: string;
+  name?: string | null;
+  image?: string | null;
+  createdAt: string;
+}
+
+// --- Фільтри ---
+export interface DiscoverFilters {
+  genre?: string;
+  year?: string;
+  country?: string;
+}
+
+export interface HomePageFilters extends DiscoverFilters {
+  page?: string;
 }
 
 // --- Пропси для компонентів ---
