@@ -1,21 +1,7 @@
-// --- Базові сутності ---
-export interface Genre {
-  id: number;
-  name: string;
-}
+export interface Genre { id: number; name: string; }
+export interface ProductionCountry { iso_3166_1: string; name: string; }
+export interface SpokenLanguage { english_name: string; iso_639_1: string; name: string; }
 
-export interface ProductionCountry {
-  iso_3166_1: string;
-  name: string;
-}
-
-export interface SpokenLanguage {
-  english_name: string;
-  iso_639_1: string;
-  name: string;
-}
-
-// --- Фільми ---
 export interface Movie {
   id: number;
   title: string;
@@ -44,50 +30,13 @@ export interface MovieDetails extends Movie {
   spoken_languages: SpokenLanguage[];
 }
 
-// --- Актори та Команда ---
-export interface CastMember {
-  id: number;
-  name: string;
-  character: string;
-  profile_path: string | null;
-}
+export interface CastMember { id: number; name: string; character: string; profile_path: string | null; }
+export interface CrewMember { id: number; name: string; job: string; }
+export interface CreditsResponse { id: number; cast: CastMember[]; crew: CrewMember[]; }
+export interface Video { key: string; site: string; type: string; official: boolean; }
+export interface Comment { id: number; author: string; text: string; date: string; }
+export interface RegisteredUser { email: string; name?: string | null; image?: string | null; createdAt: string; }
 
-export interface CrewMember {
-  id: number;
-  name: string;
-  job: string;
-}
-
-export interface CreditsResponse {
-  id: number;
-  cast: CastMember[];
-  crew: CrewMember[];
-}
-
-// --- Відео та Трейлери ---
-export interface Video {
-  key: string;
-  site: string;
-  type: string;
-  official: boolean;
-}
-
-// --- Коментарі та Користувачі ---
-export interface Comment {
-  id: number;
-  author: string;
-  text: string;
-  date: string;
-}
-
-export interface RegisteredUser {
-  email: string;
-  name?: string | null;
-  image?: string | null;
-  createdAt: string;
-}
-
-// --- Фільтри та Пропси для Головної та Каталогу ---
 export interface DiscoverFilters {
   genre?: string;
   year?: string;
@@ -99,15 +48,15 @@ export interface HomePageProps {
   searchParams: Promise<DiscoverFilters>;
 }
 
-// ОСЬ ЦЕЙ ІНТЕРФЕЙС ВИПРАВЛЯЄ ПОТОЧНУ ПОМИЛКУ
+// ОНОВЛЕНО: Додано hasFilters
 export interface MovieCardAllProps {
   movies: Movie[];
   totalPages: number;
   currentPage: number;
-  filters: DiscoverFilters;
+  filters?: DiscoverFilters;
+  hasFilters?: boolean; 
 }
 
-// --- Пропси для деталей фільму ---
 export interface MovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
@@ -119,7 +68,6 @@ export interface ExtendedMovieDetailsProps extends MovieDetailsProps {
   playerToken: string;
 }
 
-// --- Відповіді API ---
 export interface TMDBResponse {
   page: number;
   results: Movie[];
