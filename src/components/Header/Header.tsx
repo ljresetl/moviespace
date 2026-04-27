@@ -102,8 +102,8 @@ export default function Header() {
       <header className={styles.header}>
         <div className={`container ${styles.headerInner}`}>
           <Link href="/" className={styles.logo}>
-            <span className={styles.fullLogo}>MOVIE<span>SPACE</span></span>
-            <span className={styles.mobileLogo}>M<span>S</span></span>
+            <span className={styles.fullLogo}>Kino<span>Shrot</span></span>
+            <span className={styles.mobileLogo}>K<span>S</span></span>
           </Link>
 
           <Suspense fallback={<div className={styles.searchInput}>Завантаження...</div>}>
