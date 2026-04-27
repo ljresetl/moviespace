@@ -1,7 +1,4 @@
-// types/movie.ts
-
 // --- Базові сутності ---
-
 export interface Genre {
   id: number;
   name: string;
@@ -19,7 +16,6 @@ export interface SpokenLanguage {
 }
 
 // --- Фільми ---
-
 export interface Movie {
   id: number;
   title: string;
@@ -30,63 +26,33 @@ export interface Movie {
   vote_average: number;
   vote_count: number;
   overview: string;
-  genre_ids: number[];
   popularity: number;
   adult: boolean;
   video: boolean;
+  genre_ids?: number[]; // Опціонально, бо в деталях приходять об'єкти genres
 }
 
-export interface MovieDetails extends Omit<Movie, 'genre_ids'> {
+export interface MovieDetails extends Movie {
   genres: Genre[];
   runtime: number; // В хвилинах
   budget: number;
   revenue: number;
   status: string;
   tagline: string | null;
-  original_language: string; 
+  original_language: string;
   production_countries: ProductionCountry[];
   spoken_languages: SpokenLanguage[];
 }
 
-// --- Відповіді API (TMDB) ---
-
-export interface TMDBResponse {
-  page: number;
-  results: Movie[];
-  total_pages: number;
-  total_results: number;
-}
-
-// --- Відео та Трейлери ---
-
-export interface Video {
-  id?: string;
-  iso_639_1?: string;
-  iso_3166_1?: string;
-  key: string;       // ID відео на YouTube
-  name?: string;
-  site: string;      // "YouTube"
-  size?: number;
-  type: string;      // "Trailer", "Teaser" тощо
-  official?: boolean;
-  published_at?: string;
-}
-
-export interface MovieVideosResponse {
-  id: number;
-  results: Video[];
-}
-
 // --- Актори та Команда ---
-
-export interface Cast {
+export interface CastMember {
   id: number;
   name: string;
   character: string;
   profile_path: string | null;
 }
 
-export interface Crew {
+export interface CrewMember {
   id: number;
   name: string;
   job: string;
@@ -94,12 +60,19 @@ export interface Crew {
 
 export interface CreditsResponse {
   id: number;
-  cast: Cast[];
-  crew: Crew[];
+  cast: CastMember[];
+  crew: CrewMember[];
 }
 
-// --- Коментарі та Відгуки ---
+// --- Відео та Трейлери ---
+export interface Video {
+  key: string;       // ID відео на YouTube
+  site: string;      // "YouTube"
+  type: string;      // "Trailer", "Teaser"
+  official: boolean;
+}
 
+// --- Коментарі та Користувачі ---
 export interface Comment {
   id: number;
   author: string;
@@ -107,8 +80,14 @@ export interface Comment {
   date: string;
 }
 
-// --- Пропси для компонентів (Next.js 15) ---
+export interface RegisteredUser {
+  email: string;
+  name?: string | null;
+  image?: string | null;
+  createdAt: string;
+}
 
+// --- Фільтри та Пропси (Next.js 15) ---
 export interface DiscoverFilters {
   genre?: string;
   year?: string;
@@ -119,20 +98,22 @@ export interface HomePageFilters extends DiscoverFilters {
   page?: string;
 }
 
-export interface HomePageProps {
-  searchParams: Promise<HomePageFilters>;
-}
-
-export interface MovieCardAllProps {
-  movies: Movie[];
-  totalPages: number;
-  currentPage: number;
-  hasFilters: boolean;
-}
-
 export interface MovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
-  cast: Cast[];
   director: string;
+  cast: CastMember[];
+}
+
+// Розширений інтерфейс для клієнтського компонента
+export interface ExtendedMovieDetailsProps extends MovieDetailsProps {
+  playerToken: string;
+}
+
+// Відповіді API
+export interface TMDBResponse {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
 }

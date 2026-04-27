@@ -7,21 +7,28 @@ interface MoviePageProps {
 }
 
 export default async function MoviePage({ params }: MoviePageProps) {
+  // Розв'язуємо проміс params (вимога Next.js 15)
   const resolvedParams = await params;
   const rawId = resolvedParams.id;
 
   if (!rawId) return notFound();
 
-  const id = parseInt(rawId.split("-")[0]);
-  if (isNaN(id)) return notFound();
+  // Витягуємо тільки цифри до першого дефіса (для валідного запиту до TMDB)
+  const cleanId = parseInt(rawId.split("-")[0]);
+  
+  if (isNaN(cleanId)) return notFound();
 
+  // Отримуємо дані від TMDB та токен з оточення паралельно
   const [movie, credits, trailerKey] = await Promise.all([
-    getMovieDetails(id),
-    getMovieCredits(id),
-    getMovieVideos(id)
+    getMovieDetails(cleanId),
+    getMovieCredits(cleanId),
+    getMovieVideos(cleanId)
   ]);
 
   if (!movie) return notFound();
+
+  // Отримуємо токен без префікса PUBLIC (безпечно, бо це серверний компонент)
+  const token = process.env.PLAYER_TOKEN || ""; 
 
   const cast = credits?.cast.slice(0, 10) || [];
   const director = credits?.crew.find((p) => p.job === "Director")?.name || "Невідомо";
@@ -32,6 +39,7 @@ export default async function MoviePage({ params }: MoviePageProps) {
       trailerKey={trailerKey} 
       cast={cast} 
       director={director} 
+      playerToken={token} // Передаємо токен як prop
     />
   );
 }
