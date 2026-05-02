@@ -20,6 +20,8 @@ export interface SpokenLanguage {
 }
 
 // --- 2. Фільми (TMDB) ---
+
+/** Базовий об'єкт фільму для списків та пошуку */
 export interface Movie {
   id: number;
   title: string;
@@ -34,8 +36,13 @@ export interface Movie {
   adult?: boolean;
   video?: boolean;
   genre_ids: number[];
+  // Додаткові поля, що можуть з'являтися після обробки на бекенді
+  posterUrl?: string; 
+  rating?: number | string;
+  year?: string | number;
 }
 
+/** Розширені деталі фільму (отримані за ID) */
 export interface MovieDetails extends Movie {
   genres: Genre[];
   runtime: number | null;
@@ -48,19 +55,27 @@ export interface MovieDetails extends Movie {
   spoken_languages?: SpokenLanguage[];
 }
 
-// --- 3. Локальні дані (movies.json / Videoseed) ---
+// --- 3. Локальні дані (movies.json / Videoseed / Vibix) ---
+
+/** Структура одного запису у вашому локальному JSON-файлі */
 export interface MovieEntry {
   id_tmdb: string | number;
   id_kp: string | number;
   iframe: string; // Основне посилання з Videoseed
   name?: string;
+  original_name?: string;
+  year?: string;
+  poster?: string;
 }
 
+/** Кореневий об'єкт файлу movies.json */
 export interface MoviesJsonData {
+  last_update?: string;
   data: MovieEntry[];
 }
 
-// --- 4. Коментарі та Credits ---
+// --- 4. Актори, Команда та Коментарі ---
+
 export interface CastMember {
   id: number;
   name: string;
@@ -68,22 +83,55 @@ export interface CastMember {
   profile_path: string | null;
 }
 
+export interface CrewMember {
+  id: number;
+  name: string;
+  job: string;
+  department: string;
+}
+
 export interface Comment {
   id: number;
   author: string;
   text: string;
   date: string;
+  userId?: string; // Для зв'язку з профілем
 }
 
-// --- 5. Пропси для Компонентів ---
+// --- 5. Користувачі та Сесії (для Next-Auth) ---
+
+export interface RegisteredUser {
+  id?: string;
+  email: string | null | undefined;
+  name?: string | null;
+  image?: string | null;
+  role?: 'user' | 'admin' | 'premium';
+  createdAt?: string;
+}
+
+// --- 6. Пропси для Компонентів ---
+
+/** Пропси для сторінкиMovieDetailsContent.tsx */
 export interface ExtendedMovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
-  cast: CastMember[];
+  cast: CastMember[]; // Масив об'єктів для рендеру карток акторів
   director: string;
+  playerToken?: string; // Токен для Vibix/Videoseed
 }
 
-// --- 6. Відповіді API ---
+/** Параметри фільтрації (для сторінок категорій) */
+export interface DiscoverFilters {
+  genre?: string;
+  year?: string;
+  country?: string;
+  page?: string;
+  sort_by?: string;
+}
+
+// --- 7. Відповіді API ---
+
+/** Стандартна відповідь від API перевірки доступності фільму */
 export interface CheckMovieResponse {
   found: boolean;
   player1Url?: string; // Videoseed (з файлу)
@@ -92,8 +140,19 @@ export interface CheckMovieResponse {
   error?: string;
 }
 
+/** Спрощена структура відповіді від Vibix API */
 export interface VibixVideoResponse {
   id: number;
   iframe_url: string;
   kp_id: number;
+  name?: string;
+  quality?: string;
+}
+
+/** Типова відповідь від TMDB API для пагінації */
+export interface TMDBPaginationResponse<T> {
+  page: number;
+  results: T[];
+  total_pages: number;
+  total_results: number;
 }
