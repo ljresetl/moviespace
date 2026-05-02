@@ -5,18 +5,27 @@ import Link from "next/link";
 import Image from "next/image";
 import Pagination from "./../Pagination/Pagination";
 import styles from "./MovieCardAll.module.css";
-import { MovieCardAllProps } from "@/types/movie";
+import { Movie } from "@/types/movie";
 import { slugify } from "@/utils/slugify";
+
+// Типізація пропсів для клієнтської частини
+interface MovieCardAllClientProps {
+  movies: Movie[];
+  totalPages: number;
+  currentPage: number;
+  hasFilters: boolean;
+  isPremiumView: boolean;
+}
 
 export default function MovieCardAllClient({ 
   movies, 
   totalPages, 
   currentPage, 
-  hasFilters 
-}: MovieCardAllProps) {
+  hasFilters,
+  isPremiumView
+}: MovieCardAllClientProps) {
   const sectionRef = useRef<HTMLHeadingElement>(null);
 
-  // Плавний скрол до початку списку при зміні сторінки
   useEffect(() => {
     if (currentPage > 1 && sectionRef.current) {
       const yOffset = -100; 
@@ -28,11 +37,11 @@ export default function MovieCardAllClient({
   return (
     <section className={styles.section}>
       <h2 ref={sectionRef} className={styles.titleText}>
-        {hasFilters ? "Результати пошуку" : "Усі фільми"}
+        {isPremiumView ? "Ваша преміум колекція" : (hasFilters ? "Результати пошуку" : "Усі фільми")}
       </h2>
 
       <div className={styles.flexContainer}>
-        {movies && movies.length > 0 ? (
+        {movies.length > 0 ? (
           movies.map((movie) => {
             const movieSlug = `${movie.id}-${slugify(movie.title)}`;
             
@@ -43,6 +52,9 @@ export default function MovieCardAllClient({
                 className={styles.card}
               >
                 <div className={styles.imageWrapper}>
+                  {isPremiumView && (
+                    <div className={styles.premiumBadge}>Full HD</div>
+                  )}
                   <div className={styles.rating}>
                     {movie.vote_average ? movie.vote_average.toFixed(1) : "—"}
                   </div>
@@ -66,12 +78,11 @@ export default function MovieCardAllClient({
           })
         ) : (
           <div className={styles.noResults}>
-            <p>Фільмів не знайдено за вашим запитом.</p>
+            <p>Наразі фільмів не знайдено.</p>
           </div>
         )}
       </div>
 
-      {/* ПЕРЕВІР ТУТ: передаємо тільки totalPages */}
       {totalPages > 1 && (
         <Pagination totalPages={totalPages} />
       )}

@@ -1,196 +1,191 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useSyncExternalStore, useEffect, FormEvent } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
-import { ExtendedMovieDetailsProps, Comment } from "@/types/movie";
-import { movieEmbedLinks } from "@/lib/movieLinks";
+import { ExtendedMovieDetailsProps, Comment, Genre, CheckMovieResponse, CastMember } from "@/types/movie";
+import MovieTabs from "@/components/home/MoviePlayer/MovieTabs";
 import styles from "./MoviePage.module.css";
 
+const PLAYER_TOKEN = "33a811c627033af901fb8aa5d449483c";
+
+const subscribe = (callback: () => void) => {
+  window.addEventListener("storage", callback);
+  return () => window.removeEventListener("storage", callback);
+};
+
+const RatingStars = ({ voteAverage }: { voteAverage: number }) => {
+  const rating = voteAverage / 2;
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+
+  return (
+    <div className={styles.starsWrapper} aria-label={`Рейтинг: ${voteAverage} з 10`}>
+      {[...Array(5)].map((_, i) => (
+        <span key={i} className={styles.star}>
+          {i < fullStars ? "★" : i === fullStars && hasHalfStar ? "½" : "☆"}
+        </span>
+      ))}
+      <span className={styles.voteValue}>{voteAverage.toFixed(1)}</span>
+    </div>
+  );
+};
+
 export default function MovieDetailsContent({ 
-  movie, 
-  trailerKey, 
-  cast, 
-  director,
-  playerToken 
-}: ExtendedMovieDetailsProps) {
+  movie, trailerKey, cast, director 
+}: ExtendedMovieDetailsProps): React.JSX.Element {
   const router = useRouter();
   const { data: session, status } = useSession();
-  const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState<string>("");
+  
+  const [isMovieAvailable, setIsMovieAvailable] = useState<boolean | null>(null);
+  const [player1Url, setPlayer1Url] = useState<string | null>(null);
+  const [player2Url, setPlayer2Url] = useState<string | null>(null);
+  const [kpId, setKpId] = useState<string | null>(null);
+  const [newComment, setNewComment] = useState("");
 
-  // 1. Отримуємо конфігурацію з нашого локального файлу movieLinks
-  const movieConfig = movieEmbedLinks[Number(movie.id)];
-
-  // 2. Визначаємо опис: спочатку кастомний, якщо порожньо — з TMDB, якщо зовсім порожньо — заглушка
-  const displayOverview = movieConfig?.customOverview || movie.overview || "Опис відсутній.";
-
-  // 3. Отримуємо код плеєра (iframe)
-  const fullIframeCode = movieConfig?.iframe || null;
-
-  const handleShare = async (): Promise<void> => {
-    if (navigator.share) {
+  useEffect(() => {
+    async function checkAvailability() {
       try {
-        await navigator.share({
-          title: movie.title,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.error("Помилка:", err);
+        const res = await fetch(`/api/check-movie?id=${movie.id}`);
+        const data: CheckMovieResponse = await res.json();
+        if (data.found) {
+          setIsMovieAvailable(true);
+          setKpId(data.kp_id ? String(data.kp_id) : null);
+          setPlayer1Url(data.player1Url ? data.player1Url.replace("YOU_TOKEN", PLAYER_TOKEN) : null);
+          setPlayer2Url(data.player2Url || null);
+        } else {
+          setIsMovieAvailable(false);
+        }
+      } catch (error) {
+        setIsMovieAvailable(false);
       }
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Посилання скопійовано!");
     }
-  };
+    if (movie.id) checkAvailability();
+  }, [movie.id]);
 
-  const handleSubmitComment = (e: React.FormEvent): void => {
+  const commentsJson = useSyncExternalStore(subscribe, () => localStorage.getItem(`comments_${movie.id}`) || "[]", () => "[]");
+  const comments: Comment[] = useMemo(() => JSON.parse(commentsJson), [commentsJson]);
+
+  const handleSubmitComment = (e: FormEvent) => {
     e.preventDefault();
-    if (!newComment.trim() || !session) return;
+    if (!newComment.trim()) return;
     const commentObj: Comment = {
       id: Date.now(),
-      author: session.user?.name || "Користувач",
+      author: session?.user?.name || "Гість",
       text: newComment,
       date: new Date().toLocaleDateString("uk-UA"),
     };
-    setComments([commentObj, ...comments]);
+    localStorage.setItem(`comments_${movie.id}`, JSON.stringify([commentObj, ...comments]));
+    window.dispatchEvent(new Event("storage"));
     setNewComment("");
   };
 
   return (
-    <main className={styles.main}>
-      <div className="container">
-        <div className={styles.topActions}>
+    <article className={styles.heroSection}>
+      <div className={styles.container}>
+        {/* Хлебні крихти та дії */}
+        <nav className={styles.topActions}>
           <button onClick={() => router.back()} className={styles.backBtn}>← Назад</button>
-          <button onClick={handleShare} className={styles.shareBtn}>📤 Поділитися</button>
-        </div>
+          <span className={styles.breadcrumb}>{movie.title}</span>
+        </nav>
 
-        {/* ОСНОВНА ІНФОРМАЦІЯ */}
-        <div className={styles.movieContent}>
-          <div className={styles.posterWrapper}>
+        {/* Основна інформація */}
+        <section className={styles.mainInfoGrid}>
+          <div className={styles.posterSide}>
             <Image 
               src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : "/no-poster.png"} 
-              alt={movie.title} width={300} height={450} className={styles.poster} priority 
+              alt={`Постер до фільму ${movie.title}`} 
+              width={400} height={600} 
+              className={styles.poster} 
+              priority 
             />
           </div>
-          <div className={styles.info}>
-            <h1 className={styles.title}>{movie.title} ({movie.release_date?.split("-")[0]})</h1>
-            <p className={styles.metaInfo}>
-              {movie.release_date} • {movie.genres?.map(g => g.name).join(", ")} • {movie.runtime} хв
-            </p>
-            <div className={styles.ratingCircle}>
-              <span>{Math.round(movie.vote_average * 10)}%</span> Оцінка
-            </div>
-            <div className={styles.description}>
-              <h3>Опис</h3>
-              {/* ВИКОРИСТОВУЄМО ПЕРЕВІРЕНИЙ ОПИС */}
-              <p>{displayOverview}</p>
-            </div>
-            <p className={styles.directorInfo}><strong>Режисер:</strong> <span>{director}</span></p>
-          </div>
-        </div>
 
-        {/* СЕКЦІЯ: АКТОРИ */}
-        {cast && cast.length > 0 && (
-          <section className={styles.castSection}>
-            <h2 className={styles.sectionTitle}>У головних ролях</h2>
-            <div className={styles.castScroll}>
-              {cast.slice(0, 10).map((person) => (
-                <div key={person.id} className={styles.castCard}>
-                  <div className={styles.castImageWrapper}>
-                    <Image
-                      src={person.profile_path ? `https://image.tmdb.org/t/p/w185${person.profile_path}` : "/no-avatar.png"}
-                      alt={person.name}
-                      fill
-                      className={styles.castImage}
-                    />
+          <div className={styles.detailsSide}>
+            <h1 className={styles.title}>{movie.title} <span>({movie.release_date?.split("-")[0]})</span></h1>
+            
+            <RatingStars voteAverage={movie.vote_average} />
+
+            <div className={styles.metaList}>
+              <span>{movie.release_date}</span>
+              <span>{movie.runtime} хв.</span>
+              <span>{movie.genres?.map((g: Genre) => g.name).join(", ")}</span>
+            </div>
+
+            <section className={styles.synopsis}>
+              <h2>Про що фільм:</h2>
+              <p>{movie.overview || "Опис фільму наразі відсутній."}</p>
+            </section>
+
+            <section className={styles.castBlock}>
+              <h2>Акторський склад:</h2>
+              <div className={styles.castGrid}>
+                {cast.slice(0, 6).map((actor: CastMember) => (
+                  <div key={actor.id} className={styles.actorCard}>
+                    <div className={styles.actorImageHolder}>
+                      <Image 
+                        src={actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : "/no-photo.png"} 
+                        alt={actor.name} fill sizes="100px" 
+                      />
+                    </div>
+                    <p>{actor.name}</p>
                   </div>
-                  <p className={styles.castName}>{person.name}</p>
-                  <p className={styles.castCharacter}>{person.character}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* СЕКЦІЯ ТРЕЙЛЕРА */}
-        {status !== "authenticated" && (
-          <section className={styles.playerSection}>
-            <h2 className={styles.sectionTitle}>Трейлер фільму</h2>
-            <div className={styles.videoWrapper}>
-              {trailerKey ? (
-                <iframe 
-                  src={`https://www.youtube.com/embed/${trailerKey}?rel=0`} 
-                  allowFullScreen 
-                  className={styles.iframe} 
-                  frameBorder="0"
-                />
-              ) : <p className={styles.noVideo}>Трейлер відсутній</p>}
-            </div>
-          </section>
-        )}
-
-        {/* СЕКЦІЯ ПОВНОГО ФІЛЬМУ */}
-        <section className={styles.fullMovieSection}>
-          <h2 className={styles.sectionTitle}>Повний фільм</h2>
-          {status !== "authenticated" ? (
-            <div className={styles.lockOverlay}>
-              <div className={styles.lockContent}>
-                <div className={styles.lockIcon} style={{ fontSize: "40px", marginBottom: "10px" }}>🔒</div>
-                <h3>Дивіться повну версію</h3>
-                <p>Увійдіть через Google, щоб отримати доступ до плеєра в високій якості.</p>
-                <button 
-                  className={styles.googleBtn} 
-                  onClick={() => signIn("google")}
-                >
-                  Увійти через Google
-                </button>
+                ))}
               </div>
-            </div>
-          ) : (
-            <div className={styles.fullMoviePlayer}>
-              {fullIframeCode ? (
-                <div 
-                  className={styles.videoWrapper}
-                  dangerouslySetInnerHTML={{ __html: fullIframeCode }} 
-                />
-              ) : (
-                <div className={styles.lockOverlay} style={{ background: "#1a1a1a" }}>
-                   <p>Цей фільм скоро зявиться в нашому кінотеатрі.</p>
-                </div>
-              )}
-            </div>
-          )}
+            </section>
+            
+            <p className={styles.director}><strong>Режисер:</strong> {director}</p>
+          </div>
         </section>
 
-        {/* ВІДГУКИ */}
+        {/* Секція Плеєра */}
+        {isMovieAvailable && (
+          <section className={styles.videoSection}>
+            <h2 className={styles.sectionTitle}>Дивитися онлайн: {movie.title}</h2>
+            {status !== "authenticated" ? (
+              <div className={styles.lockOverlay}>
+                <h3>Контент доступний лише для членів клубу</h3>
+                <button onClick={() => signIn("google")} className={styles.authBtn}>Увійти через Google</button>
+              </div>
+            ) : (
+              <MovieTabs player1Url={player1Url || ""} player2Url={player2Url || ""} kpId={kpId} />
+            )}
+          </section>
+        )}
+
+        {/* Трейлер */}
+        <section className={styles.trailerSection}>
+          <h2 className={styles.sectionTitle}>Офіційний трейлер</h2>
+          <div className={styles.aspectRatio}>
+            {trailerKey ? (
+              <iframe src={`https://www.youtube.com/embed/${trailerKey}`} allowFullScreen />
+            ) : <p>Відео очікується...</p>}
+          </div>
+        </section>
+
+        {/* Коментарі */}
         <section className={styles.commentsSection}>
-          <h2 className={styles.sectionTitle}>Відгуки користувачів</h2>
+          <h2 className={styles.sectionTitle}>Відгуки глядачів</h2>
           <form onSubmit={handleSubmitComment} className={styles.commentForm}>
             <textarea 
-              placeholder={session ? "Поділіться враженнями про фільм..." : "Авторизуйтесь, щоб залишити відгук"} 
+              placeholder="Поділіться враженнями про фільм..." 
               value={newComment} 
               onChange={(e) => setNewComment(e.target.value)} 
-              className={styles.textarea} 
-              disabled={!session}
               required 
             />
-            <button type="submit" className={styles.submitBtn} disabled={!session}>Надіслати відгук</button>
+            <button type="submit">Опублікувати</button>
           </form>
           <div className={styles.commentsList}>
-            {comments.map(c => (
+            {comments.map((c) => (
               <div key={c.id} className={styles.commentCard}>
-                <div className={styles.commentHeader}>
-                  <span className={styles.commentAuthor}>{c.author}</span>
-                  <span className={styles.commentDate}>{c.date}</span>
-                </div>
-                <p className={styles.commentText}>{c.text}</p>
+                <p className={styles.commentHeader}><strong>{c.author}</strong> • {c.date}</p>
+                <p>{c.text}</p>
               </div>
             ))}
           </div>
         </section>
       </div>
-    </main>
+    </article>
   );
 }

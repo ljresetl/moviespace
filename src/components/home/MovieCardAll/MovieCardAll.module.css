@@ -122,3 +122,18 @@
   flex-direction: column;
   gap: 20px;
 }
+
+.premiumBlock {
+  background: rgba(229, 9, 20, 0.05); /* Легкий червоний відтінок фону */
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+  border: 1px solid rgba(229, 9, 20, 0.1);
+}
+
+.divider {
+  border: 0;
+  height: 1px;
+  background: #eeeeee;
+  margin: 40px 0;
+}

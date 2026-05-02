@@ -1,4 +1,8 @@
-// --- Базові сутності ---
+/**
+ * ТИПИ ДЛЯ ФІЛЬМІВ ТА API (Next.js + TMDB + Videoseed + Vibix)
+ */
+
+// --- 1. Базові сутності ---
 export interface Genre {
   id: number;
   name: string;
@@ -15,36 +19,48 @@ export interface SpokenLanguage {
   name: string;
 }
 
-// --- Фільми ---
+// --- 2. Фільми (TMDB) ---
 export interface Movie {
   id: number;
   title: string;
-  original_title: string;
+  original_title?: string;
   poster_path: string | null;
-  backdrop_path: string | null;
+  backdrop_path?: string | null;
   release_date: string;
   vote_average: number;
-  vote_count: number;
-  overview: string;
-  popularity: number;
-  adult: boolean;
-  video: boolean;
-  genre_ids?: number[];
+  vote_count?: number;
+  overview?: string;
+  popularity?: number;
+  adult?: boolean;
+  video?: boolean;
+  genre_ids: number[];
 }
 
 export interface MovieDetails extends Movie {
   genres: Genre[];
-  runtime: number;
+  runtime: number | null;
   budget: number;
   revenue: number;
-  status: string;
+  status?: string;
   tagline: string | null;
-  original_language: string;
-  production_countries: ProductionCountry[];
-  spoken_languages: SpokenLanguage[];
+  original_language?: string;
+  production_countries?: ProductionCountry[];
+  spoken_languages?: SpokenLanguage[];
 }
 
-// --- Актори та Команда ---
+// --- 3. Локальні дані (movies.json / Videoseed) ---
+export interface MovieEntry {
+  id_tmdb: string | number;
+  id_kp: string | number;
+  iframe: string; // Основне посилання з Videoseed
+  name?: string;
+}
+
+export interface MoviesJsonData {
+  data: MovieEntry[];
+}
+
+// --- 4. Коментарі та Credits ---
 export interface CastMember {
   id: number;
   name: string;
@@ -52,33 +68,6 @@ export interface CastMember {
   profile_path: string | null;
 }
 
-export interface CrewMember {
-  id: number;
-  name: string;
-  job: string;
-}
-
-export interface CreditsResponse {
-  id: number;
-  cast: CastMember[];
-  crew: CrewMember[];
-}
-
-// --- Відео та Трейлери ---
-export interface Video {
-  key: string;
-  site: string;
-  type: string;
-  official: boolean;
-}
-
-// ОСЬ ЦЕЙ ІНТЕРФЕЙС ВИПРАВЛЯЄ ПОМИЛКУ В tmdb.ts
-export interface MovieVideosResponse {
-  id: number;
-  results: Video[];
-}
-
-// --- Коментарі та Користувачі ---
 export interface Comment {
   id: number;
   author: string;
@@ -86,49 +75,25 @@ export interface Comment {
   date: string;
 }
 
-export interface RegisteredUser {
-  email: string;
-  name?: string | null;
-  image?: string | null;
-  createdAt: string;
-}
-
-// --- Фільтри та Пропси для Головної та Каталогу ---
-export interface DiscoverFilters {
-  genre?: string;
-  year?: string;
-  country?: string;
-  page?: string;
-}
-
-export interface HomePageProps {
-  searchParams: Promise<DiscoverFilters>;
-}
-
-export interface MovieCardAllProps {
-  movies: Movie[];
-  totalPages: number;
-  currentPage: number;
-  filters?: DiscoverFilters;
-  hasFilters?: boolean;
-}
-
-// --- Пропси для деталей фільму ---
-export interface MovieDetailsProps {
+// --- 5. Пропси для Компонентів ---
+export interface ExtendedMovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
-  director: string;
   cast: CastMember[];
+  director: string;
 }
 
-export interface ExtendedMovieDetailsProps extends MovieDetailsProps {
-  playerToken: string;
+// --- 6. Відповіді API ---
+export interface CheckMovieResponse {
+  found: boolean;
+  player1Url?: string; // Videoseed (з файлу)
+  player2Url?: string; // Vibix (з API)
+  kp_id?: string | number | null;
+  error?: string;
 }
 
-// --- Відповіді API ---
-export interface TMDBResponse {
-  page: number;
-  results: Movie[];
-  total_pages: number;
-  total_results: number;
+export interface VibixVideoResponse {
+  id: number;
+  iframe_url: string;
+  kp_id: number;
 }

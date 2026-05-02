@@ -7,17 +7,20 @@ import HeroSlider from "@/components/home/HeroSlider/HeroSlider";
 import { HomePageProps } from "@/types/movie";
 import { getMovies } from "@/lib/tmdb";
 
+// Налаштовуємо ISR: сторінка буде оновлюватися у фоновому режимі максимум раз на 1 годину (3600 сек)
+// Це дозволяє Next.js віддавати сторінку миттєво з кешу сервера
+export const revalidate = 3600; 
+
 export default async function HomePage({ searchParams }: HomePageProps) {
-  // 1. Очікуємо параметри (Next.js 15 обов'язково через await)
+  // 1. Очікуємо параметри
   const filters = await searchParams;
   const currentPage = Number(filters.page) || 1;
 
-  // 2. Завантажуємо дані для HeroSlider на сервері
-  // Використовуємо серверний запит, щоб уникнути помилок 401 на клієнті
+  // 2. Завантажуємо дані для HeroSlider
+  // Додаємо cache: 'force-cache' або використовуємо налаштування fetch у getMovies
   const trendingMovies = await getMovies('/trending/movie/day');
   const heroMovie = trendingMovies?.[0] || null;
 
-  // 3. Формуємо об'єкт фільтрів для каталогу
   const activeFilters = {
     genre: filters.genre,
     year: filters.year,
@@ -26,20 +29,20 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   return (
     <main className="container">
-      {/* Передаємо завантажений фільм у слайдер */}
+      {/* HeroSlider тепер рендериться миттєво з кешу */}
       <HeroSlider initialMovie={heroMovie} /> 
       
-      <LatestMovies />
+      {/* Рекомендую додати Suspense і сюди, якщо LatestMovies робить важкі запити */}
+      <Suspense fallback={<div>Завантаження новинок...</div>}>
+        <LatestMovies />
+      </Suspense>
 
-      {/* Suspense реагує на зміну ключів фільтрації */}
       <Suspense 
         key={JSON.stringify(filters)} 
-        fallback={<div className="catalog-loader">Завантаження каталогу...</div>}
+        fallback={<div className="catalog-loader" style={{textAlign: 'center', padding: '50px'}}>Завантаження каталогу...</div>}
       >
         <section id="catalog" style={{ minHeight: '600px', paddingTop: '20px' }}>
           <GenreFilters />
-          
-          {/* Серверний компонент каталогу */}
           <MovieCardAll 
             filters={activeFilters} 
             page={currentPage} 

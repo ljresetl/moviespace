@@ -1,0 +1,77 @@
+/* Базові стилі для мобільних пристроїв (Mobile First) */
+.playerContainer {
+  width: 100%;
+  margin: 15px 0;
+  background: #111;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #333;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.tabsHeader {
+  display: flex;
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+.tabBtn {
+  flex: 1;
+  padding: 10px 5px; /* Менші падінги для мобільних */
+  background: transparent;
+  color: #888;
+  border: none;
+  cursor: pointer;
+  font-size: 11px; /* Компактний шрифт */
+  font-weight: 600;
+  transition: all 0.2s ease;
+  outline: none;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.tabBtn.active {
+  background: #ce6c56; /* Фірмовий колір */
+  color: #fff;
+}
+
+.tabBtn:disabled {
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+
+/* Адаптивний контейнер для відео */
+.screen {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* Співвідношення 16:9 */
+  background: #000;
+}
+
+.iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Стилі для планшетів та десктопів */
+@media (min-width: 768px) {
+  .playerContainer {
+    margin: 20px 0;
+    border-radius: 12px;
+  }
+
+  .tabBtn {
+    padding: 14px 20px;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .tabBtn:hover:not(:disabled):not(.active) {
+    color: #fff;
+    background: #222;
+  }
+}

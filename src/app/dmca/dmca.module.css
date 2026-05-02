@@ -1,0 +1,96 @@
+/* --- MOBILE FIRST (Базові стилі для телефонів) --- */
+.mainWrapper {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  padding: 40px 0; /* Менші відступи для мобільних */
+}
+
+.title {
+  font-family: var(--heading-font);
+  font-size: 1.8rem; /* Менший шрифт для смартфонів */
+  font-weight: 800;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  border-left: 5px solid #e50914;
+  padding-left: 15px;
+}
+
+.contentSection {
+  margin-bottom: 25px;
+}
+
+.contentSection h2 {
+  font-family: var(--heading-font);
+  font-size: 1.3rem; /* Компактні заголовки */
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.contentSection p {
+  font-size: 1rem; /* Стандартний розмір для читання з екрана */
+  line-height: 1.6;
+  margin-bottom: 12px;
+  color: #4a4a4a;
+}
+
+.list {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+
+.list li {
+  margin-bottom: 10px;
+  font-size: 0.95rem;
+}
+
+.emailLink {
+  color: #e50914;
+  text-decoration: none;
+  font-weight: 700;
+  border-bottom: 1px dashed #e50914;
+  word-break: break-all; /* Щоб довга пошта не вилазила за межі екрана */
+}
+
+.emailLink:hover {
+  border-bottom-style: solid;
+}
+
+.footerNote {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #eeeeee;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+/* --- TABLETS & DESKTOP (Збільшення для великих екранів) --- */
+@media (min-width: 768px) {
+  .mainWrapper {
+    padding: 60px 0;
+  }
+
+  .title {
+    font-size: 2.5rem;
+    padding-left: 20px;
+    margin-bottom: 40px;
+  }
+
+  .contentSection h2 {
+    font-size: 1.5rem;
+  }
+
+  .contentSection p {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+
+  .list li {
+    font-size: 1rem;
+  }
+
+  .footerNote {
+    margin-top: 60px;
+    font-size: 0.9rem;
+  }
+}

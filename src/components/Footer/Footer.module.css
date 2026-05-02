@@ -1,25 +1,57 @@
 .footer {
   padding: 30px 0;
-  background: var(--bg-color, #0a0a0a);
-  border-top: 1px solid var(--border-color, #222);
+  background: var(--bg-color, #ffffff);
+  border-top: 1px solid #eee;
   text-align: center;
 }
 
+/* Mobile First: елементи в стовпчик */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
 .logo {
-  font-size: 1.2rem;
+  font-family: var(--heading-font);
+  font-size: 1.3rem;
   font-weight: 900;
-  margin-bottom: 10px;
-  color: #000000;
+  color: var(--text-color, #1a1a1a);
+  letter-spacing: 1px;
 }
 
 .logo span {
-  color: var(--accent-color, #e50914);
+  color: #e50914;
 }
 
 .copy {
   font-size: 0.85rem;
   color: #888;
-  margin-bottom: 8px;
+}
+
+.navLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+
+.secondaryLink {
+  color: #666;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.secondaryLink:hover {
+  color: var(--text-color, #1a1a1a);
+  text-decoration: underline;
+}
+
+.separator {
+  color: #ddd;
+  user-select: none;
 }
 
 .author {
@@ -28,14 +60,51 @@
 }
 
 .link {
-  color: #fff;
+  color: #e50914;
   text-decoration: none;
   font-weight: 600;
-  transition: color 0.2s ease;
-  color: #e50914;
+  transition: opacity 0.2s ease;
 }
 
 .link:hover {
-  color: var(--accent-color, #e50914);
-  text-decoration: underline;
+  opacity: 0.8;
+}
+
+/* Tablet & Desktop (від 768px): ВСЕ В ОДИН РЯДОК */
+@media (min-width: 768px) {
+  .footer {
+    padding: 25px 0; /* Трохи менші відступи для компактності в один рядок */
+  }
+
+  .container {
+    flex-direction: row; /* Вибудовуємо в рядок */
+    justify-content: space-between; /* Розтягуємо по краях */
+    flex-wrap: wrap; /* Дозволяємо перенос, якщо екран зовсім малий для одного рядка */
+    gap: 20px;
+  }
+
+  /* Вирівнюємо порядок елементів у рядку */
+  .logo {
+    order: 1;
+  }
+  .navLinks {
+    order: 2;
+  }
+  .copy {
+    order: 3;
+  }
+  .author {
+    order: 4;
+    width: auto; /* Прибираємо 100%, щоб не переносило */
+    border-top: none;
+    padding-top: 0;
+    margin-top: 0;
+  }
+}
+
+/* Опціонально для великих екранів (від 1024px), щоб було ще вільніше */
+@media (min-width: 1024px) {
+  .container {
+    gap: 0; /* Простір регулюється через justify-content: space-between */
+  }
 }
