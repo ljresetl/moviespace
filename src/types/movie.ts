@@ -122,11 +122,11 @@ export interface ExtendedMovieDetailsProps {
 
 /** Параметри фільтрації (для сторінок категорій) */
 export interface DiscoverFilters {
-  genre?: string;
-  year?: string;
-  country?: string;
-  page?: string;
-  sort_by?: string;
+genre?: string | string[];   // Додано | string[]
+  year?: string | string[];    // Додано | string[]
+  country?: string | string[]; // Додано | string[]
+  page?: string | string[];    // Додано | string[]
+  sort_by?: string | string[]; // Додано | string[]
 }
 
 // --- 7. Відповіді API ---
@@ -155,4 +155,11 @@ export interface TMDBPaginationResponse<T> {
   results: T[];
   total_pages: number;
   total_results: number;
+}
+
+// Додайте це до src/types/movie.ts
+
+export interface HomePageProps {
+params: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
