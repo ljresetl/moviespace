@@ -2,18 +2,15 @@ import { getMovieDetails, getMovieCredits, getMovieVideos } from "@/lib/tmdb";
 import MovieDetailsContent from "@/app/movie/[id]/MovieDetailsContent";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+// Імпортуємо тип CrewMember, який ми створили раніше у файлі типів
+import { CrewMember } from "@/types/movie"; 
 
-// Налаштовуємо кешування: сторінка фільму оновлюється не частіше ніж раз на добу (86400 сек)
-// Оскільки інформація про фільм (актори, опис) змінюється рідко.
 export const revalidate = 86400; 
 
 interface MoviePageProps {
   params: Promise<{ id: string }>;
 }
 
-/**
- * Динамічна генерація метаданих
- */
 export async function generateMetadata({ params }: MoviePageProps): Promise<Metadata> {
   const resolvedParams = await params;
   const rawId = resolvedParams.id;
@@ -23,7 +20,6 @@ export async function generateMetadata({ params }: MoviePageProps): Promise<Meta
   const cleanId = parseInt(rawId.split("-")[0]);
   if (isNaN(cleanId)) return {};
 
-  // Next.js автоматично дедуплікує цей запит, тому він не навантажує API повторно
   const movie = await getMovieDetails(cleanId);
   if (!movie) return {};
 
@@ -60,7 +56,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
   const cleanId = parseInt(rawId.split("-")[0]);
   if (isNaN(cleanId)) return notFound();
 
-  // Паралельне завантаження вже є — це чудово для швидкості першого рендеру
   const [movie, credits, trailerKey] = await Promise.all([
     getMovieDetails(cleanId),
     getMovieCredits(cleanId),
@@ -71,7 +66,9 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
   const token = process.env.PLAYER_TOKEN || ""; 
   const cast = credits?.cast.slice(0, 10) || [];
-  const director = credits?.crew.find((p) => p.job === "Director")?.name || "Невідомо";
+  
+  // ВИПРАВЛЕННЯ ТУТ: явно вказуємо тип для параметра 'p'
+  const director = credits?.crew.find((p: CrewMember) => p.job === "Director")?.name || "Невідомо";
 
   return (
     <MovieDetailsContent 
