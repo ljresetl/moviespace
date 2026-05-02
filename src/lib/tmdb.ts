@@ -5,15 +5,12 @@ import {
   TMDBResponse, 
   MovieDetails, 
   CreditsResponse, 
-  MovieVideosResponse, 
-  Video 
+  MovieVideosResponse,
+  Video // Переконайтеся, що цей тип експортується з @/types/movie
 } from "@/types/movie";
 
 const BASE_URL = 'https://api.themoviedb.org/3';
 
-/**
- * Утиліта для отримання заголовків авторизації
- */
 const getAuthOptions = () => ({
   method: 'GET',
   headers: {
@@ -22,7 +19,7 @@ const getAuthOptions = () => ({
   }
 });
 
-// 1. Отримання загальних списків (Trending, Популярні тощо)
+// 1. Отримання загальних списків
 export const getMovies = async (endpoint: string): Promise<Movie[]> => {
   try {
     const res = await fetch(`${BASE_URL}${endpoint}?language=uk-UA`, {
@@ -40,7 +37,7 @@ export const getMovies = async (endpoint: string): Promise<Movie[]> => {
   }
 };
 
-// 2. Каталог з фільтрацією та пагінацією
+// 2. Каталог з фільтрацією
 export const discoverMovies = async (
   filters: DiscoverFilters, 
   page: number
@@ -51,9 +48,9 @@ export const discoverMovies = async (
   const params = new URLSearchParams({
     language: 'uk-UA',
     page: page.toString(),
-    with_genres: genre || "",
-    primary_release_year: filterYear || "",
-    with_origin_country: country || "",
+    with_genres: Array.isArray(genre) ? genre.join(',') : (genre || ""),
+    primary_release_year: Array.isArray(filterYear) ? filterYear[0] : (filterYear || ""),
+    with_origin_country: Array.isArray(country) ? country[0] : (country || ""),
     sort_by: 'popularity.desc'
   });
 
@@ -72,7 +69,7 @@ export const discoverMovies = async (
   }
 };
 
-// 3. Детальна інформація про конкретний фільм
+// 3. Деталі фільму
 export const getMovieDetails = async (id: number): Promise<MovieDetails | null> => {
   try {
     const res = await fetch(`${BASE_URL}/movie/${id}?language=uk-UA`, {
@@ -88,7 +85,7 @@ export const getMovieDetails = async (id: number): Promise<MovieDetails | null> 
   }
 };
 
-// 4. Отримання акторського складу та знімальної групи
+// 4. Credits
 export const getMovieCredits = async (id: number): Promise<CreditsResponse | null> => {
   try {
     const res = await fetch(`${BASE_URL}/movie/${id}/credits?language=uk-UA`, {
@@ -104,7 +101,7 @@ export const getMovieCredits = async (id: number): Promise<CreditsResponse | nul
   }
 };
 
-// 5. Отримання ключа трейлера (YouTube)
+// 5. Трейлери (ВИПРАВЛЕНО ТИПІЗАЦІЮ 'v')
 export const getMovieVideos = async (id: number): Promise<string | null> => {
   const options = {
     ...getAuthOptions(),
@@ -112,17 +109,16 @@ export const getMovieVideos = async (id: number): Promise<string | null> => {
   };
 
   try {
-    // Спочатку шукаємо українською
     const res = await fetch(`${BASE_URL}/movie/${id}/videos?language=uk-UA`, options);
     const data: MovieVideosResponse = await res.json();
     
-    let trailer = data.results?.find(v => v.type === "Trailer" && v.site === "YouTube");
+    // Додано тип Video для параметра v
+    let trailer = data.results?.find((v: Video) => v.type === "Trailer" && v.site === "YouTube");
     
-    // Якщо українською немає, шукаємо оригінал (англійською)
     if (!trailer) {
       const resEn = await fetch(`${BASE_URL}/movie/${id}/videos`, options);
       const dataEn: MovieVideosResponse = await resEn.json();
-      trailer = dataEn.results?.find(v => v.type === "Trailer" && v.site === "YouTube");
+      trailer = dataEn.results?.find((v: Video) => v.type === "Trailer" && v.site === "YouTube");
     }
     
     return trailer?.key || data.results?.[0]?.key || null;
@@ -132,21 +128,17 @@ export const getMovieVideos = async (id: number): Promise<string | null> => {
   }
 };
 
-// 6. Утиліта для формування URL зображень
-export const getImageUrl = (path: string, size: string = 'w500'): string => {
+// 6. Зображення
+export const getImageUrl = (path: string | null, size: string = 'w500'): string => {
   return path ? `https://image.tmdb.org/t/p/${size}${path}` : '/no-poster.png';
 };
 
-// 7. Пошук фільмів (для використання в Клієнтських компонентах)
+// 7. Клієнтський пошук
 export const searchMoviesClient = async (query: string): Promise<Movie[]> => {
   if (!query) return [];
-  
   try {
-    // Ми робимо запит до НАШОГО сервера, а не до TMDB напряму
     const res = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
-    
     if (!res.ok) throw new Error("Search failed");
-    
     const data = await res.json();
     return data.results || [];
   } catch (error) {

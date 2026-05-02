@@ -3,6 +3,7 @@
  */
 
 // --- 1. Базові сутності ---
+
 export interface Genre {
   id: number;
   name: string;
@@ -55,7 +56,25 @@ export interface MovieDetails extends Movie {
   spoken_languages?: SpokenLanguage[];
 }
 
-// --- 3. Локальні дані (movies.json / Videoseed / Vibix) ---
+// --- 3. Відео та Трейлери (TMDB) ---
+
+export interface Video {
+  id: string;
+  key: string;
+  name: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+}
+
+export interface MovieVideosResponse {
+  id: number;
+  results: Video[];
+}
+
+// --- 4. Локальні дані (movies.json / Videoseed / Vibix) ---
 
 /** Структура одного запису у вашому локальному JSON-файлі */
 export interface MovieEntry {
@@ -74,7 +93,7 @@ export interface MoviesJsonData {
   data: MovieEntry[];
 }
 
-// --- 4. Актори, Команда та Коментарі ---
+// --- 5. Актори та Команда ---
 
 export interface CastMember {
   id: number;
@@ -90,6 +109,14 @@ export interface CrewMember {
   department: string;
 }
 
+export interface CreditsResponse {
+  id: number;
+  cast: CastMember[];
+  crew: CrewMember[];
+}
+
+// --- 6. Соціальні функції ---
+
 export interface Comment {
   id: number;
   author: string;
@@ -98,8 +125,7 @@ export interface Comment {
   userId?: string; // Для зв'язку з профілем
 }
 
-// --- 5. Користувачі та Сесії (для Next-Auth) ---
-
+/** Користувачі та Сесії (для Next-Auth) */
 export interface RegisteredUser {
   id?: string;
   email: string | null | undefined;
@@ -109,9 +135,9 @@ export interface RegisteredUser {
   createdAt?: string;
 }
 
-// --- 6. Пропси для Компонентів ---
+// --- 7. Пропси для Компонентів ---
 
-/** Пропси для сторінкиMovieDetailsContent.tsx */
+/** Пропси для сторінки MovieDetailsContent.tsx */
 export interface ExtendedMovieDetailsProps {
   movie: MovieDetails;
   trailerKey: string | null;
@@ -122,14 +148,19 @@ export interface ExtendedMovieDetailsProps {
 
 /** Параметри фільтрації (для сторінок категорій) */
 export interface DiscoverFilters {
-genre?: string | string[];   // Додано | string[]
-  year?: string | string[];    // Додано | string[]
-  country?: string | string[]; // Додано | string[]
-  page?: string | string[];    // Додано | string[]
-  sort_by?: string | string[]; // Додано | string[]
+  genre?: string | string[];
+  year?: string | string[];
+  country?: string | string[];
+  page?: string | string[];
+  sort_by?: string | string[];
 }
 
-// --- 7. Відповіді API ---
+export interface HomePageProps {
+  params: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+// --- 8. Відповіді API ---
 
 /** Стандартна відповідь від API перевірки доступності фільму */
 export interface CheckMovieResponse {
@@ -150,23 +181,17 @@ export interface VibixVideoResponse {
 }
 
 /** Типова відповідь від TMDB API для пагінації */
-export interface TMDBPaginationResponse<T> {
+export interface TMDBResponse {
   page: number;
-  results: T[];
+  results: Movie[];
   total_pages: number;
   total_results: number;
 }
 
-
-export interface HomePageProps {
-params: Promise<{ [key: string]: string | string[] | undefined }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
-
-
-export interface TMDBResponse {
+/** Універсальний дженерик для пагінації (якщо знадобиться для інших типів) */
+export interface TMDBPaginationResponse<T> {
   page: number;
-  results: Movie[];
+  results: T[];
   total_pages: number;
   total_results: number;
 }
