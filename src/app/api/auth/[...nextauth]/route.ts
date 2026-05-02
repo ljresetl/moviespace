@@ -4,7 +4,14 @@ import NextAuth, { NextAuthOptions, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import fs from "fs";
 import path from "path";
-import { RegisteredUser } from "@/types/movie";
+
+// Визначаємо інтерфейс прямо тут, щоб уникнути помилок Type Error під час збірки
+interface RegisteredUser {
+  email: string | null | undefined;
+  name?: string | null;
+  image?: string | null;
+  createdAt: string;
+}
 
 const authOptions: NextAuthOptions = {
   providers: [
@@ -18,9 +25,16 @@ const authOptions: NextAuthOptions = {
     async signIn({ user }: { user: User }): Promise<boolean> {
       if (user.email) {
         try {
-          const filePath = path.join(process.cwd(), "users.json");
-          
-          // Перевіряємо існування файлу, щоб уникнути помилки при першому читанні
+          // Використовуємо шлях до src/data, як у нашому проекті на сервері
+          const dataDir = path.join(process.cwd(), "src/data");
+          const filePath = path.join(dataDir, "users.json");
+
+          // Створюємо папку, якщо її не існує
+          if (!fs.existsSync(dataDir)) {
+            fs.mkdirSync(dataDir, { recursive: true });
+          }
+
+          // Перевіряємо існування файлу
           if (!fs.existsSync(filePath)) {
             fs.writeFileSync(filePath, JSON.stringify([], null, 2));
           }
@@ -48,7 +62,6 @@ const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    // Додаємо типізацію для сесії, щоб email був доступний на фронтенді
     async session({ session, token }) {
       if (session.user) {
         session.user.email = token.email;
@@ -63,7 +76,7 @@ const authOptions: NextAuthOptions = {
         httpOnly: true,
         sameSite: 'lax',
         path: '/',
-        secure: process.env.NODE_ENV === "production", // Автоматично true на Vercel
+        secure: process.env.NODE_ENV === "production",
       },
     },
   },
