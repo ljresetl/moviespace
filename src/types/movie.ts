@@ -157,9 +157,16 @@ export interface TMDBPaginationResponse<T> {
   total_results: number;
 }
 
-// Додайте це до src/types/movie.ts
 
 export interface HomePageProps {
 params: Promise<{ [key: string]: string | string[] | undefined }>;
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+
+export interface TMDBResponse {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
 }
