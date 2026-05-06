@@ -1,56 +1,84 @@
 .section {
-  padding: 60px 0;
+  padding: 40px 0; /* Трохи менше для мобілок, 60px для десктопа через media */
   background-color: var(--bg-color);
-  overflow: hidden; /* Щоб не було горизонтального скролу всієї сторінки */
+  overflow: hidden;
 }
 
 .head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
+  /* Важливо додати паддінг і сюди, щоб заголовок збігався з початком слайдера */
+  padding: 0 var(--container-px, 20px);
 }
 
 .title {
-  font-size: 1.8rem;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
   font-weight: 800;
   color: #fff;
   border-left: 4px solid var(--accent-color);
   padding-left: 15px;
 }
 
-/* --- КЛЮЧОВЕ ВИПРАВЛЕННЯ ДЛЯ ЕФЕКТУ КОЛІС --- */
+/* Контейнер слайдера */
 .sliderWrapper {
   position: relative;
   width: 100%;
-
-  /* Даємо паддінг зліва, що дорівнює паддінгу вашого .container */
-  /* Зазвичай це 16px або 24px, підстав сюди значення зі свого globals.css */
-  padding-left: var(--container-px, 24px);
-
-  overflow: visible !important; /* Щоб картки виходили за межі */
+  padding-left: var(--container-px, 20px);
+  overflow: visible !important;
 }
 
 .slider {
-  overflow: visible !important; /* Swiper також не повинен обрізати контент */
-  padding: 20px 0; /* Простір для ховера картки вгору */
+  overflow: visible !important;
+  padding: 15px 0;
 }
 
+/* --- РОЗРАХУНОК ШИРИНИ СЛАЙДІВ --- */
+
+/* Мобільні (3 картки): (100% - паддінги - відступи між картами) / 3 */
 .slide {
-  /* Задаємо фіксовану ширину слайда, щоб SlidesPerView: auto працював правильно */
-  width: 160px; /* Приблизно для 9 карт на десктопі, підкоригуй під свій дизайн */
+  width: calc((100vw - 60px) / 3);
+  max-width: 130px;
 }
 
-@media (min-width: 1024px) {
+/* Планшети (5-6 карток) */
+@media (min-width: 640px) {
   .slide {
-    width: 135px; /* Для 9 карт */
+    width: calc((100vw - 80px) / 5);
+    max-width: 140px;
+  }
+  .section {
+    padding: 60px 0;
   }
 }
 
+/* Ноутбуки та Десктопи (9 карток) */
+@media (min-width: 1024px) {
+  .slide {
+    width: calc((100vw - 120px) / 9);
+    max-width: 145px;
+  }
+  .head {
+    padding: 0 var(--container-px, 24px);
+  }
+  .sliderWrapper {
+    padding-left: var(--container-px, 24px);
+  }
+}
+
+/* Великі екрани (щоб карти не ставали гігантськими) */
+@media (min-width: 1440px) {
+  .slide {
+    width: 135px;
+  }
+}
+
+/* КАРТКА */
 .card {
   display: block;
   text-decoration: none;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .posterWrapper {
@@ -72,65 +100,65 @@
 .cardOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(18, 20, 23, 0.6);
+  background: rgba(18, 20, 23, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: 0.3s;
-}
-
-.playBtn {
-  font-size: 2rem;
-  color: var(--accent-color);
+  transition: opacity 0.3s ease;
 }
 
 /* Ефекти ховера */
 .card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-8px);
 }
+
 .card:hover .posterWrapper {
   border-color: var(--accent-color);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
 }
+
 .card:hover .cardOverlay {
   opacity: 1;
 }
 
 .movieTitle {
-  margin-top: 10px;
-  font-size: 0.85rem;
+  margin-top: 8px;
+  font-size: 0.8rem;
   color: var(--text-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  transition: color 0.3s ease;
+  text-align: center; /* Центруємо текст для мобілок */
 }
 
-.card:hover .movieTitle {
-  color: var(--accent-color);
+@media (min-width: 768px) {
+  .movieTitle {
+    font-size: 0.85rem;
+    text-align: left;
+  }
 }
 
-/* Навігація */
+/* Керування */
 .controls {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  padding-right: var(--container-px, 20px);
 }
+
 .controls button {
-  background: var(--card-bg);
+  background: var(--bg-darker);
   border: 1px solid var(--border-color);
   color: #fff;
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   cursor: pointer;
   transition: 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 10;
-  font-size: 0.9rem;
 }
 
 .controls button:hover {
@@ -140,12 +168,6 @@
 
 @media (max-width: 768px) {
   .controls {
-    display: none;
+    display: none; /* Ховаємо стрілки на мобілках, бо там зручніше свайпати пальцем */
   }
-  .sliderWrapper {
-    padding-left: 16px;
-  } /* Паддінг для мобільного контейнера */
-  .slide {
-    width: 120px;
-  } /* Трохи менші карти на мобільних */
 }

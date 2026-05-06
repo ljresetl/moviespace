@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
-import { ArrowLeft } from 'lucide-react'; // Імпортуємо іконку
+import { ArrowLeft, Share2 } from 'lucide-react'; 
 import styles from './page.module.css';
 
 interface Actor {
@@ -54,6 +54,7 @@ export default function MoviePage() {
       try {
         await navigator.share({
           title: movie?.title,
+          text: `Дивись фільм "${movie?.title}" на Kinoshrot`,
           url: window.location.href,
         });
       } catch (err) {
@@ -74,7 +75,6 @@ export default function MoviePage() {
   return (
     <div className={styles.pageWrapper}>
       <div className="container">
-        {/* Оновлена кнопка "Назад" */}
         <button onClick={() => router.back()} className={styles.backBtn}>
           <ArrowLeft size={20} className={styles.backIcon} />
           <span>Назад</span>
@@ -84,7 +84,7 @@ export default function MoviePage() {
           <aside className={styles.leftCol}>
             <div className={styles.posterWrapper}>
               <Image
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/no-poster.png'}
                 alt={movie.title}
                 fill
                 priority
@@ -92,7 +92,7 @@ export default function MoviePage() {
               />
               <div className={styles.rating}>⭐ {movie.vote_average.toFixed(1)}</div>
             </div>
-            <a href="https://t.me/your_channel" target="_blank" className={styles.tgBtnMain}>
+            <a href="https://t.me/your_channel" target="_blank" rel="noopener noreferrer" className={styles.tgBtnMain}>
               Дивитись у Telegram
             </a>
           </aside>
@@ -101,7 +101,7 @@ export default function MoviePage() {
             <div className={styles.headerRow}>
               <h1 className={styles.title}>{movie.title}</h1>
               <button onClick={handleShare} className={styles.shareBtn} title="Поділитися">
-                🔗
+                <Share2 size={18} />
               </button>
             </div>
 
@@ -119,7 +119,7 @@ export default function MoviePage() {
                 <strong>Ми в Telegram</strong>
                 <span>Підписуйся, щоб не пропустити нові фільми!</span>
               </div>
-              <a href="https://t.me/your_channel" target="_blank" className={styles.tgSubBtn}>
+              <a href="https://t.me/your_channel" target="_blank" rel="noopener noreferrer" className={styles.tgSubBtn}>
                 Підписатися
               </a>
             </div>
@@ -137,7 +137,11 @@ export default function MoviePage() {
               <section className={styles.trailerSection}>
                 <h3 className={styles.sectionTitle}>Офіційний трейлер</h3>
                 <div className={styles.iframeWrapper}>
-                  <iframe src={`https://www.youtube.com/embed/${trailer.key}`} allowFullScreen />
+                  <iframe 
+                    src={`https://www.youtube.com/embed/${trailer.key}`} 
+                    title="YouTube trailer"
+                    allowFullScreen 
+                  />
                 </div>
               </section>
             )}
