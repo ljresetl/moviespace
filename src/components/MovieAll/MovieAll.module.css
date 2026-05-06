@@ -1,0 +1,148 @@
+.section {
+  padding: 40px 0;
+  background-color: var(--bg-color);
+}
+
+.title {
+  margin-bottom: 30px;
+  position: relative;
+  padding-left: 15px;
+  font-size: var(--fs-h2);
+  color: var(--text-color);
+}
+
+.title::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 24px;
+  background: var(--accent-color);
+  border-radius: 2px;
+}
+
+/* --- FLEXBOX CONTAINER (Mobile First: 2 колонки) --- */
+.flexContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.card {
+  /* Віднімаємо gap, щоб влізло рівно 2 картки: (100% - 16px) / 2 */
+  width: calc((100% - 16px) / 2);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Планшети: 3 колонки */
+@media (min-width: 600px) {
+  .card {
+    width: calc((100% - 32px) / 3);
+  }
+}
+
+/* Малі десктопи: 4 колонки */
+@media (min-width: 900px) {
+  .flexContainer {
+    gap: 20px;
+  }
+  .card {
+    width: calc((100% - 60px) / 4);
+  }
+}
+
+/* Великі десктопи: 5 колонок */
+@media (min-width: 1100px) {
+  .card {
+    width: calc((100% - 80px) / 5);
+  }
+}
+
+.card:hover {
+  transform: translateY(-8px);
+}
+
+.posterWrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3; /* Фіксований розмір контейнера */
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--bg-darker);
+  border: 1px solid var(--border-color);
+}
+
+.poster {
+  object-fit: cover; /* Фото завжди однакового розміру всередині */
+  transition: scale 0.5s ease;
+}
+
+.card:hover .poster {
+  scale: 1.1;
+}
+
+.rating {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(10, 12, 14, 0.85);
+  backdrop-filter: blur(4px);
+  color: var(--accent-color);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 800;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-color);
+  z-index: 2;
+}
+
+.info {
+  margin-top: 12px;
+  padding: 0 4px;
+}
+
+.movieTitle {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.3;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.year {
+  color: var(--gray);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.loaderContainer {
+  height: 40vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

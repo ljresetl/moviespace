@@ -1,0 +1,151 @@
+.section {
+  padding: 60px 0;
+  background-color: var(--bg-color);
+  overflow: hidden; /* Щоб не було горизонтального скролу всієї сторінки */
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+  border-left: 4px solid var(--accent-color);
+  padding-left: 15px;
+}
+
+/* --- КЛЮЧОВЕ ВИПРАВЛЕННЯ ДЛЯ ЕФЕКТУ КОЛІС --- */
+.sliderWrapper {
+  position: relative;
+  width: 100%;
+
+  /* Даємо паддінг зліва, що дорівнює паддінгу вашого .container */
+  /* Зазвичай це 16px або 24px, підстав сюди значення зі свого globals.css */
+  padding-left: var(--container-px, 24px);
+
+  overflow: visible !important; /* Щоб картки виходили за межі */
+}
+
+.slider {
+  overflow: visible !important; /* Swiper також не повинен обрізати контент */
+  padding: 20px 0; /* Простір для ховера картки вгору */
+}
+
+.slide {
+  /* Задаємо фіксовану ширину слайда, щоб SlidesPerView: auto працював правильно */
+  width: 160px; /* Приблизно для 9 карт на десктопі, підкоригуй під свій дизайн */
+}
+
+@media (min-width: 1024px) {
+  .slide {
+    width: 135px; /* Для 9 карт */
+  }
+}
+
+.card {
+  display: block;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.posterWrapper {
+  position: relative;
+  aspect-ratio: 2/3;
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cardOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 20, 23, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.playBtn {
+  font-size: 2rem;
+  color: var(--accent-color);
+}
+
+/* Ефекти ховера */
+.card:hover {
+  transform: translateY(-10px);
+}
+.card:hover .posterWrapper {
+  border-color: var(--accent-color);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+.card:hover .cardOverlay {
+  opacity: 1;
+}
+
+.movieTitle {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.card:hover .movieTitle {
+  color: var(--accent-color);
+}
+
+/* Навігація */
+.controls {
+  display: flex;
+  gap: 10px;
+}
+.controls button {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: #fff;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  font-size: 0.9rem;
+}
+
+.controls button:hover {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+  .controls {
+    display: none;
+  }
+  .sliderWrapper {
+    padding-left: 16px;
+  } /* Паддінг для мобільного контейнера */
+  .slide {
+    width: 120px;
+  } /* Трохи менші карти на мобільних */
+}

@@ -1,0 +1,134 @@
+.hero {
+  position: relative;
+  height: 70vh; /* Висота банера */
+  min-height: 500px;
+  width: 100%;
+  overflow: hidden;
+  background-color: #0a0c0e;
+}
+
+.imageWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.backgroundImage {
+  object-fit: cover;
+  object-position: center 20%;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  /* Градієнт, щоб текст було видно на будь-якому фоні */
+  background:
+    linear-gradient(
+      to right,
+      rgba(10, 12, 14, 0.9) 0%,
+      rgba(10, 12, 14, 0.4) 50%,
+      transparent 100%
+    ),
+    linear-gradient(to top, rgba(10, 12, 14, 1) 0%, transparent 30%);
+  display: flex;
+  align-items: center;
+}
+
+.content {
+  max-width: 600px;
+  padding: 0 20px;
+}
+
+.badge {
+  display: inline-block;
+  background-color: var(--accent-color);
+  color: white;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.5;
+  color: #cbd5e1;
+  margin-bottom: 30px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* Обмежуємо опис 3-ма рядками */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.actions {
+  display: flex;
+  gap: 15px;
+}
+
+/* Mobile First Адаптація */
+@media (max-width: 768px) {
+  .hero {
+    height: 80vh;
+  }
+
+  .overlay {
+    background: linear-gradient(
+      to top,
+      rgba(10, 12, 14, 1) 20%,
+      rgba(10, 12, 14, 0.4) 100%
+    );
+    align-items: flex-end;
+    padding-bottom: 60px;
+  }
+
+  .content {
+    text-align: center;
+    max-width: 100%;
+  }
+
+  .actions {
+    justify-content: center;
+    flex-direction: column; /* Кнопки одна під одною на мобілках */
+  }
+
+  .description {
+    display: none; /* Ховаємо довгий опис на малих екранах для чистоти */
+  }
+}
+
+.loader {
+  height: 70vh;
+  width: 100%;
+  background-color: #1a1f24;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

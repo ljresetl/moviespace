@@ -1,0 +1,269 @@
+.pageWrapper {
+  padding: 20px 0;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+}
+
+.backBtn {
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  padding: 8px 16px;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  cursor: pointer;
+}
+
+.mainGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* ЛІВА КОЛОНКА */
+.leftCol {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.posterWrapper {
+  position: relative;
+  aspect-ratio: 2/3;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.posterImage {
+  object-fit: cover;
+}
+
+.rating {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(10, 12, 14, 0.9);
+  padding: 4px 10px;
+  border-radius: 6px;
+  color: var(--accent-color);
+  font-weight: 800;
+}
+
+.tgBtnMain {
+  display: block;
+  text-align: center;
+  background: #24a1de;
+  color: #fff;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  margin-top: 16px;
+}
+
+/* ПРАВА КОЛОНКА */
+.rightCol {
+  flex: 1;
+  width: 100%;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.shareBtn {
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.shareBtn:hover {
+  border-color: var(--accent-color);
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.year {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+.genre {
+  background: var(--bg-darker);
+  padding: 2px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  border: 1px solid var(--border-color);
+  color: var(--gray);
+}
+
+.overview {
+  line-height: 1.6;
+  color: var(--gray);
+  margin-bottom: 24px;
+}
+
+/* ТЕЛЕГРАМ ПІДПИСКА */
+.tgSubBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(36, 161, 222, 0.1);
+  border: 1px dashed #24a1de;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.tgSubText strong {
+  display: block;
+  color: #24a1de;
+}
+.tgSubText span {
+  font-size: 0.8rem;
+  color: var(--gray);
+}
+
+.tgSubBtn {
+  background: #24a1de;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+/* ПЛЕЄРИ */
+.videoPlaceholder,
+.iframeWrapper {
+  width: 100%;
+  max-width: 900px;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.overlay {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+    circle,
+    rgba(28, 31, 36, 0.5) 0%,
+    rgba(10, 12, 14, 1) 100%
+  );
+}
+
+.playBtn {
+  background: var(--accent-color);
+  color: #fff;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+}
+
+.iframeWrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.sectionTitle {
+  margin: 24px 0 16px;
+  font-size: 1.2rem;
+}
+
+/* АКТОРИ */
+.castScroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+}
+.actorCard {
+  flex: 0 0 80px;
+  text-align: center;
+}
+.avatarWrapper {
+  position: relative;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 8px;
+  border: 1px solid var(--border-color);
+}
+.avatar {
+  object-fit: cover;
+}
+.actorName {
+  font-size: 0.75rem;
+  color: var(--text-color);
+}
+
+/* ADAPTATION */
+@media (min-width: 1024px) {
+  .mainGrid {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+  .leftCol {
+    flex: 0 0 300px;
+    position: sticky;
+    top: 20px;
+    margin: 0;
+  }
+  .title {
+    font-size: 2.8rem;
+  }
+}
+
+.loaderContainer {
+  height: 60vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

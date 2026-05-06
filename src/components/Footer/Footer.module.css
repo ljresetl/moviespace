@@ -1,0 +1,96 @@
+.footer {
+  padding: 30px 0;
+  background-color: var(--bg-darker); /* Тінь асфальту */
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+/* Логотип у стилі Header */
+.logo {
+  font-family: var(--font-header);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-color);
+  letter-spacing: 1px;
+}
+
+.logo span {
+  color: var(--accent-color);
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.9rem;
+}
+
+.divider {
+  display: none; /* Ховаємо роздільник на мобільних */
+  color: var(--border-color);
+}
+
+.links a {
+  color: var(--gray);
+  transition: color 0.3s ease;
+}
+
+.links a:hover {
+  color: var(--text-color);
+}
+
+.copyright {
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.creator {
+  font-size: 0.85rem;
+  color: var(--gray);
+}
+
+.creator a {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.heart {
+  color: #ff4d4d;
+}
+
+/* --- TABLETS & DESKTOPS --- */
+@media (min-width: 768px) {
+  .wrapper {
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0;
+  }
+
+  .links {
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .divider {
+    display: inline;
+  }
+
+  .logo {
+    font-size: 1.2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer {
+    padding: 20px 0;
+  }
+}

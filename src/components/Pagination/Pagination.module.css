@@ -1,0 +1,72 @@
+.paginationContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 0;
+}
+
+.pagesList {
+  display: flex;
+  gap: 5px;
+}
+
+.pageBtn,
+.navBtn {
+  background: var(--bg-darker); /* Колір тіні асфальту */
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  min-width: 35px;
+  height: 35px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.pageBtn:hover:not(.active),
+.navBtn:hover:not(:disabled) {
+  border-color: var(--accent-color);
+  color: var(--accent-color);
+}
+
+.pageBtn.active {
+  background: var(--accent-color); /* Фірмовий помаранчевий */
+  border-color: var(--accent-color);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 92, 0, 0.3);
+}
+
+.navBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.dots {
+  color: var(--gray);
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: 5px;
+}
+
+/* --- Mobile First: Адаптація для планшетів та десктопів --- */
+@media (min-width: 768px) {
+  .paginationContainer {
+    gap: 12px;
+  }
+
+  .pageBtn,
+  .navBtn {
+    min-width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .pagesList {
+    gap: 8px;
+  }
+}

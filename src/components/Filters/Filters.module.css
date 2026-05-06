@@ -1,0 +1,99 @@
+.filterSection {
+  padding: 10px 0;
+  background-color: transparent;
+}
+
+.filtersBar {
+  display: flex;
+  flex-direction: column; /* Mobile First: спочатку в стовпчик */
+  gap: 15px;
+}
+
+/* Контейнер кнопок зі скролом на мобільних */
+.categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 5px;
+  /* Приховуємо скролбар */
+  scrollbar-width: none;
+}
+
+.categories::-webkit-scrollbar {
+  display: none;
+}
+
+.filterBtn {
+  background: var(--card-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.filterBtn:hover {
+  border-color: var(--accent-color);
+  background-color: var(--bg-darker);
+}
+
+.filterBtn.active {
+  background: var(--accent-color);
+  border-color: var(--accent-color);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 92, 0, 0.2);
+}
+
+/* Кастомний селект */
+.sortWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.sortSelect {
+  width: 100%;
+  appearance: none; /* Приховуємо стандартну стрілку */
+  background: var(--bg-darker);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  padding: 10px 15px;
+  border-radius: 12px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.selectArrow {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  color: var(--gray);
+  pointer-events: none;
+}
+
+/* --- Десктоп версія --- */
+@media (min-width: 768px) {
+  .filtersBar {
+    flex-direction: row; /* В лінію */
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .categories {
+    overflow-x: visible; /* На десктопі скрол не потрібен */
+    flex-wrap: wrap;
+  }
+
+  .sortWrapper {
+    width: 220px; /* Фіксована ширина для селекту */
+  }
+}

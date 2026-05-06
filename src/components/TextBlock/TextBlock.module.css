@@ -1,0 +1,74 @@
+/* --- MOBILE FIRST (Базові стилі для телефонів) --- */
+.section {
+  padding: 30px 0;
+  background-color: var(--bg-color); /* Глибокий асфальт */
+}
+
+.content {
+  background-color: var(--bg-darker); /* Тінь асфальту */
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color); /* Колір швів на асфальті */
+}
+
+.title {
+  color: var(--accent-color); /* Фірмовий помаранчевий */
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: var(--text-color);
+  font-size: 1.1rem;
+  margin: 20px 0 10px;
+}
+
+.textWrapper p {
+  color: var(--gray); /* Колір пилу */
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.textWrapper strong {
+  color: var(--text-color);
+  font-weight: 700;
+}
+
+.seoFooter {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 1px dashed var(--border-color);
+  font-size: 0.75rem;
+  color: var(--gray);
+  font-style: italic;
+  opacity: 0.6;
+}
+
+/* --- TABLETS & DESKTOPS --- */
+@media (min-width: 768px) {
+  .section {
+    padding: 50px 0;
+  }
+
+  .content {
+    padding: 40px;
+    border-radius: 20px;
+  }
+
+  .title {
+    font-size: var(--fs-h2); /* 2rem згідно твого globals.css */
+    margin-bottom: 25px;
+  }
+
+  .subtitle {
+    font-size: 1.4rem;
+  }
+
+  .textWrapper p {
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 18px;
+  }
+}

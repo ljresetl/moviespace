@@ -1,0 +1,204 @@
+.header {
+  height: 75px;
+  display: flex;
+  align-items: center;
+  background-color: rgba(18, 20, 23, 0.85);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/* Логіка логотипа */
+.logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 1px;
+}
+
+.logoFull span {
+  color: var(--accent-color);
+}
+
+.logoShort {
+  display: inline;
+  color: var(--accent-color);
+}
+
+.logoFull {
+  display: none;
+}
+
+/* Перемикання лого на десктопі */
+@media (min-width: 768px) {
+  .logoShort {
+    display: none;
+  }
+  .logoFull {
+    display: inline;
+  }
+}
+
+.searchForm {
+  flex: 1;
+  max-width: 400px;
+  margin: 0 15px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 16px;
+  background-color: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  color: #fff;
+  outline: none;
+  transition: 0.3s;
+}
+
+.searchInput:focus {
+  border-color: var(--accent-color);
+}
+
+.desktopNav {
+  display: none;
+  gap: 25px;
+  align-items: center;
+}
+
+.navLink {
+  font-weight: 600;
+  color: var(--text-color);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.navLink:hover {
+  color: var(--accent-color);
+}
+
+.burgerBtn {
+  background: none;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  z-index: 2001;
+  padding: 5px;
+}
+
+.burgerLine {
+  width: 24px;
+  height: 2px;
+  background-color: #fff;
+  transition: 0.3s;
+}
+
+.burgerActive .burgerLine:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+.burgerActive .burgerLine:nth-child(2) {
+  opacity: 0;
+}
+.burgerActive .burgerLine:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.mobileMenu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 280px;
+  background-color: var(--bg-color);
+  z-index: 2000;
+  padding: 100px 24px;
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.mobileMenuOpen {
+  transform: translateX(0);
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1999;
+}
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.modalContent {
+  background: var(--card-bg);
+  padding: 40px;
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.modalTitle {
+  color: var(--accent-color);
+  margin-bottom: 8px;
+}
+.modalSubTitle {
+  color: var(--gray);
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+}
+.modalButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wideBtn {
+  width: 100%;
+}
+.closeBtn {
+  margin-top: 15px;
+}
+
+@media (min-width: 1024px) {
+  .desktopNav {
+    display: flex;
+  }
+  .burgerBtn {
+    display: none;
+  }
+}
