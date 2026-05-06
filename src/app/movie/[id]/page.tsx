@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
+import { ArrowLeft } from 'lucide-react'; // Імпортуємо іконку
 import styles from './page.module.css';
 
 interface Actor {
@@ -73,10 +74,13 @@ export default function MoviePage() {
   return (
     <div className={styles.pageWrapper}>
       <div className="container">
-        <button onClick={() => router.back()} className={styles.backBtn}>← Назад</button>
+        {/* Оновлена кнопка "Назад" */}
+        <button onClick={() => router.back()} className={styles.backBtn}>
+          <ArrowLeft size={20} className={styles.backIcon} />
+          <span>Назад</span>
+        </button>
 
         <div className={styles.mainGrid}>
-          {/* Ліва колонка */}
           <aside className={styles.leftCol}>
             <div className={styles.posterWrapper}>
               <Image
@@ -93,7 +97,6 @@ export default function MoviePage() {
             </a>
           </aside>
 
-          {/* Права колонка */}
           <main className={styles.rightCol}>
             <div className={styles.headerRow}>
               <h1 className={styles.title}>{movie.title}</h1>
@@ -111,7 +114,6 @@ export default function MoviePage() {
 
             <p className={styles.overview}>{movie.overview || "Опис додається..."}</p>
 
-            {/* Блок Telegram підписки */}
             <div className={styles.tgSubBox}>
               <div className={styles.tgSubText}>
                 <strong>Ми в Telegram</strong>
@@ -122,7 +124,6 @@ export default function MoviePage() {
               </a>
             </div>
 
-            {/* Плеєр */}
             <section className={styles.playerSection}>
               <div className={styles.videoPlaceholder}>
                 <div className={styles.overlay}>
@@ -132,7 +133,6 @@ export default function MoviePage() {
               </div>
             </section>
 
-            {/* Трейлер */}
             {trailer && (
               <section className={styles.trailerSection}>
                 <h3 className={styles.sectionTitle}>Офіційний трейлер</h3>
@@ -142,7 +142,6 @@ export default function MoviePage() {
               </section>
             )}
 
-            {/* Актори */}
             <section className={styles.castSection}>
               <h3 className={styles.sectionTitle}>Актори</h3>
               <div className={styles.castScroll}>

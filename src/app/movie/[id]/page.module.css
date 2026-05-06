@@ -4,14 +4,34 @@
   min-height: 100vh;
 }
 
+/* ОНОВЛЕНА КНОПКА НАЗАД */
 .backBtn {
-  background: var(--bg-darker);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.05); /* Напівпрозорий фон */
   border: 1px solid var(--border-color);
   color: var(--text-color);
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 10px 18px;
+  border-radius: 12px;
   margin-bottom: 24px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.backBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-color);
+  transform: translateX(-5px); /* Легкий зсув вліво */
+}
+
+.backIcon {
+  transition: transform 0.3s ease;
+}
+
+.backBtn:hover .backIcon {
+  transform: translateX(-3px);
 }
 
 .mainGrid {
@@ -60,6 +80,11 @@
   font-weight: 700;
   text-decoration: none;
   margin-top: 16px;
+  transition: opacity 0.2s;
+}
+
+.tgBtnMain:hover {
+  opacity: 0.9;
 }
 
 /* ПРАВА КОЛОНКА */
@@ -141,6 +166,7 @@
   display: block;
   color: #24a1de;
 }
+
 .tgSubText span {
   font-size: 0.8rem;
   color: var(--gray);
@@ -210,10 +236,12 @@
   overflow-x: auto;
   padding-bottom: 12px;
 }
+
 .actorCard {
   flex: 0 0 80px;
   text-align: center;
 }
+
 .avatarWrapper {
   position: relative;
   width: 70px;
@@ -223,9 +251,11 @@
   margin: 0 auto 8px;
   border: 1px solid var(--border-color);
 }
+
 .avatar {
   object-fit: cover;
 }
+
 .actorName {
   font-size: 0.75rem;
   color: var(--text-color);
@@ -254,6 +284,7 @@
   justify-content: center;
   align-items: center;
 }
+
 .spinner {
   width: 40px;
   height: 40px;
@@ -262,6 +293,7 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
 @keyframes spin {
   to {
     transform: rotate(360deg);
