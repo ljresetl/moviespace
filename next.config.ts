@@ -1,10 +1,17 @@
-// next.config.ts або next.config.js
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'image.tmdb.org',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/a/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'image.tmdb.org', // Додаємо також для постерів фільмів
+        port: '',
         pathname: '/t/p/**',
       },
     ],

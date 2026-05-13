@@ -1,0 +1,536 @@
+.profileScreen {
+  padding: 40px 0 80px;
+  min-height: 100vh;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+/* ── LOADER ───────────────────────────────────────────────── */
+.loaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: var(--accent-color);
+}
+
+.spinnerSmall {
+  animation: spin 1s linear infinite;
+  color: var(--accent-color);
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.errorContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+/* ── SIDEBAR ──────────────────────────────────────────────── */
+.sidebar {
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.userCard {
+  background-color: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.avatarWrapper {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 20px;
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--border-color);
+}
+
+.avatarInitial {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--accent-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 2.5rem;
+  border: 3px solid var(--border-color);
+}
+
+.editAvatar {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: 0.25s ease;
+}
+
+.editAvatar:hover {
+  background-color: var(--accent-hover);
+  transform: scale(1.1);
+}
+
+.userName {
+  font-size: 1.5rem;
+  margin-bottom: 5px;
+}
+
+.userEmail {
+  color: var(--gray);
+  font-size: 0.9rem;
+  margin-bottom: 30px;
+}
+
+/* ── NAV ──────────────────────────────────────────────────── */
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-radius: 14px;
+  color: var(--text-color);
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 1rem;
+  font-family: var(--font-header);
+  font-weight: 600;
+}
+
+.navLink:hover:not(.active) {
+  background-color: rgba(255, 255, 255, 0.03);
+  border-color: var(--border-color);
+}
+
+.navLink.active {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 10px 0;
+}
+
+.logoutBtn {
+  color: #ff4b4b;
+}
+
+.logoutBtn:hover {
+  background-color: rgba(255, 75, 75, 0.1);
+}
+
+/* ── CONTENT ──────────────────────────────────────────────── */
+.mainContent {
+  flex: 1;
+}
+
+.contentCard {
+  background-color: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  padding: 40px;
+  min-height: 500px;
+}
+
+.tabTitle {
+  font-size: var(--fs-h2);
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.emptyContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 300px;
+  color: var(--gray);
+}
+
+.emptyContent h3 {
+  color: white;
+  margin: 15px 0 5px;
+}
+
+.actionBtn {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 700;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.actionBtn:hover {
+  background-color: var(--accent-hover);
+}
+
+/* ── SETTINGS ─────────────────────────────────────────────── */
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionTitle {
+  font-size: 1.15rem;
+  color: var(--text-color);
+  margin: 8px 0 4px;
+}
+
+.loadingRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--gray);
+  padding: 20px 0;
+}
+
+.successBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  color: #4ade80;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  animation: slideDown 0.2s ease forwards;
+}
+
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 77, 106, 0.08);
+  border: 1px solid rgba(255, 77, 106, 0.2);
+  color: #ff4d6a;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  animation: slideDown 0.2s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dividerHorizontal {
+  height: 1px;
+  background: var(--border-color);
+  margin: 16px 0;
+}
+
+/* ── FORM ─────────────────────────────────────────────────── */
+.form {
+  max-width: 550px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.formRow {
+  display: flex;
+  gap: 16px;
+}
+
+.formRow .field {
+  flex: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 0.9rem;
+  color: var(--gray);
+  font-weight: 600;
+}
+
+.input {
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  padding: 14px;
+  border-radius: 12px;
+  color: white;
+  outline: none;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: 0.25s ease;
+  width: 100%;
+}
+
+.input:focus {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(var(--accent-color-rgb, 108, 99, 255), 0.15);
+}
+
+.input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: var(--gray);
+  opacity: 0.5;
+}
+
+.submitBtn {
+  background-color: #2fb344;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  transition: 0.25s ease;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background-color: #26993a;
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submitBtnAlt {
+  background-color: var(--accent-color);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 8px;
+  font-size: 0.95rem;
+  transition: 0.25s ease;
+}
+
+.submitBtnAlt:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.submitBtnAlt:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── DATE PICKER ──────────────────────────────────────────── */
+.datePickerWrapper {
+  width: 100%;
+}
+
+.datePickerWrapper input {
+  width: 100%;
+}
+
+/* Темна тема для календаря */
+:global(.react-datepicker) {
+  background-color: var(--bg-darker) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 16px !important;
+  font-family: var(--font-body) !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5) !important;
+  overflow: hidden;
+}
+
+:global(.react-datepicker__header) {
+  background-color: var(--bg-color) !important;
+  border-bottom: 1px solid var(--border-color) !important;
+  padding: 12px 0 8px !important;
+}
+
+:global(.react-datepicker__current-month),
+:global(.react-datepicker__day-name) {
+  color: var(--text-color) !important;
+}
+
+:global(.react-datepicker__day) {
+  color: var(--text-color) !important;
+  border-radius: 8px !important;
+  transition: 0.2s ease !important;
+}
+
+:global(.react-datepicker__day:hover) {
+  background-color: var(--border-color) !important;
+  color: white !important;
+}
+
+:global(.react-datepicker__day--selected),
+:global(.react-datepicker__day--keyboard-selected) {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+
+:global(.react-datepicker__day--today) {
+  border: 1px solid var(--accent-color) !important;
+  font-weight: 700 !important;
+}
+
+:global(.react-datepicker__day--outside-month) {
+  color: var(--gray) !important;
+  opacity: 0.4;
+}
+
+:global(.react-datepicker__navigation) {
+  top: 12px !important;
+}
+
+:global(.react-datepicker__navigation-icon::before) {
+  border-color: var(--gray) !important;
+}
+
+:global(
+  .react-datepicker__navigation:hover .react-datepicker__navigation-icon::before
+) {
+  border-color: var(--accent-color) !important;
+}
+
+:global(.react-datepicker__year-dropdown),
+:global(.react-datepicker__month-dropdown) {
+  background-color: var(--bg-darker) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+}
+
+:global(.react-datepicker__year-option),
+:global(.react-datepicker__month-option) {
+  color: var(--text-color) !important;
+  padding: 6px 12px !important;
+}
+
+:global(.react-datepicker__year-option:hover),
+:global(.react-datepicker__month-option:hover) {
+  background-color: var(--accent-color) !important;
+  color: white !important;
+}
+
+:global(.react-datepicker__year-option--selected_year),
+:global(.react-datepicker__month-option--selected_month) {
+  color: var(--accent-color) !important;
+  font-weight: 700;
+}
+
+:global(.react-datepicker__triangle) {
+  display: none !important;
+}
+
+:global(.react-datepicker-popper) {
+  z-index: 100 !important;
+}
+
+:global(.react-datepicker__year-read-view--down-arrow),
+:global(.react-datepicker__month-read-view--down-arrow) {
+  border-color: var(--gray) !important;
+}
+
+:global(.react-datepicker__year-read-view),
+:global(.react-datepicker__month-read-view) {
+  color: var(--text-color) !important;
+}
+
+:global(.react-datepicker select) {
+  background-color: var(--bg-darker) !important;
+  color: var(--text-color) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 8px !important;
+  padding: 4px 8px !important;
+  font-size: 0.9rem !important;
+}
+
+/* ── ADAPTIVE ─────────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 100px;
+    flex: 0 0 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .contentCard {
+    padding: 25px 15px;
+  }
+
+  .navLink span {
+    font-size: 0.9rem;
+  }
+
+  .formRow {
+    flex-direction: column;
+  }
+}

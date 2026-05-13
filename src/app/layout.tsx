@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header/Header"; // Перевір, щоб шлях співпадав з твоєю структурою
-import Footer from "@/components/Footer/Footer"; // Перевір, щоб шлях співпадав з твоєю структурою
+import Header from "@/components/Header/Header";
+import Footer from "@/components/Footer/Footer";
+import Providers from "@/components/Providers"; // Імпортуємо провайдер сесії
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -46,18 +47,20 @@ export default function RootLayout({
           backgroundColor: "var(--bg-color)",
           color: "var(--text-color)",
           minHeight: "100vh",
-          display: "flex",       // Додаємо flex, щоб футер завжди був знизу
+          display: "flex",
           flexDirection: "column"
         }}
       >
-        <Header />
-        
-        {/* main з flex: 1 розтягується, штовхаючи футер вниз, якщо контенту мало */}
-        <main style={{ flex: 1 }}>
-          {children}
-        </main>
+        {/* Обгортка Providers дозволяє використовувати useSession() у будь-якому компоненті */}
+        <Providers>
+          <Header />
+          
+          <main style={{ flex: 1 }}>
+            {children}
+          </main>
 
-        <Footer />
+          <Footer />
+        </Providers>
       </body>
     </html>
   );

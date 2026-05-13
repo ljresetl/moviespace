@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation'; // Імпортуємо роутер
+import { useRouter } from 'next/navigation';
 import { Button } from '../Buttons/Buttons';
 import styles from './Hero.module.css';
 
@@ -16,7 +16,7 @@ interface Movie {
 
 export default function Hero() {
   const [movie, setMovie] = useState<Movie | null>(null);
-  const router = useRouter(); // Ініціалізуємо роутер
+  const router = useRouter();
 
   useEffect(() => {
     const fetchTrendingMovie = async () => {
@@ -39,6 +39,7 @@ export default function Hero() {
 
         const data = await res.json();
         if (data.results && data.results.length > 0) {
+          // Беремо випадковий фільм з першої десятки
           const randomIndex = Math.floor(Math.random() * 10);
           setMovie(data.results[randomIndex]);
         }
@@ -50,7 +51,6 @@ export default function Hero() {
     fetchTrendingMovie();
   }, []);
 
-  // Функція для переходу на сторінку фільму
   const handleNavigate = () => {
     if (movie) {
       router.push(`/movie/${movie.id}`);
@@ -85,7 +85,6 @@ export default function Hero() {
                 : movie.overview}
             </p>
             <div className={styles.actions}>
-              {/* Обидві кнопки тепер функціональні */}
               <Button variant="primary" onClick={handleNavigate}>
                 Дивитися зараз
               </Button>

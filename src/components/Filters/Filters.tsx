@@ -1,47 +1,115 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './Filters.module.css';
+
+// 1. Додаємо інтерфейс для пропсів
+interface FiltersProps {
+  onFilterChange: () => void;
+}
 
 const categories = [
   { id: 'all', name: 'Всі' },
-  { id: 'action', name: 'Бойовики' },
-  { id: 'comedy', name: 'Комедії' },
-  { id: 'drama', name: 'Драми' },
-  { id: 'horror', name: 'Жахи' },
-  { id: 'sci-fi', name: 'Фантастика' },
-  { id: 'animation', name: 'Мультфільми' },
+  { id: '28', name: 'Бойовики' },
+  { id: '35', name: 'Комедії' },
+  { id: '18', name: 'Драми' },
+  { id: '27', name: 'Жахи' },
+  { id: '878', name: 'Фантастика' },
+  { id: '16', name: 'Мультфільми' },
 ];
 
-export default function Filters() {
-  const [activeCategory, setActiveCategory] = useState('all');
+const years = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i).toString());
+
+const countries = [
+  { code: '', name: 'Всі країни' },
+  { code: 'US', name: 'США' },
+  { code: 'UA', name: 'Україна' },
+  { code: 'FR', name: 'Франція' },
+  { code: 'GB', name: 'Велика Британія' },
+];
+
+// 2. Використовуємо пропси в компоненті
+export default function Filters({ onFilterChange }: FiltersProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const currentGenre = searchParams.get('genre') || 'all';
+  const currentSort = searchParams.get('sort') || 'popularity.desc';
+  const currentYear = searchParams.get('year') || '';
+  const currentCountry = searchParams.get('country') || '';
+
+  const updateFilters = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    if (value && value !== 'all' && value !== '') {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
+    
+    params.set('page', '1');
+    
+    // 3. Викликаємо колбек, щоб HomePage скинув стейт сторінки
+    onFilterChange();
+    
+    router.push(`?${params.toString()}`, { scroll: false });
+  };
 
   return (
     <section className={styles.filterSection}>
       <div className="container">
         <div className={styles.filtersBar}>
-          {/* Скрол-зона для категорій на мобільних */}
           <div className={styles.categories}>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 className={`${styles.filterBtn} ${
-                  activeCategory === cat.id ? styles.active : ''
+                  currentGenre === cat.id ? styles.active : ''
                 }`}
-                onClick={() => setActiveCategory(cat.id)}
+                onClick={() => updateFilters('genre', cat.id)}
               >
                 {cat.name}
               </button>
             ))}
           </div>
           
-          <div className={styles.sortWrapper}>
-            <select className={styles.sortSelect}>
-              <option value="popularity.desc">За популярністю</option>
-              <option value="release_date.desc">Спочатку нові</option>
-              <option value="vote_average.desc">Високий рейтинг</option>
-            </select>
-            <span className={styles.selectArrow}>▼</span>
+          <div className={styles.selectGroup}>
+             <div className={styles.sortWrapper}>
+              <select 
+                className={styles.sortSelect} 
+                value={currentYear}
+                onChange={(e) => updateFilters('year', e.target.value)}
+              >
+                <option value="">Всі роки</option>
+                {years.map(y => <option key={y} value={y}>{y}</option>)}
+              </select>
+              <span className={styles.selectArrow}>▼</span>
+            </div>
+
+            <div className={styles.sortWrapper}>
+              <select 
+                className={styles.sortSelect} 
+                value={currentCountry}
+                onChange={(e) => updateFilters('country', e.target.value)}
+              >
+                {countries.map(c => <option key={c.code} value={c.code}>{c.name}</option>)}
+              </select>
+              <span className={styles.selectArrow}>▼</span>
+            </div>
+
+            <div className={styles.sortWrapper}>
+              <select 
+                className={styles.sortSelect} 
+                value={currentSort}
+                onChange={(e) => updateFilters('sort', e.target.value)}
+              >
+                <option value="popularity.desc">За популярністю</option>
+                <option value="release_date.desc">Спочатку нові</option>
+                <option value="vote_average.desc">Високий рейтинг</option>
+              </select>
+              <span className={styles.selectArrow}>▼</span>
+            </div>
           </div>
         </div>
       </div>

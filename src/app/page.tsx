@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react'; // Додали useRef
 
 import Hero from '@/components/Hero/Hero';
 import NewReleases from '@/components/NewReleases/NewReleases';
@@ -8,33 +8,53 @@ import Filters from '@/components/Filters/Filters';
 import MovieAll from '@/components/MovieAll/MovieAll';
 import Pagination from '@/components/Pagination/Pagination';
 import TextBlock from '@/components/TextBlock/TextBlock';
-   
 
 export default function HomePage() {
-  // Додаємо стан для пагінації тут, щоб передавати його в компоненти
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 5; // Оскільки ми тягнемо 100 фільмів (5 сторінок по 20)
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalItems, setTotalItems] = useState<number>(0);
+  
+  // Реф для секції з фільмами
+  const moviesSectionRef = useRef<HTMLDivElement>(null);
+
+  const itemsPerPage = 20;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handlePageChange = (page: number): void => {
+    setCurrentPage(page);
+    
+    // Скролимо до початку списку фільмів, а не в самий верх сторінки
+    if (moviesSectionRef.current) {
+      moviesSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
 
   return (
     <>
-      
       <main>
         <Hero />
         <NewReleases />
-        <Filters />
+        <Filters onFilterChange={() => setCurrentPage(1)} />
 
-        {/* Передаємо поточну сторінку в MovieAll, щоб він знав, яку частину з 100 фільмів показати */}
-        <MovieAll currentPage={currentPage} />
+        {/* Обгортка з рефом, щоб знати куди скролити */}
+        <div ref={moviesSectionRef} style={{ scrollMarginTop: '20px' }}>
+          <MovieAll 
+            currentPage={currentPage} 
+            onMoviesLoaded={(count: number) => setTotalItems(count)} 
+          />
+        </div>
 
-        {/* Тепер пагінація не видасть помилку, бо має всі дані */}
         <Pagination 
-          currentPage={currentPage} 
-          totalPages={totalPages} 
-          onPageChange={(page) => setCurrentPage(page)} 
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          onPageChange={handlePageChange}
         />
+        
         <TextBlock />
       </main>
-
     </>
   );
 }

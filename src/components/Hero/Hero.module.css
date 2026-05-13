@@ -1,12 +1,14 @@
 .hero {
   position: relative;
-  /* Використовуємо dvh для точного розрахунку на мобільних, vh як запасний варіант */
+  /* Використовуємо 70dvh для стабільності на мобільних */
   height: 70vh;
   height: 70dvh;
-  min-height: 400px; /* Трохи зменшив мінімалку для дуже малих екранів */
+  min-height: 400px;
   width: 100%;
   overflow: hidden;
   background-color: #0a0c0e;
+  /* Запобігаємо зайвим рухам при зміні висоти в'юпорту */
+  contain: layout paint;
 }
 
 .imageWrapper {
@@ -16,11 +18,15 @@
   width: 100%;
   height: 100%;
   z-index: 1;
+  /* Створюємо окремий шар для відеокарти, щоб уникнути "стрибків" */
+  transform: translateZ(0);
 }
 
 .backgroundImage {
   object-fit: cover;
   object-position: center 20%;
+  /*will-change підказує браузеру, що цей елемент не повинен перераховуватися при кожному скролі */
+  will-change: transform;
 }
 
 .overlay {
@@ -45,7 +51,7 @@
 .content {
   max-width: 600px;
   padding: 0 20px;
-  width: 100%; /* Додано для стабільності на малих екранах */
+  width: 100%;
 }
 
 .badge {
@@ -62,11 +68,7 @@
 }
 
 .title {
-  font-size: clamp(
-    1.8rem,
-    5vw,
-    3.5rem
-  ); /* Зменшив початковий розмір для мобілок */
+  font-size: clamp(1.8rem, 5vw, 3.5rem);
   font-weight: 900;
   line-height: 1.1;
   margin-bottom: 20px;
@@ -92,10 +94,10 @@
 /* Адаптація для мобільних пристроїв */
 @media (max-width: 768px) {
   .hero {
-    /* Жорстко обмежуємо висоту 70% на всіх телефонах */
-    height: 70vh;
-    height: 70dvh;
-    min-height: auto; /* Прибираємо мінімальну висоту, щоб вона не "виштовхувала" понад 70% */
+    /* На мобільних dlv (dynamic) може глючити, спробуємо зафіксувати */
+    height: 65vh;
+    height: 65svh; /* svh - small viewport height (коли стрічка браузера є) */
+    min-height: auto;
   }
 
   .overlay {
@@ -105,13 +107,12 @@
       rgba(10, 12, 14, 0.6) 50%,
       rgba(10, 12, 14, 0.3) 100%
     );
-    align-items: flex-end; /* Контент притискається до низу */
-    padding-bottom: 40px;
+    align-items: flex-end;
+    padding-bottom: 30px;
   }
 
   .content {
     text-align: center;
-    max-width: 100%;
     padding: 0 15px;
   }
 
@@ -127,6 +128,7 @@
 
   .title {
     margin-bottom: 15px;
+    font-size: 1.6rem; /* Трохи компактніше для мобілок */
   }
 }
 
