@@ -4,7 +4,6 @@ import React from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './Filters.module.css';
 
-// 1. Додаємо інтерфейс для пропсів
 interface FiltersProps {
   onFilterChange: () => void;
 }
@@ -29,7 +28,6 @@ const countries = [
   { code: 'GB', name: 'Велика Британія' },
 ];
 
-// 2. Використовуємо пропси в компоненті
 export default function Filters({ onFilterChange }: FiltersProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -41,18 +39,15 @@ export default function Filters({ onFilterChange }: FiltersProps) {
 
   const updateFilters = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     if (value && value !== 'all' && value !== '') {
       params.set(key, value);
     } else {
       params.delete(key);
     }
-    
+
     params.set('page', '1');
-    
-    // 3. Викликаємо колбек, щоб HomePage скинув стейт сторінки
     onFilterChange();
-    
     router.push(`?${params.toString()}`, { scroll: false });
   };
 
@@ -73,11 +68,12 @@ export default function Filters({ onFilterChange }: FiltersProps) {
               </button>
             ))}
           </div>
-          
+
           <div className={styles.selectGroup}>
-             <div className={styles.sortWrapper}>
-              <select 
-                className={styles.sortSelect} 
+            <div className={styles.sortWrapper}>
+              <select
+                className={styles.sortSelect}
+                aria-label="Фільтр за роком"
                 value={currentYear}
                 onChange={(e) => updateFilters('year', e.target.value)}
               >
@@ -88,8 +84,9 @@ export default function Filters({ onFilterChange }: FiltersProps) {
             </div>
 
             <div className={styles.sortWrapper}>
-              <select 
-                className={styles.sortSelect} 
+              <select
+                className={styles.sortSelect}
+                aria-label="Фільтр за країною"
                 value={currentCountry}
                 onChange={(e) => updateFilters('country', e.target.value)}
               >
@@ -99,8 +96,9 @@ export default function Filters({ onFilterChange }: FiltersProps) {
             </div>
 
             <div className={styles.sortWrapper}>
-              <select 
-                className={styles.sortSelect} 
+              <select
+                className={styles.sortSelect}
+                aria-label="Сортування фільмів"
                 value={currentSort}
                 onChange={(e) => updateFilters('sort', e.target.value)}
               >

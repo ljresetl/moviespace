@@ -217,7 +217,7 @@ export default function Header() {
           </nav>
 
           <button
-            className={`${styles.burgerBtn} ${isMenuOpen ? styles.burgerActive : ''}`}
+            className={`${styles.burgerBtn} aria-label="Відкрити меню" ${isMenuOpen ? styles.burgerActive : ''}`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <span className={styles.burgerLine}></span>
