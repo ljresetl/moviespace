@@ -8,16 +8,25 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
+function toSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
+  const actorId = id.split("-")[0];
 
   try {
     const [actorRes, creditsRes] = await Promise.all([
-      fetch(`https://api.themoviedb.org/3/person/${id}?language=uk-UA`, {
+      fetch(`https://api.themoviedb.org/3/person/${actorId}?language=uk-UA`, {
         headers: { Authorization: `Bearer ${TMDB_TOKEN}` },
         next: { revalidate: 86400 },
       }),
-      fetch(`https://api.themoviedb.org/3/person/${id}/movie_credits?language=uk-UA`, {
+      fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?language=uk-UA`, {
         headers: { Authorization: `Bearer ${TMDB_TOKEN}` },
         next: { revalidate: 86400 },
       }),
@@ -38,6 +47,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       : "/og-image.png";
 
     const department = actor.known_for_department === "Acting" ? "актор" : actor.known_for_department?.toLowerCase() || "діяч кіно";
+    const slug = toSlug(actor.name);
+    const canonicalUrl = `${SITE_URL}/actor/${actorId}-${slug}`;
 
     const title = `${actor.name} — біографія, фільмографія, фото`;
 
@@ -57,7 +68,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       openGraph: {
         title: `${actor.name} — біографія та фільмографія`,
         description,
-        url: `${SITE_URL}/actor/${id}`,
+        url: canonicalUrl,
         siteName: "Кіношрот",
         images: [{ url: photo, width: 500, height: 750, alt: `${actor.name} — фото` }],
         type: "profile",
@@ -72,7 +83,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       },
 
       alternates: {
-        canonical: `${SITE_URL}/actor/${id}`,
+        canonical: canonicalUrl,
       },
     };
   } catch {
@@ -81,5 +92,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default function ActorPage() {
-  return <ActorPageClient />
-};
+  return <ActorPageClient />;
+}

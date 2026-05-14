@@ -18,6 +18,23 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
+.tagMore {
+  background: transparent;
+  border: 1px solid var(--accent-color);
+  color: var(--accent-color);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: 0.25s;
+  font-family: inherit;
+}
+
+.tagMore:hover {
+  background: var(--accent-color);
+  color: #fff;
+}
+
 @keyframes toastIn {
   from {
     opacity: 0;
@@ -245,7 +262,10 @@
     gap: 28px;
   }
 
-  .posterWrap { width: 200px; max-width: 200px; }
+  .posterWrap {
+    width: 200px;
+    max-width: 200px;
+  }
 
   .info {
     align-items: flex-start;
@@ -314,7 +334,9 @@
   }
   .posterWrap {
     border-radius: 12px;
-    width: 260px; max-width: 260px; border-radius: 12px;
+    width: 260px;
+    max-width: 260px;
+    border-radius: 12px;
   }
   .title {
     font-size: 2.2rem;
@@ -356,7 +378,8 @@
    ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1280px) {
   .posterWrap {
-    width: 300px; max-width: 300px;
+    width: 300px;
+    max-width: 300px;
   }
   .title {
     font-size: 2.5rem;

@@ -5,7 +5,7 @@ import Footer from "@/components/Footer/Footer";
 import Providers from "@/components/Providers";
 import "./globals.css";
 
-const SITE_URL = "https://kinoshrot.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://moviespace-nine.vercel.app";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     description: "Безкоштовний онлайн кінотеатр з українським дубляжем. Новинки кіно 2024–2025 у HD якості.",
     images: [
       {
-        url: "/og-image.png",
+        url: "/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Кіношрот — онлайн кінотеатр українською",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Кіношрот — Фільми онлайн українською",
     description: "Дивіться найкращі фільми безкоштовно з українським дубляжем на Кіношрот.",
-    images: ["/og-image.png"],
+    images: ["/opengraph-image"],
   },
 
   alternates: {

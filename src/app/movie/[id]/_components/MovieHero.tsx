@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { Star, Calendar, Film, Clock, Globe, Share2 } from 'lucide-react';
+import { Star, Calendar, Clock, Globe, Share2 } from 'lucide-react';
 import type { MovieDetails } from '../../../../../lib/types';
 import styles from './MovieHero.module.css';
 
@@ -12,6 +12,7 @@ interface Props {
 
 export default function MovieHero({ movie }: Props) {
   const [toast, setToast] = useState(false);
+  const [showAllGenres, setShowAllGenres] = useState(false);
   const year = movie.release_date?.split('-')[0];
 
   const handleShare = async () => {
@@ -29,6 +30,7 @@ export default function MovieHero({ movie }: Props) {
   const hours = movie.runtime ? Math.floor(movie.runtime / 60) : 0;
   const mins = movie.runtime ? movie.runtime % 60 : 0;
   const countries = movie.production_countries?.map(c => c.name).join(', ');
+  const visibleGenres = showAllGenres ? movie.genres : movie.genres.slice(0, 4);
 
   return (
     <section className={styles.section}>
@@ -36,7 +38,6 @@ export default function MovieHero({ movie }: Props) {
       <div className="container">
         <div className={styles.grid}>
 
-          {/* Постер */}
           <div className={styles.posterWrap}>
             <Image
               src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/no-poster.png'}
@@ -49,7 +50,6 @@ export default function MovieHero({ movie }: Props) {
             </div>
           </div>
 
-          {/* Інфо */}
           <div className={styles.info}>
             <div className={styles.infoTop}>
               <h1 className={styles.title}>
@@ -62,13 +62,20 @@ export default function MovieHero({ movie }: Props) {
               )}
 
               <div className={styles.tags}>
-                {movie.genres.map(g => (
+                {visibleGenres.map(g => (
                   <span key={g.id} className={styles.tag}>{g.name}</span>
                 ))}
+                {!showAllGenres && movie.genres.length > 4 && (
+                  <button
+                    className={styles.tagMore}
+                    onClick={() => setShowAllGenres(true)}
+                  >
+                    +{movie.genres.length - 4}
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* Мета-дані */}
             <div className={styles.metaGrid}>
               <div className={styles.metaItem}>
                 <Star size={16} className={styles.metaIcon} />
@@ -82,13 +89,6 @@ export default function MovieHero({ movie }: Props) {
                 <div>
                   <span className={styles.metaLabel}>Рік</span>
                   <strong className={styles.metaValue}>{year}</strong>
-                </div>
-              </div>
-              <div className={styles.metaItem}>
-                <Film size={16} className={styles.metaIcon} />
-                <div>
-                  <span className={styles.metaLabel}>Жанр</span>
-                  <strong className={styles.metaValue}>{movie.genres.map(g => g.name).join(', ') || '—'}</strong>
                 </div>
               </div>
               {movie.runtime > 0 && (
@@ -111,12 +111,10 @@ export default function MovieHero({ movie }: Props) {
               )}
             </div>
 
-            {/* Короткий опис — видно тільки на десктопі */}
             {movie.overview && (
               <p className={styles.overview}>{movie.overview}</p>
             )}
 
-            {/* Кнопки */}
             <div className={styles.actions}>
               <button onClick={handleShare} className={styles.shareBtn}>
                 <Share2 size={16} />
