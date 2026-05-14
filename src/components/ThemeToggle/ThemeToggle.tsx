@@ -1,20 +1,28 @@
 "use client";
 
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
-import { Sun, Moon, Monitor, Droplets, Drama, Gem, Flame, Crown } from 'lucide-react';
+import {
+  Sun, Moon, Monitor, Droplets, Drama, Gem, Flame, Crown,
+  Cannabis, Factory, Bird, Flag, Beer
+} from 'lucide-react';
 import styles from './ThemeToggle.module.css';
 
-type Theme = 'auto' | 'dark' | 'light' | 'midnight' | 'crimson' | 'emerald' | 'amber' | 'gold';
+type Theme = 'auto' | 'dark' | 'light' | 'midnight' | 'crimson' | 'emerald' | 'amber' | 'gold' | 'kush' | 'factory' | 'freedom' | 'ukraine' | 'beer';
 
 const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
-  { id: 'auto',     label: 'Авто',    icon: <Monitor size={16} /> },
-  { id: 'dark',     label: 'Темна',   icon: <Moon size={16} /> },
-  { id: 'light',    label: 'Світла',  icon: <Sun size={16} /> },
-  { id: 'midnight', label: 'Ніч',     icon: <Droplets size={16} /> },
-  { id: 'crimson',  label: 'Кіно',    icon: <Drama size={16} /> },
-  { id: 'emerald',  label: 'Смарагд', icon: <Gem size={16} /> },
-  { id: 'amber',    label: 'Бурштин', icon: <Flame size={16} /> },
-  { id: 'gold',     label: 'Золото',  icon: <Crown size={16} /> },
+  { id: 'auto',     label: 'Авто',     icon: <Monitor size={16} /> },
+  { id: 'dark',     label: 'Темна',    icon: <Moon size={16} /> },
+  { id: 'light',    label: 'Світла',   icon: <Sun size={16} /> },
+  { id: 'midnight', label: 'Ніч',      icon: <Droplets size={16} /> },
+  { id: 'crimson',  label: 'Кіно',     icon: <Drama size={16} /> },
+  { id: 'emerald',  label: 'Смарагд',  icon: <Gem size={16} /> },
+  { id: 'amber',    label: 'Бурштин',  icon: <Flame size={16} /> },
+  { id: 'gold',     label: 'Золото',   icon: <Crown size={16} /> },
+  { id: 'kush',     label: '420',      icon: <Cannabis size={16} /> },
+  { id: 'factory',  label: 'Завод',    icon: <Factory size={16} /> },
+  { id: 'freedom',  label: 'Воля',     icon: <Bird size={16} /> },
+  { id: 'ukraine',  label: 'Україна',  icon: <Flag size={16} /> },
+  { id: 'beer',     label: 'Пиво',     icon: <Beer size={16} /> },
 ];
 
 function subscribe(callback: () => void) {

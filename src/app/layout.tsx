@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Providers from "@/components/Providers";
+import ScrollToTop from "@/components/ScrollToTop";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://moviespace-nine.vercel.app";
@@ -94,6 +95,7 @@ export default function RootLayout({
         }}
       >
         <Providers>
+          <ScrollToTop />
           <Suspense fallback={null}>
             <Header />
           </Suspense>

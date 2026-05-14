@@ -36,7 +36,7 @@ export default function NewReleases() {
   }, []);
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} id="new">
       <div className="container">
         <div className={styles.head}>
           <h2 className={styles.title}>Новинки</h2>

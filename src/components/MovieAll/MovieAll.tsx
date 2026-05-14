@@ -81,9 +81,9 @@ export default function MovieAll({ currentPage, onMoviesLoaded }: MovieAllProps)
   const displayedMovies = movies.slice(startIndex, startIndex + 20);
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} id="popular">
       <div className="container">
-        <h2 className={styles.title}>Всі фільми</h2>
+        <h2 className={styles.title}>Популярні</h2>
 
         {displayedMovies.length === 0 ? (
           <p className={styles.notFound}>Фільми не знайдені</p>

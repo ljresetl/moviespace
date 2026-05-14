@@ -7,7 +7,6 @@
 
 /* --- 2. ДИЗАЙН-СИСТЕМА --- */
 :root {
-  /* За замовчуванням — Темна (Мокрий Асфальт) */
   --bg-color: #121417;
   --bg-darker: #0a0c0e;
   --card-bg: #1c1f24;
@@ -17,7 +16,6 @@
   --gray: #9ba3af;
   --border-color: #2e343d;
 
-  /* Шрифти та розміри */
   --font-header: "Segoe UI", Roboto, sans-serif;
   --font-body: "Trebuchet MS", sans-serif;
   --fs-h1: 2rem;
@@ -124,6 +122,66 @@
   --border-color: #3d3420;
 }
 
+/* ═══ ТЕМА: 420 (Ганджубас) ═══ */
+:root[data-theme="kush"] {
+  --bg-color: #0d120a;
+  --bg-darker: #080b06;
+  --card-bg: #1a2414;
+  --text-color: #e8f0d8;
+  --accent-color: #7bc142;
+  --accent-hover: #5fa030;
+  --gray: #8a9a70;
+  --border-color: #2d3d20;
+}
+
+/* ═══ ТЕМА: Завод (Industrial) ═══ */
+:root[data-theme="factory"] {
+  --bg-color: #18181a;
+  --bg-darker: #0e0e10;
+  --card-bg: #28282c;
+  --text-color: #e0ddd8;
+  --accent-color: #ff6f20;
+  --accent-hover: #e05a10;
+  --gray: #8a8880;
+  --border-color: #3a3a3e;
+}
+
+/* ═══ ТЕМА: Воля (Freedom) ═══ */
+:root[data-theme="freedom"] {
+  --bg-color: #f0f4f8;
+  --bg-darker: #dce4ec;
+  --card-bg: #ffffff;
+  --text-color: #2c3e50;
+  --accent-color: #3498db;
+  --accent-hover: #2980b9;
+  --gray: #7f8c9b;
+  --border-color: #c8d6e0;
+}
+
+/* ═══ ТЕМА: Україна (UA) ═══ */
+:root[data-theme="ukraine"] {
+  --bg-color: #0a1628;
+  --bg-darker: #060e1a;
+  --card-bg: #102040;
+  --text-color: #f5f0d0;
+  --accent-color: #ffd700;
+  --accent-hover: #e6c200;
+  --gray: #8a9ab0;
+  --border-color: #1a3060;
+}
+
+/* ═══ ТЕМА: Пиво (Beer) ═══ */
+:root[data-theme="beer"] {
+  --bg-color: #1a1408;
+  --bg-darker: #100c04;
+  --card-bg: #2c2210;
+  --text-color: #f5ead0;
+  --accent-color: #e8a820;
+  --accent-hover: #cc9010;
+  --gray: #a09068;
+  --border-color: #3d3018;
+}
+
 /* --- АДАПТИВНІ РОЗМІРИ --- */
 @media (min-width: 768px) {
   :root {
@@ -142,6 +200,10 @@
 }
 
 /* --- 3. БАЗОВІ СТИЛІ --- */
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background-color: var(--bg-color);
@@ -152,6 +214,10 @@ body {
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+}
+
+[id] {
+  scroll-margin-top: 85px;
 }
 
 section {
