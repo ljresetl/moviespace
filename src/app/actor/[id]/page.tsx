@@ -25,17 +25,12 @@ export default function ActorPage() {
 
   useEffect(() => {
     const fetchActor = async () => {
-      const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
-      if (!actorId || !token) { setLoading(false); return; }
+      if (!actorId) { setLoading(false); return; }
 
       try {
         const [actorRes, creditsRes] = await Promise.all([
-          fetch(`https://api.themoviedb.org/3/person/${actorId}?language=uk-UA`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
-          fetch(`https://api.themoviedb.org/3/person/${actorId}/movie_credits?language=uk-UA`, {
-            headers: { Authorization: `Bearer ${token}` },
-          }),
+          fetch(`/api/tmdb/person/${actorId}?language=uk-UA`),
+          fetch(`/api/tmdb/person/${actorId}/movie_credits?language=uk-UA`),
         ]);
 
         if (!actorRes.ok) throw new Error(`TMDB error: ${actorRes.status}`);

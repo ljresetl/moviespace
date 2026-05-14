@@ -25,35 +25,19 @@ export default function Hero({ initialMovie = null }: Props) {
   useEffect(() => {
     if (movie) return;
 
-    const fetchTrendingMovie = async () => {
+    const fetchMovie = async () => {
       try {
-        const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
-        if (!token) return;
-
-        const res = await fetch(
-          `https://api.themoviedb.org/3/trending/movie/week?language=uk-UA`,
-          {
-            method: 'GET',
-            headers: {
-              accept: 'application/json',
-              Authorization: `Bearer ${token}`
-            }
-          }
-        );
-
+        const res = await fetch('/api/tmdb/trending/movie/week?language=uk-UA');
         if (!res.ok) return;
-
         const data = await res.json();
-        if (data.results && data.results.length > 0) {
-          const randomIndex = Math.floor(Math.random() * 10);
-          setMovie(data.results[randomIndex]);
+        if (data.results?.length > 0) {
+          setMovie(data.results[Math.floor(Math.random() * 10)]);
         }
       } catch (error) {
         console.error("Помилка завантаження банера:", error);
       }
     };
-
-    fetchTrendingMovie();
+    fetchMovie();
   }, [movie]);
 
   if (!movie) return <div className={styles.loader}></div>;

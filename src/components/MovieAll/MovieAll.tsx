@@ -20,16 +20,12 @@ interface MovieAllProps {
   onMoviesLoaded: (count: number) => void;
 }
 
-export default function MovieAll({
-  currentPage,
-  onMoviesLoaded,
-}: MovieAllProps) {
+export default function MovieAll({ currentPage, onMoviesLoaded }: MovieAllProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
 
   const searchParams = useSearchParams();
 
-  // Фільтри
   const genre = searchParams.get("genre") || "";
   const sort = searchParams.get("sort") || "popularity.desc";
   const year = searchParams.get("year") || "";
@@ -39,64 +35,29 @@ export default function MovieAll({
     const fetchMovies = async () => {
       setLoading(true);
 
-      const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
-
       try {
         const pages = [1, 2, 3, 4, 5];
 
         const requests = pages.map((page) => {
-          const url = new URL(
-            "https://api.themoviedb.org/3/discover/movie"
-          );
+          const params = new URLSearchParams();
+          params.set("language", "uk-UA");
+          params.set("sort_by", sort);
+          params.set("page", page.toString());
 
-          url.searchParams.set("language", "uk-UA");
-          url.searchParams.set("sort_by", sort);
-          url.searchParams.set("page", page.toString());
+          if (genre && genre !== "all") params.set("with_genres", genre);
+          if (year) params.set("primary_release_year", year);
+          if (country) params.set("with_origin_country", country);
 
-          // Жанр
-          if (genre && genre !== "all") {
-            url.searchParams.set("with_genres", genre);
-          }
-
-          // Рік
-          if (year) {
-            url.searchParams.set(
-              "primary_release_year",
-              year
-            );
-          }
-
-          // Країна
-          if (country) {
-            url.searchParams.set(
-              "with_origin_country",
-              country
-            );
-          }
-
-          return fetch(url.toString(), {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }).then((res) => res.json());
+          return fetch(`/api/tmdb/discover/movie?${params.toString()}`).then((res) => res.json());
         });
 
         const results = await Promise.all(requests);
-
-        const allMovies = results.flatMap(
-          (data) => data.results || []
-        );
-
-        // Видаляємо дублікати
+        const allMovies = results.flatMap((data) => data.results || []);
         const uniqueMovies = Array.from(
-          new Map(
-            allMovies.map((movie) => [movie.id, movie])
-          ).values()
+          new Map(allMovies.map((movie) => [movie.id, movie])).values()
         );
 
         setMovies(uniqueMovies);
-
-        // Передаємо кількість фільмів у parent
         onMoviesLoaded(uniqueMovies.length);
       } catch (error) {
         console.error("Помилка завантаження:", error);
@@ -106,13 +67,7 @@ export default function MovieAll({
     };
 
     fetchMovies();
-  }, [
-    genre,
-    sort,
-    year,
-    country,
-    onMoviesLoaded,
-  ]);
+  }, [genre, sort, year, country, onMoviesLoaded]);
 
   if (loading) {
     return (
@@ -122,13 +77,8 @@ export default function MovieAll({
     );
   }
 
-  // Пагінація
   const startIndex = (currentPage - 1) * 20;
-
-  const displayedMovies = movies.slice(
-    startIndex,
-    startIndex + 20
-  );
+  const displayedMovies = movies.slice(startIndex, startIndex + 20);
 
   return (
     <section className={styles.section}>
@@ -136,41 +86,24 @@ export default function MovieAll({
         <h2 className={styles.title}>Всі фільми</h2>
 
         {displayedMovies.length === 0 ? (
-          <p className={styles.notFound}>
-            Фільми не знайдені
-          </p>
+          <p className={styles.notFound}>Фільми не знайдені</p>
         ) : (
           <div className={styles.flexContainer}>
             {displayedMovies.map((movie) => (
-              <Link
-                href={`/movie/${movie.id}`}
-                key={movie.id}
-                className={styles.card}
-              >
+              <Link href={`/movie/${movie.id}`} key={movie.id} className={styles.card}>
                 <div className={styles.posterWrapper}>
                   <Image
                     src={`https://image.tmdb.org/t/p/w400${movie.poster_path}`}
                     alt={movie.title}
                     fill
-                    sizes="(max-width: 480px) 50vw,
-                           (max-width: 1024px) 25vw,
-                           200px"
+                    sizes="(max-width: 480px) 50vw, (max-width: 1024px) 25vw, 200px"
                     className={styles.poster}
                   />
-
-                  <div className={styles.rating}>
-                    {movie.vote_average.toFixed(1)}
-                  </div>
+                  <div className={styles.rating}>{movie.vote_average.toFixed(1)}</div>
                 </div>
-
                 <div className={styles.info}>
-                  <h3 className={styles.movieTitle}>
-                    {movie.title}
-                  </h3>
-
-                  <p className={styles.year}>
-                    {movie.release_date?.split("-")[0]}
-                  </p>
+                  <h3 className={styles.movieTitle}>{movie.title}</h3>
+                  <p className={styles.year}>{movie.release_date?.split("-")[0]}</p>
                 </div>
               </Link>
             ))}

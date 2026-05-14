@@ -46,13 +46,11 @@ export default function MoviePage() {
 
   useEffect(() => {
     const fetchMovie = async () => {
-      const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
-      if (!tmdbId || !token) { setLoading(false); return; }
+      if (!tmdbId) { setLoading(false); return; }
 
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/movie/${tmdbId}?language=uk-UA&append_to_response=videos,credits,external_ids`,
-          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+          `/api/tmdb/movie/${tmdbId}?language=uk-UA&append_to_response=videos,credits,external_ids`
         );
         if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
 
@@ -73,18 +71,14 @@ export default function MoviePage() {
     fetchMovie();
   }, [tmdbId]);
 
-  // Динамічний title + транслітерований slug
   useEffect(() => {
     if (movie) {
       const year = movie.release_date?.split('-')[0];
-
-      // Title у вкладці
       const title = movie.original_title && movie.original_title !== movie.title
         ? `${movie.title} (${movie.original_title}, ${year}) — KinoShrot`
         : `${movie.title} (${year}) — KinoShrot`;
       document.title = title;
 
-      // Slug: транслітерація → lowercase → тільки a-z0-9 та дефіс
       const slug = transliterate(movie.title)
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
