@@ -4,7 +4,6 @@ import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
 import Providers from "@/components/Providers";
 import ScrollToTop from "@/components/ScrollToTop";
-import { Toaster } from "sonner";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://moviespace-nine.vercel.app";
@@ -104,17 +103,6 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
-          <Toaster
-            position="bottom-right"
-            richColors
-            toastOptions={{
-              style: {
-                background: 'var(--card-bg)',
-                color: 'var(--text-color)',
-                border: '1px solid var(--border-color)',
-              },
-            }}
-          />
         </Providers>
       </body>
     </html>
