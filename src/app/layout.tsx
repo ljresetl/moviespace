@@ -5,34 +5,71 @@ import Footer from "@/components/Footer/Footer";
 import Providers from "@/components/Providers";
 import "./globals.css";
 
+const SITE_URL = "https://kinoshrot.com";
+
 export const metadata: Metadata = {
-  title: "Кіношрот — Дивитись фільми онлайн українською",
-  description: "Найкраща добірка з 50 топових фільмів у високій якості. Тільки якісний український дубляж на Кіношрот.",
-  keywords: ["кіношрот", "фільми українською", "дивитись онлайн", "топ 50 фільмів"],
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    default: "Кіношрот — Дивитись фільми онлайн українською безкоштовно",
+    template: "%s | Кіношрот",
+  },
+
+  description:
+    "Кіношрот — безкоштовний онлайн кінотеатр українською мовою. Дивіться фільми, серіали та мультфільми у HD якості без реклами. Великий каталог новинок 2024–2025 з українським дубляжем.",
+
+  keywords: [
+    "кіношрот", "фільми онлайн", "дивитись фільми українською",
+    "фільми безкоштовно", "онлайн кінотеатр", "фільми 2025",
+    "фільми 2024", "український дубляж", "дивитись онлайн безкоштовно",
+    "новинки кіно", "HD фільми", "кіно українською",
+  ],
+
+  authors: [{ name: "Кіношрот", url: SITE_URL }],
+  creator: "Кіношрот",
+  publisher: "Кіношрот",
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 
   openGraph: {
-    title: "Кіношрот — Найкращі фільми українською",
-    description: "Збірка з 50 топових фільмів у високій якості. Дивись онлайн на Кіношрот.",
-    url: "https://kinoshrot.com",
+    type: "website",
+    locale: "uk_UA",
+    url: SITE_URL,
     siteName: "Кіношрот",
+    title: "Кіношрот — Дивитись фільми онлайн українською безкоштовно",
+    description: "Безкоштовний онлайн кінотеатр з українським дубляжем. Новинки кіно 2024–2025 у HD якості.",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Кіношрот — онлайн кінотеатр",
+        alt: "Кіношрот — онлайн кінотеатр українською",
       },
     ],
-    locale: "uk_UA",
-    type: "website",
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "Кіношрот — Дивитись фільми онлайн українською",
-    description: "50 відібраних фільмів у високій якості.",
+    title: "Кіношрот — Фільми онлайн українською",
+    description: "Дивіться найкращі фільми безкоштовно з українським дубляжем на Кіношрот.",
     images: ["/og-image.png"],
   },
+
+  alternates: {
+    canonical: SITE_URL,
+  },
+
+  category: "entertainment",
 };
 
 export default function RootLayout({
@@ -53,18 +90,14 @@ export default function RootLayout({
           color: "var(--text-color)",
           minHeight: "100vh",
           display: "flex",
-          flexDirection: "column"
+          flexDirection: "column",
         }}
       >
         <Providers>
           <Suspense fallback={null}>
             <Header />
           </Suspense>
-
-          <main style={{ flex: 1 }}>
-            {children}
-          </main>
-
+          <main style={{ flex: 1 }}>{children}</main>
           <Footer />
         </Providers>
       </body>

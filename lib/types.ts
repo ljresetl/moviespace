@@ -89,6 +89,7 @@ export interface MovieVideo {
 }
 
 export interface MovieDetails {
+  vote_count: number;
   id: number;
   title: string;
   original_title: string;
