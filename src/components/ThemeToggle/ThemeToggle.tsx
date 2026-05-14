@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
 import { Sun, Moon, Monitor, Droplets, Drama, Gem, Flame } from 'lucide-react';
 import styles from './ThemeToggle.module.css';
 
@@ -16,13 +16,21 @@ const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
   { id: 'amber',    label: 'Бурштин', icon: <Flame size={16} /> },
 ];
 
-function getSavedTheme(): Theme {
-  if (typeof window === 'undefined') return 'auto';
+function subscribe(callback: () => void) {
+  window.addEventListener('storage', callback);
+  return () => window.removeEventListener('storage', callback);
+}
+
+function getSnapshot(): Theme {
   return (localStorage.getItem('theme') as Theme) || 'auto';
 }
 
+function getServerSnapshot(): Theme {
+  return 'auto';
+}
+
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>(getSavedTheme);
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const [isOpen, setIsOpen] = useState(false);
 
   const applyTheme = useCallback((t: Theme) => {
@@ -39,16 +47,15 @@ export default function ThemeToggle() {
   }, [theme, applyTheme]);
 
   useEffect(() => {
+    if (!isOpen) return;
     const handleClickOutside = () => setIsOpen(false);
-    if (isOpen) {
-      document.addEventListener('click', handleClickOutside);
-      return () => document.removeEventListener('click', handleClickOutside);
-    }
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, [isOpen]);
 
   const selectTheme = (t: Theme) => {
-    setTheme(t);
     localStorage.setItem('theme', t);
+    window.dispatchEvent(new Event('storage'));
     setIsOpen(false);
   };
 

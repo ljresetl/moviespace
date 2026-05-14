@@ -5,8 +5,9 @@
   background-color: color-mix(in srgb, var(--bg-color) 85%, transparent);
   backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--border-color);
-  position: sticky;
+  position: fixed; /* було: sticky */
   top: 0;
+  left: 0; /* додати */
   z-index: 1000;
   width: 100%;
   transition: background-color 0.3s ease;
@@ -303,6 +304,14 @@
   flex-shrink: 0;
 }
 
+/* ── Мобільні контроли (тема + бургер) ────────────────────── */
+.mobileControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 2001;
+}
+
 /* ── Бургер ───────────────────────────────────────────────── */
 .burgerBtn {
   background: none;
@@ -311,7 +320,6 @@
   flex-direction: column;
   gap: 5px;
   cursor: pointer;
-  z-index: 2001;
   padding: 5px;
 }
 
@@ -462,7 +470,7 @@
   .desktopNav {
     display: flex;
   }
-  .burgerBtn {
+  .mobileControls {
     display: none;
   }
 }

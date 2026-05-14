@@ -192,6 +192,7 @@ export default function Header() {
             />
           </div>
 
+          {/* Десктоп навігація */}
           <nav className={styles.desktopNav}>
             <Link href="#popular" className={styles.navLink}>Популярні</Link>
             <Link href="#new" className={styles.navLink}>Новинки</Link>
@@ -212,18 +213,23 @@ export default function Header() {
             )}
           </nav>
 
-          <button
-            className={`${styles.burgerBtn} ${isMenuOpen ? styles.burgerActive : ''}`}
-            aria-label="Відкрити меню"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <span className={styles.burgerLine}></span>
-            <span className={styles.burgerLine}></span>
-            <span className={styles.burgerLine}></span>
-          </button>
+          {/* Мобільні кнопки — завжди видно */}
+          <div className={styles.mobileControls}>
+            <ThemeToggle />
+            <button
+              className={`${styles.burgerBtn} ${isMenuOpen ? styles.burgerActive : ''}`}
+              aria-label="Відкрити меню"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              <span className={styles.burgerLine}></span>
+              <span className={styles.burgerLine}></span>
+              <span className={styles.burgerLine}></span>
+            </button>
+          </div>
         </div>
       </header>
 
+      {/* Мобільне меню */}
       <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`}>
         <div className={styles.mobileSearchWrap} ref={mobileSearchRef}>
           <div className={styles.mobileSearchForm}>
@@ -262,7 +268,6 @@ export default function Header() {
           )}
         </nav>
         <div className={styles.mobileActions}>
-          <ThemeToggle />
           {!isAuthenticated && (
             <Button onClick={() => { openModal(); setIsMenuOpen(false); }} className={styles.wideBtn}>
               Реєстрація
