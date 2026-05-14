@@ -15,7 +15,6 @@ registerLocale('uk', uk);
 
 type Tab = 'favorites' | 'history' | 'settings';
 
-// ── Хелпери для дати ─────────────────────────────────────────
 function parseDDMMYYYY(dateStr: string): Date | null {
   const parts = dateStr.split('/');
   if (parts.length !== 3) return null;
@@ -32,7 +31,7 @@ function formatToDDMMYYYY(date: Date): string {
 }
 
 export default function ProfilePage() {
-  const { data: sessionData, status } = useSession();
+  const { data: sessionData, status, update: updateSession } = useSession();
   const session = sessionData as ExtendedSession | null;
   const [activeTab, setActiveTab] = useState<Tab>('favorites');
 
@@ -60,6 +59,12 @@ export default function ProfilePage() {
       const accessToken = session?.accessToken;
       if (!accessToken) return;
 
+      // Якщо refresh не вдався — розлогін
+      if (session?.error === 'RefreshAccessTokenError') {
+        await signOut({ callbackUrl: '/' });
+        return;
+      }
+
       try {
         setProfileLoading(true);
         const data = await getCurrentUser(accessToken);
@@ -70,6 +75,18 @@ export default function ProfilePage() {
         setBirthdayDate(data.birthday ? parseDDMMYYYY(data.birthday) : null);
         setProfileError(null);
       } catch (error) {
+        if (error instanceof ApiError && error.status === 401) {
+          // Спробуємо оновити сесію
+          const refreshed = await updateSession();
+          if (refreshed) {
+            // Сесія оновлена — перезавантажимо сторінку
+            window.location.reload();
+            return;
+          }
+          // Refresh не допоміг — розлогін
+          await signOut({ callbackUrl: '/' });
+          return;
+        }
         if (error instanceof ApiError) {
           setProfileError(error.message);
         } else {
@@ -83,7 +100,7 @@ export default function ProfilePage() {
     if (status === 'authenticated') {
       loadProfile();
     }
-  }, [session, status]);
+  }, [session?.accessToken, session?.error, status, updateSession]);
 
   const handleSaveProfile = async (e: FormEvent) => {
     e.preventDefault();
@@ -107,6 +124,10 @@ export default function ProfilePage() {
       setProfileSuccess('✅ Профіль оновлено!');
       setTimeout(() => setProfileSuccess(null), 3000);
     } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        await signOut({ callbackUrl: '/' });
+        return;
+      }
       if (error instanceof ApiError) {
         setProfileFormError(error.message);
       } else {
@@ -143,6 +164,10 @@ export default function ProfilePage() {
       setConfirmPassword('');
       setTimeout(() => setPasswordSuccess(null), 3000);
     } catch (error) {
+      if (error instanceof ApiError && error.status === 401) {
+        await signOut({ callbackUrl: '/' });
+        return;
+      }
       if (error instanceof ApiError) {
         setPasswordError(error.message);
       } else {
@@ -261,7 +286,7 @@ export default function ProfilePage() {
                       <div className={styles.errorBanner}><AlertCircle size={18} /> {profileError}</div>
                     )}
 
-                    {!profileLoading && (
+                    {!profileLoading && !profileError && (
                       <>
                         <h3 className={styles.sectionTitle}>Особисті дані</h3>
                         {profileSuccess && <div className={styles.successBanner}><Check size={18} /> {profileSuccess}</div>}

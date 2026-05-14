@@ -1,5 +1,4 @@
 .section {
-  padding: 40px 0; /* Трохи менше для мобілок, 60px для десктопа через media */
   background-color: var(--bg-color);
   overflow: hidden;
 }
@@ -9,8 +8,6 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 25px;
-  /* Важливо додати паддінг і сюди, щоб заголовок збігався з початком слайдера */
-  padding: 0 var(--container-px, 20px);
 }
 
 .title {
@@ -21,60 +18,21 @@
   padding-left: 15px;
 }
 
-/* Контейнер слайдера */
 .sliderWrapper {
   position: relative;
   width: 100%;
-  padding-left: var(--container-px, 20px);
   overflow: visible !important;
 }
 
 .slider {
   overflow: visible !important;
-  padding: 15px 0;
 }
 
-/* --- РОЗРАХУНОК ШИРИНИ СЛАЙДІВ --- */
-
-/* Мобільні (3 картки): (100% - паддінги - відступи між картами) / 3 */
+/* Мобіль: рівно 3 картки */
 .slide {
-  width: calc((100vw - 60px) / 3);
-  max-width: 130px;
+  width: calc((100vw - 40px) / 3);
 }
 
-/* Планшети (5-6 карток) */
-@media (min-width: 640px) {
-  .slide {
-    width: calc((100vw - 80px) / 5);
-    max-width: 140px;
-  }
-  .section {
-    padding: 60px 0;
-  }
-}
-
-/* Ноутбуки та Десктопи (9 карток) */
-@media (min-width: 1024px) {
-  .slide {
-    width: calc((100vw - 120px) / 9);
-    max-width: 145px;
-  }
-  .head {
-    padding: 0 var(--container-px, 24px);
-  }
-  .sliderWrapper {
-    padding-left: var(--container-px, 24px);
-  }
-}
-
-/* Великі екрани (щоб карти не ставали гігантськими) */
-@media (min-width: 1440px) {
-  .slide {
-    width: 135px;
-  }
-}
-
-/* КАРТКА */
 .card {
   display: block;
   text-decoration: none;
@@ -108,7 +66,6 @@
   transition: opacity 0.3s ease;
 }
 
-/* Ефекти ховера */
 .card:hover {
   transform: translateY(-8px);
 }
@@ -130,35 +87,28 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 600;
-  text-align: center; /* Центруємо текст для мобілок */
+  text-align: center;
 }
 
-@media (min-width: 768px) {
-  .movieTitle {
-    font-size: 0.85rem;
-    text-align: left;
-  }
-}
-
-/* Керування */
+/* ── Кнопки гортання — видно завжди ───────────────────────── */
 .controls {
   display: flex;
   gap: 8px;
-  padding-right: var(--container-px, 20px);
 }
 
 .controls button {
   background: var(--bg-darker);
   border: 1px solid var(--border-color);
   color: #fff;
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
   cursor: pointer;
   transition: 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.75rem;
 }
 
 .controls button:hover {
@@ -166,8 +116,46 @@
   color: var(--accent-color);
 }
 
-@media (max-width: 768px) {
-  .controls {
-    display: none; /* Ховаємо стрілки на мобілках, бо там зручніше свайпати пальцем */
+/* ══════════════════════════════════════════════════════════════
+   TABLET — 640px+ : 6 карток
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 640px) {
+  .slide {
+    width: calc((100vw - 100px) / 6);
+  }
+
+  .controls button {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+@media (min-width: 768px) {
+  .movieTitle {
+    font-size: 0.85rem;
+    text-align: left;
+  }
+
+  .controls button {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DESKTOP — 1024px+ : 9 карток
+   ══════════════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .slide {
+    width: calc((100vw - 120px) / 9);
+    max-width: 145px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .slide {
+    width: 135px;
   }
 }

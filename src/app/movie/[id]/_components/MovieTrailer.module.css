@@ -1,0 +1,47 @@
+.section {
+  padding: 0 0 24px;
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  padding-left: 14px;
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.heading::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: var(--accent-color);
+  border-radius: 2px;
+}
+
+.wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+}
+
+.wrap iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+@media (min-width: 768px) {
+  .heading {
+    font-size: 1.2rem;
+  }
+}

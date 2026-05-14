@@ -4,11 +4,13 @@ import GoogleProvider from "next-auth/providers/google";
 import { loginUser, refreshToken as apiRefreshToken } from "../../../../../lib/api";
 import type { JWT } from "next-auth/jwt";
 
-const ACCESS_TOKEN_LIFETIME_MS = 5 * 60 * 1000; // 5 хв — має збігатись з Django SIMPLE_JWT
+const ACCESS_TOKEN_LIFETIME_MS = 5 * 60 * 1000;
 
 async function refreshAccessToken(token: JWT): Promise<JWT> {
   try {
+    console.log("🔄 [JWT] Refreshing access token...");
     const refreshed = await apiRefreshToken(token.refreshToken);
+    console.log("✅ [JWT] Token refreshed successfully");
     return {
       ...token,
       accessToken: refreshed.access,
@@ -16,7 +18,8 @@ async function refreshAccessToken(token: JWT): Promise<JWT> {
       accessTokenExpires: Date.now() + ACCESS_TOKEN_LIFETIME_MS,
       error: undefined,
     };
-  } catch {
+  } catch (error) {
+    console.error("❌ [JWT] Token refresh failed:", error);
     return { ...token, error: "RefreshAccessTokenError" };
   }
 }
@@ -78,8 +81,10 @@ export const authOptions: NextAuthOptions = {
           userEmail: user?.email ?? "",
         };
       }
-      // Токен ще дійсний
-      if (Date.now() < (token.accessTokenExpires ?? 0)) return token;
+      // Токен ще дійсний (з запасом 60 секунд)
+      if (Date.now() < ((token.accessTokenExpires ?? 0) - 60_000)) {
+        return token;
+      }
       // Оновлюємо токен
       return refreshAccessToken(token);
     },

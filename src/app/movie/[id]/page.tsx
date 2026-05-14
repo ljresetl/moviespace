@@ -1,92 +1,64 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import Image from 'next/image';
-import { ArrowLeft, Share2, Loader2 } from 'lucide-react'; 
-import Script from 'next/script';
+import { useSession } from 'next-auth/react';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import type { MovieDetails, ExtendedSession } from '../../../../lib/types';
+
+import MovieHero from './_components/MovieHero';
+import MovieDescription from './_components/MovieDescription';
+import MoviePlayer from './_components/MoviePlayer';
+import MovieTrailer from './_components/MovieTrailer';
+import MovieCast from './_components/MovieCast';
+import MovieComments from './_components/MovieComments';
+import MovieFAQ from './_components/MovieFAQ';
 import styles from './page.module.css';
 
-// --- Interfaces ---
-interface Actor {
-  id: number;
-  name: string;
-  character: string;
-  profile_path: string;
-}
-
-interface MovieVideo {
-  key: string;
-  type: string;
-  site: string;
-}
-
-interface MovieDetails {
-  id: number;
-  title: string;
-  overview: string;
-  poster_path: string;
-  release_date: string;
-  vote_average: number;
-  genres: { id: number; name: string }[];
-  videos?: { results: MovieVideo[] };
-  credits?: { cast: Actor[] };
-  external_ids?: {
-    kp_id?: string | number;
-    imdb_id?: string;
+function transliterate(text: string): string {
+  const map: Record<string, string> = {
+    а: 'a', б: 'b', в: 'v', г: 'h', ґ: 'g', д: 'd', е: 'e', є: 'ye',
+    ж: 'zh', з: 'z', и: 'y', і: 'i', ї: 'yi', й: 'y', к: 'k', л: 'l',
+    м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u',
+    ф: 'f', х: 'kh', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'shch', ь: '',
+    ю: 'yu', я: 'ya', ъ: '', э: 'e', ы: 'y',
+    А: 'A', Б: 'B', В: 'V', Г: 'H', Ґ: 'G', Д: 'D', Е: 'E', Є: 'Ye',
+    Ж: 'Zh', З: 'Z', И: 'Y', І: 'I', Ї: 'Yi', Й: 'Y', К: 'K', Л: 'L',
+    М: 'M', Н: 'N', О: 'O', П: 'P', Р: 'R', С: 'S', Т: 'T', У: 'U',
+    Ф: 'F', Х: 'Kh', Ц: 'Ts', Ч: 'Ch', Ш: 'Sh', Щ: 'Shch', Ь: '',
+    Ю: 'Yu', Я: 'Ya', Ъ: '', Э: 'E', Ы: 'Y',
   };
+  return text.split('').map(ch => map[ch] ?? ch).join('');
 }
 
 export default function MoviePage() {
   const router = useRouter();
   const params = useParams();
-  const tmdbId = params?.id;
+  const rawId = params?.id as string;
+  const tmdbId = rawId?.split('-')[0];
+  const { data: sessionData, status: authStatus } = useSession();
+  const session = sessionData as ExtendedSession | null;
+  const isLoggedIn = authStatus === 'authenticated';
 
   const [movie, setMovie] = useState<MovieDetails | null>(null);
   const [externalId, setExternalId] = useState<{ type: string; id: string } | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Константи з твого .env
-  const PUBLISHER_ID = process.env.NEXT_PUBLIC_VIBIX_PUBLISHER_ID || "677712298";
-  const VIBIX_TOKEN = process.env.NEXT_PUBLIC_VIBIX_TOKEN || "25865|pXUsxpJTa3RbdjAJVzCCAb4jSIEtajYpohl3VBb29b0ecb46";
-  const AD_TYPES = process.env.NEXT_PUBLIC_VIBIX_AD_TYPES || "brand,sticker,pcsticker,banners,flyroll";
-
-  // Функція ініціалізації плеєра
-  const initVibix = useCallback(() => {
-    // @ts-expect-error: Vibix SDK interface
-    if (typeof window !== 'undefined' && window.Vibix && typeof window.Vibix.init === 'function') {
-      console.log("Vibix: Initializing Player...");
-      // @ts-expect-error: Vibix SDK interface
-      window.Vibix.init();
-    }
-  }, []);
-
   useEffect(() => {
-    const fetchMovieData = async () => {
+    const fetchMovie = async () => {
       const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
-      if (!tmdbId || !token) {
-        console.error("Missing tmdbId or TMDB token");
-        setLoading(false);
-        return;
-      }
+      if (!tmdbId || !token) { setLoading(false); return; }
 
       try {
         const res = await fetch(
           `https://api.themoviedb.org/3/movie/${tmdbId}?language=uk-UA&append_to_response=videos,credits,external_ids`,
-          { 
-            headers: { 
-              Authorization: `Bearer ${token}`,
-              'Content-Type': 'application/json'
-            } 
-          }
+          { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
         );
-        
         if (!res.ok) throw new Error(`TMDB error: ${res.status}`);
-        
-        const data = await res.json();
+
+        const data: MovieDetails = await res.json();
         setMovie(data);
 
-        // Визначаємо ID для плеєра
         if (data.external_ids?.kp_id) {
           setExternalId({ type: "kp", id: String(data.external_ids.kp_id) });
         } else if (data.external_ids?.imdb_id) {
@@ -98,135 +70,88 @@ export default function MoviePage() {
         setLoading(false);
       }
     };
-
-    fetchMovieData();
+    fetchMovie();
   }, [tmdbId]);
 
-  // Запуск плеєра після появи даних у DOM
+  // Динамічний title + транслітерований slug
   useEffect(() => {
-    if (externalId && !loading) {
-      const timer = setTimeout(initVibix, 1000);
-      return () => clearTimeout(timer);
+    if (movie) {
+      const year = movie.release_date?.split('-')[0];
+
+      // Title у вкладці
+      const title = movie.original_title && movie.original_title !== movie.title
+        ? `${movie.title} (${movie.original_title}, ${year}) — KinoShrot`
+        : `${movie.title} (${year}) — KinoShrot`;
+      document.title = title;
+
+      // Slug: транслітерація → lowercase → тільки a-z0-9 та дефіс
+      const slug = transliterate(movie.title)
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '');
+      const newUrl = `/movie/${tmdbId}-${slug}`;
+      window.history.replaceState(null, '', newUrl);
     }
-  }, [externalId, loading, initVibix]);
+
+    return () => { document.title = 'KinoShrot'; };
+  }, [movie, tmdbId]);
 
   if (loading) return (
-    <div className={styles.loaderContainer}>
+    <div className={styles.loader}>
       <Loader2 className={styles.spinner} size={50} />
     </div>
   );
 
-  if (!movie) return <div className={styles.error}>Фільм не знайдено. Перевірте консоль (F12).</div>;
+  if (!movie || !tmdbId) return (
+    <div className={styles.error}>
+      <h2>Фільм не знайдено</h2>
+      <p>Перевірте посилання або поверніться на головну</p>
+    </div>
+  );
 
   const trailer = movie.videos?.results.find(v => v.type === "Trailer" && v.site === "YouTube");
-  const cast = movie.credits?.cast.slice(0, 10);
+  const cast = movie.credits?.cast.slice(0, 10) || [];
+  const year = movie.release_date?.split('-')[0] || '';
+  const castNames = cast.map(a => a.name);
+  const genreNames = movie.genres.map(g => g.name).join(', ');
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Movie",
+    name: movie.title,
+    description: movie.overview,
+    image: movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : undefined,
+    datePublished: movie.release_date,
+    genre: movie.genres.map(g => g.name),
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: movie.vote_average.toFixed(1),
+      bestRating: "10",
+      ratingCount: "1000",
+    },
+    actor: cast.map(a => ({ "@type": "Person", name: a.name })),
+  };
 
   return (
-    <div className={styles.pageWrapper}>
-      {/* Скрипти Vibix */}
-      <Script 
-        src="https://graphicslab.io/sdk/v2/rendex-sdk.min.js" 
-        strategy="afterInteractive" 
-        onLoad={initVibix}
-      />
-      <Script 
-        src="https://v-js-menu.run/public/lib.en.min.js" 
-        strategy="afterInteractive" 
-      />
+    <div className={styles.page}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="container">
-        <button onClick={() => router.back()} className={styles.backBtn}>
-          <ArrowLeft size={20} />
-          <span>Назад</span>
-        </button>
-
-        <div className={styles.mainGrid}>
-          <aside className={styles.leftCol}>
-            <div className={styles.posterWrapper}>
-              <Image
-                src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/no-poster.png'}
-                alt={movie.title}
-                fill
-                priority
-                className={styles.posterImage}
-                sizes="(max-width: 768px) 100vw, 350px"
-              />
-              <div className={styles.rating}>⭐ {movie.vote_average.toFixed(1)}</div>
-            </div>
-          </aside>
-
-          <main className={styles.rightCol}>
-            <div className={styles.headerRow}>
-              <h1 className={styles.title}>{movie.title}</h1>
-              <button className={styles.shareBtn}><Share2 size={20} /></button>
-            </div>
-
-            <div className={styles.meta}>
-              <span className={styles.year}>{movie.release_date?.split('-')[0]}</span>
-              <div className={styles.genres}>
-                {movie.genres.map(g => <span key={g.id} className={styles.genre}>{g.name}</span>)}
-              </div>
-            </div>
-
-            <p className={styles.overview}>{movie.overview || "Опис завантажується..."}</p>
-
-            {/* СЕКЦІЯ ПЛЕЄРА */}
-            <section className={styles.playerSection}>
-              <div className={styles.playerContainer}>
-                {externalId ? (
-                  <div className="playerFrame" data-vibix-player-shell>
-                    <ins 
-                      className="vibix-player"
-                      data-publisher-id={PUBLISHER_ID}
-                      data-token={VIBIX_TOKEN}
-                      data-type={externalId.type} 
-                      data-id={externalId.id}
-                      data-design="1"
-                      data-ad_types={AD_TYPES}
-                    ></ins>
-                  </div>
-                ) : (
-                  <div className={styles.errorText}>
-                    ID для плеєра не знайдено (потрібен Kinopoisk або IMDB ID).
-                  </div>
-                )}
-              </div>
-            </section>
-
-            {trailer && (
-              <section className={styles.trailerSection}>
-                <h3 className={styles.sectionTitle}>Трейлер</h3>
-                <div className={styles.iframeWrapper}>
-                  <iframe 
-                    src={`https://www.youtube.com/embed/${trailer.key}`} 
-                    allowFullScreen 
-                    title="Official Trailer"
-                  />
-                </div>
-              </section>
-            )}
-
-            <section className={styles.castSection}>
-              <h3 className={styles.sectionTitle}>Актори</h3>
-              <div className={styles.castScroll}>
-                {cast?.map(actor => (
-                  <div key={actor.id} className={styles.actorCard}>
-                    <div className={styles.avatarWrapper}>
-                      <Image
-                        src={actor.profile_path ? `https://image.tmdb.org/t/p/w185${actor.profile_path}` : '/no-avatar.png'}
-                        alt={actor.name}
-                        fill
-                        className={styles.avatar}
-                      />
-                    </div>
-                    <p className={styles.actorName}>{actor.name}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </main>
+      <section className={styles.navSection}>
+        <div className="container">
+          <button onClick={() => router.back()} className={styles.backBtn}>
+            <ArrowLeft size={18} />
+            <span>Назад</span>
+          </button>
         </div>
-      </div>
+      </section>
+
+      <MovieHero movie={movie} />
+      <MovieDescription movie={movie} castNames={castNames} />
+      <MoviePlayer movieTitle={movie.title} year={year} isLoggedIn={isLoggedIn} externalId={externalId} loading={loading} />
+      {trailer && <MovieTrailer movieTitle={movie.title} trailerKey={trailer.key} />}
+      <MovieCast cast={cast} movieTitle={movie.title} />
+      <MovieComments tmdbId={tmdbId} isLoggedIn={isLoggedIn} userEmail={session?.user?.email || null} />
+      <MovieFAQ movieTitle={movie.title} rating={movie.vote_average.toFixed(1)} genres={genreNames} year={year} castNames={castNames} />
     </div>
   );
 }

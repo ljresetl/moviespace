@@ -1,0 +1,115 @@
+/* ── Back ─────────────────────────────────────────────────── */
+.backSection {
+  padding: 16px 0 0;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--gray);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  font-family: "Courier New", monospace;
+  transition: 0.2s;
+}
+
+.back:hover {
+  color: var(--accent-color);
+}
+
+/* ── Stamp ────────────────────────────────────────────────── */
+.stampSection {
+  padding: 10px 0 0;
+}
+
+.stampRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.stamp {
+  font-family: "Courier New", monospace;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--accent-color);
+  letter-spacing: 0.25em;
+  border: 2px solid var(--accent-color);
+  padding: 2px 12px;
+  transform: rotate(-2deg);
+}
+
+.fileNum {
+  font-family: "Courier New", monospace;
+  font-size: 0.65rem;
+  color: var(--gray);
+  letter-spacing: 0.08em;
+}
+
+.dashLine {
+  height: 2px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--accent-color) 0px,
+    var(--accent-color) 6px,
+    transparent 6px,
+    transparent 10px
+  );
+}
+
+/* ── Divider ──────────────────────────────────────────────── */
+.dividerSection {
+  padding: 0;
+}
+
+.divider {
+  background: var(--bg-darker);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 0;
+}
+
+.divider span {
+  font-family: "Courier New", monospace;
+  font-size: 0.52rem;
+  letter-spacing: 0.1em;
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+/* ── Footer ───────────────────────────────────────────────── */
+.footerSection {
+  padding: 0 0 40px;
+}
+
+.foot {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.foot span {
+  font-family: "Courier New", monospace;
+  font-size: 0.45rem;
+  letter-spacing: 0.1em;
+  color: var(--gray);
+  opacity: 0.6;
+  text-transform: uppercase;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (min-width: 768px) {
+  .stamp {
+    font-size: 1.8rem;
+    padding: 4px 18px;
+  }
+  .foot {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}

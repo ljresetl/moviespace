@@ -58,6 +58,8 @@ export interface ExtendedSession {
   };
   expires: string;
   accessToken?: string;
+  refreshToken?: string;
+  error?: string;
 }
 
 // ── API Error ───────────────────────────────────────────────
@@ -70,4 +72,60 @@ export class ApiError extends Error {
     super(message ?? `API Error ${status}`);
     this.name = "ApiError";
   }
+}
+
+// ── TMDB Movie ──────────────────────────────────────────────
+export interface Actor {
+  id: number;
+  name: string;
+  character: string;
+  profile_path: string;
+}
+
+export interface MovieVideo {
+  key: string;
+  type: string;
+  site: string;
+}
+
+export interface MovieDetails {
+  id: number;
+  title: string;
+  original_title: string;
+  overview: string;
+  poster_path: string;
+  release_date: string;
+  vote_average: number;
+  runtime: number;
+  genres: { id: number; name: string }[];
+  production_countries: { iso_3166_1: string; name: string }[];
+  videos?: { results: MovieVideo[] };
+  credits?: { cast: Actor[] };
+  external_ids?: {
+    kp_id?: string | number;
+    imdb_id?: string;
+  };
+}
+
+// ── TMDB Actor Details ──────────────────────────────────────
+export interface ActorDetails {
+  id: number;
+  name: string;
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  place_of_birth: string | null;
+  profile_path: string | null;
+  known_for_department: string;
+  popularity: number;
+  also_known_as: string[];
+}
+
+export interface ActorMovieCredit {
+  id: number;
+  title: string;
+  character: string;
+  poster_path: string | null;
+  release_date: string;
+  vote_average: number;
 }

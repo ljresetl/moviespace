@@ -1,0 +1,57 @@
+.section {
+  padding: 0 0 24px;
+}
+
+.q {
+  border-bottom: 1px dotted var(--border-color);
+}
+
+.q:last-child {
+  border-bottom: none;
+}
+
+.q summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-color);
+  cursor: pointer;
+  list-style: none;
+  transition: 0.2s;
+}
+
+.q summary::-webkit-details-marker {
+  display: none;
+}
+.q summary:hover {
+  color: var(--accent-color);
+}
+
+.marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--accent-color);
+  color: var(--accent-color);
+  font-family: "Courier New", monospace;
+  font-size: 0.7rem;
+  font-weight: 900;
+  flex-shrink: 0;
+}
+
+.q[open] .marker {
+  background: var(--accent-color);
+  color: white;
+}
+
+.q p {
+  padding: 0 0 10px 26px;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  color: var(--gray);
+}

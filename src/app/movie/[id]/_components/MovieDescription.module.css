@@ -1,0 +1,63 @@
+.section {
+  padding: 0 0 24px;
+}
+
+.heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  padding-left: 14px;
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.heading::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 2px;
+  bottom: 2px;
+  width: 3px;
+  background: var(--accent-color);
+  border-radius: 2px;
+}
+
+/* Опис — тільки мобіль */
+.mobileOverview {
+  margin-bottom: 16px;
+}
+
+.overviewText {
+  font-size: 0.92rem;
+  line-height: 1.75;
+  color: var(--text-color);
+  opacity: 0.9;
+}
+
+/* SEO текст */
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.meta p {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--gray);
+}
+
+.meta strong {
+  color: var(--text-color);
+}
+
+/* На десктопі опис ховаємо — він вже в Hero */
+@media (min-width: 768px) {
+  .mobileOverview {
+    display: none;
+  }
+
+  .heading {
+    font-size: 1.2rem;
+  }
+}

@@ -1,12 +1,10 @@
-.page {
-  padding-bottom: 40px;
-}
-
-.loader {
+.loaderWrap {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 60vh;
+  gap: 14px;
 }
 
 .spinner {
@@ -20,20 +18,29 @@
   }
 }
 
-.error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 60vh;
-  gap: 8px;
+.loaderText {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
   color: var(--gray);
-  text-align: center;
+  font-family: "Courier New", monospace;
 }
 
-.error h2 {
-  font-size: 1.3rem;
-  color: var(--text-color);
+.errorTitle {
+  font-size: 1.1rem;
+  color: var(--accent-color);
+  font-family: "Courier New", monospace;
+}
+
+.errorSub {
+  font-size: 0.82rem;
+  color: var(--gray);
+}
+
+.errorLink {
+  color: var(--accent-color);
+  font-size: 0.82rem;
+  text-decoration: none;
+  border-bottom: 1px dashed var(--accent-color);
 }
 
 .navSection {

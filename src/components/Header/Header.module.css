@@ -16,6 +16,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  gap: 12px;
 }
 
 /* ── Логотип ──────────────────────────────────────────────── */
@@ -24,50 +25,201 @@
   font-weight: 900;
   color: #fff;
   letter-spacing: 1px;
+  flex-shrink: 0;
 }
 
 .logoFull span {
   color: var(--accent-color);
 }
-
 .logoShort {
   display: inline;
   color: var(--accent-color);
 }
-
 .logoFull {
   display: none;
 }
 
-@media (min-width: 768px) {
-  .logoShort {
-    display: none;
-  }
-  .logoFull {
-    display: inline;
-  }
+/* ── Пошук (десктоп) ──────────────────────────────────────── */
+.searchWrap {
+  flex: 1;
+  max-width: 420px;
+  position: relative;
 }
 
-/* ── Пошук ────────────────────────────────────────────────── */
 .searchForm {
-  flex: 1;
-  max-width: 400px;
-  margin: 0 15px;
+  display: flex;
+  align-items: center;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 0 12px;
+  transition: 0.25s;
+}
+
+.searchForm:focus-within {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 3px rgba(255, 92, 0, 0.08);
+}
+
+.searchIcon {
+  color: var(--gray);
+  flex-shrink: 0;
+  opacity: 0.6;
 }
 
 .searchInput {
-  width: 100%;
-  padding: 10px 16px;
-  background-color: var(--bg-darker);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  color: #fff;
+  flex: 1;
+  background: transparent;
+  border: none;
   outline: none;
-  transition: 0.3s;
+  color: #fff;
+  padding: 10px 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  min-width: 0;
 }
 
-.searchInput:focus {
-  border-color: var(--accent-color);
+.searchInput::placeholder {
+  color: var(--gray);
+  opacity: 0.5;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: var(--gray);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: 0.15s;
+  flex-shrink: 0;
+}
+
+.clearBtn:hover {
+  color: var(--accent-color);
+}
+
+.searchSpinner {
+  animation: spin 1s linear infinite;
+  color: var(--accent-color);
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ── Dropdown результатів ─────────────────────────────────── */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+  max-height: 420px;
+  overflow-y: auto;
+  animation: dropIn 0.2s ease;
+}
+
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdownLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+.dropdownSpinner {
+  animation: spin 1s linear infinite;
+  color: var(--accent-color);
+}
+
+.dropdownEmpty {
+  padding: 20px;
+  text-align: center;
+  color: var(--gray);
+  font-size: 0.85rem;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: 0.15s;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.dropdownItem:last-child {
+  border-bottom: none;
+}
+
+.dropdownItem:hover {
+  background: rgba(255, 92, 0, 0.06);
+}
+
+.dropdownPoster {
+  position: relative;
+  width: 36px;
+  height: 52px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+}
+
+.dropdownPosterImg {
+  object-fit: cover;
+}
+
+.dropdownInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dropdownTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownItem:hover .dropdownTitle {
+  color: var(--accent-color);
+}
+
+.dropdownMeta {
+  font-size: 0.72rem;
+  color: var(--gray);
 }
 
 /* ── Навігація (десктоп) ──────────────────────────────────── */
@@ -88,7 +240,7 @@
   color: var(--accent-color);
 }
 
-/* ── Аватарка (іконка користувача) ────────────────────────── */
+/* ── Аватарка ─────────────────────────────────────────────── */
 .profileLink {
   display: flex;
   align-items: center;
@@ -115,7 +267,6 @@
   object-fit: cover;
 }
 
-/* Аватарка з літерою (коли немає фото) */
 .avatarInitial {
   width: 36px;
   height: 36px;
@@ -127,7 +278,6 @@
   justify-content: center;
   font-weight: 700;
   font-size: 0.95rem;
-  letter-spacing: 0.5px;
   border: 2px solid transparent;
   transition: 0.25s ease;
   cursor: pointer;
@@ -136,10 +286,8 @@
 .avatarInitial:hover {
   background: var(--accent-hover);
   transform: scale(1.08);
-  box-shadow: 0 0 12px rgba(var(--accent-color-rgb, 108, 99, 255), 0.4);
 }
 
-/* Маленька аватарка для мобільного меню */
 .avatarInitialSmall {
   width: 28px;
   height: 28px;
@@ -189,20 +337,57 @@
   top: 0;
   right: 0;
   bottom: 0;
-  width: 280px;
+  width: 300px;
   background-color: var(--bg-color);
   z-index: 2000;
-  padding: 100px 24px;
+  padding: 90px 20px 24px;
   transform: translateX(100%);
   transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-left: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 24px;
+  overflow-y: auto;
 }
 
 .mobileMenuOpen {
   transform: translateX(0);
+}
+
+/* Мобільний пошук */
+.mobileSearchWrap {
+  position: relative;
+}
+
+.mobileSearchForm {
+  display: flex;
+  align-items: center;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 0 12px;
+  transition: 0.25s;
+}
+
+.mobileSearchForm:focus-within {
+  border-color: var(--accent-color);
+}
+
+.mobileSearchForm input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-color);
+  padding: 12px 8px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  min-width: 0;
+}
+
+.mobileSearchForm input::placeholder {
+  color: var(--gray);
+  opacity: 0.5;
 }
 
 .mobileNav {
@@ -221,7 +406,6 @@
   font-size: 0.95rem;
   font-weight: 600;
   text-decoration: none;
-  padding: 8px 0;
   border-top: 1px solid var(--border-color);
   margin-top: 4px;
   padding-top: 20px;
@@ -234,8 +418,8 @@
   max-width: 180px;
 }
 
-.mobileProfileLink:hover {
-  color: var(--accent-hover);
+.mobileActions {
+  margin-top: auto;
 }
 
 /* ── Оверлей ──────────────────────────────────────────────── */
@@ -250,7 +434,16 @@
   width: 100%;
 }
 
-/* ── Десктоп ──────────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════════════ */
+@media (min-width: 768px) {
+  .logoShort {
+    display: none;
+  }
+  .logoFull {
+    display: inline;
+  }
+}
+
 @media (min-width: 1024px) {
   .desktopNav {
     display: flex;

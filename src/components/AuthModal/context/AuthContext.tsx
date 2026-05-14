@@ -1,10 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useCallback, type ReactNode } from "react";
+import React, { createContext, useContext, useCallback, useState, type ReactNode } from "react";
 import { SessionProvider, useSession, signOut } from "next-auth/react";
 
-// Визначаємо розширений тип сесії прямо тут
-// (не залежимо від module augmentation)
 interface ExtendedSession {
   user?: {
     id?: string;
@@ -25,19 +23,25 @@ interface AuthContextValue {
   accessToken: string | null;
   userEmail: string | null;
   logout: () => Promise<void>;
+  isModalOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 function AuthContextInner({ children }: { children: ReactNode }) {
   const { data, status } = useSession();
-
-  // Кастимо до нашого розширеного типу
   const session = data as ExtendedSession | null;
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const logout = useCallback(async () => {
     await signOut({ callbackUrl: "/" });
   }, []);
+
+  const openModal = useCallback(() => setIsModalOpen(true), []);
+  const closeModal = useCallback(() => setIsModalOpen(false), []);
 
   return (
     <AuthContext.Provider
@@ -48,6 +52,9 @@ function AuthContextInner({ children }: { children: ReactNode }) {
         accessToken: session?.accessToken ?? null,
         userEmail: session?.user?.email ?? null,
         logout,
+        isModalOpen,
+        openModal,
+        closeModal,
       }}
     >
       {children}
@@ -57,7 +64,7 @@ function AuthContextInner({ children }: { children: ReactNode }) {
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   return (
-    <SessionProvider refetchInterval={4 * 60}>
+    <SessionProvider refetchInterval={3 * 60}>
       <AuthContextInner>{children}</AuthContextInner>
     </SessionProvider>
   );
