@@ -64,14 +64,15 @@ export default function Hero() {
   return (
     <section className={styles.hero}>
       <div className={styles.imageWrapper}>
-        <Image
-          src={backdropUrl}
-          alt={movie.title}
-          fill
-          priority
-          className={styles.backgroundImage}
-          sizes="100vw"
-        />
+<Image
+  src={backdropUrl}
+  alt={movie.title}
+  fill
+  priority
+  fetchPriority="high"
+  className={styles.backgroundImage}
+  sizes="100vw"
+/>
       </div>
 
       <div className={styles.overlay}>
