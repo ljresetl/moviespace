@@ -97,7 +97,9 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <Header />
           </Suspense>
-          <main style={{ flex: 1 }}>{children}</main>
+          <main style={{ flex: 1, paddingTop: '75px' }}>
+            {children}
+          </main>
           <Footer />
         </Providers>
       </body>
