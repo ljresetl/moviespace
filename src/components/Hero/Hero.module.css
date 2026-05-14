@@ -91,6 +91,24 @@
   gap: 12px;
 }
 
+.ratingLine {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.ratingBadge {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 215, 0, 0.3);
+  color: #ffd700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
 /* Адаптація для мобільних пристроїв */
 @media (max-width: 768px) {
   .hero {
