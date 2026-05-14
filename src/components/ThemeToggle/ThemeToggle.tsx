@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react';
-import { Sun, Moon, Monitor, Droplets, Drama, Gem, Flame } from 'lucide-react';
+import { Sun, Moon, Monitor, Droplets, Drama, Gem, Flame, Crown } from 'lucide-react';
 import styles from './ThemeToggle.module.css';
 
-type Theme = 'auto' | 'dark' | 'light' | 'midnight' | 'crimson' | 'emerald' | 'amber';
+type Theme = 'auto' | 'dark' | 'light' | 'midnight' | 'crimson' | 'emerald' | 'amber' | 'gold';
 
 const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
   { id: 'auto',     label: 'Авто',    icon: <Monitor size={16} /> },
@@ -14,6 +14,7 @@ const THEMES: { id: Theme; label: string; icon: React.ReactNode }[] = [
   { id: 'crimson',  label: 'Кіно',    icon: <Drama size={16} /> },
   { id: 'emerald',  label: 'Смарагд', icon: <Gem size={16} /> },
   { id: 'amber',    label: 'Бурштин', icon: <Flame size={16} /> },
+  { id: 'gold',     label: 'Золото',  icon: <Crown size={16} /> },
 ];
 
 function subscribe(callback: () => void) {

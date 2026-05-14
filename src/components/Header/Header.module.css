@@ -5,9 +5,9 @@
   background-color: color-mix(in srgb, var(--bg-color) 85%, transparent);
   backdrop-filter: blur(15px);
   border-bottom: 1px solid var(--border-color);
-  position: fixed; /* було: sticky */
+  position: fixed;
   top: 0;
-  left: 0; /* додати */
+  left: 0;
   z-index: 1000;
   width: 100%;
   transition: background-color 0.3s ease;
@@ -18,7 +18,7 @@
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  gap: 12px;
+  gap: 8px;
 }
 
 /* ── Логотип ──────────────────────────────────────────────── */
@@ -41,10 +41,11 @@
   display: none;
 }
 
-/* ── Пошук (десктоп) ──────────────────────────────────────── */
+/* ── Пошук ────────────────────────────────────────────────── */
 .searchWrap {
   flex: 1;
   max-width: 420px;
+  min-width: 0;
   position: relative;
 }
 
@@ -54,7 +55,7 @@
   background: var(--bg-darker);
   border: 1px solid var(--border-color);
   border-radius: 12px;
-  padding: 0 12px;
+  padding: 0 8px;
   transition: 0.25s;
 }
 
@@ -75,9 +76,9 @@
   border: none;
   outline: none;
   color: var(--text-color);
-  padding: 10px 8px;
+  padding: 8px 4px;
   font-family: inherit;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   min-width: 0;
 }
 
@@ -308,8 +309,9 @@
 .mobileControls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   z-index: 2001;
+  flex-shrink: 0;
 }
 
 /* ── Бургер ───────────────────────────────────────────────── */
@@ -463,6 +465,19 @@
   }
   .logoFull {
     display: inline;
+  }
+
+  .inner {
+    gap: 12px;
+  }
+
+  .searchForm {
+    padding: 0 12px;
+  }
+
+  .searchInput {
+    padding: 10px 8px;
+    font-size: 0.9rem;
   }
 }
 

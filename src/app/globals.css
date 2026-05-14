@@ -112,6 +112,18 @@
   --border-color: #3d3020;
 }
 
+/* ═══ ТЕМА: Золото (Gold) ═══ */
+:root[data-theme="gold"] {
+  --bg-color: #1a1610;
+  --bg-darker: #100e08;
+  --card-bg: #2a2418;
+  --text-color: #f5f0e0;
+  --accent-color: #d4a531;
+  --accent-hover: #b8901a;
+  --gray: #a89a70;
+  --border-color: #3d3420;
+}
+
 /* --- АДАПТИВНІ РОЗМІРИ --- */
 @media (min-width: 768px) {
   :root {
