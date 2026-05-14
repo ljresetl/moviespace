@@ -9,7 +9,19 @@ import MovieAll from '@/components/MovieAll/MovieAll';
 import Pagination from '@/components/Pagination/Pagination';
 import TextBlock from '@/components/TextBlock/TextBlock';
 
-export default function HomePage() {
+interface Movie {
+  id: number;
+  title: string;
+  overview: string;
+  backdrop_path: string;
+  vote_average: number;
+}
+
+interface Props {
+  heroMovie?: Movie | null;
+}
+
+export default function HomePage({ heroMovie = null }: Props) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalItems, setTotalItems] = useState<number>(0);
   const moviesSectionRef = useRef<HTMLDivElement>(null);
@@ -20,25 +32,25 @@ export default function HomePage() {
   const handlePageChange = (page: number): void => {
     setCurrentPage(page);
     if (moviesSectionRef.current) {
-      moviesSectionRef.current.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+      moviesSectionRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
       });
     }
   };
 
   return (
     <>
-      <Hero />
+      <Hero initialMovie={heroMovie} />
       <NewReleases />
       <Filters onFilterChange={() => setCurrentPage(1)} />
       <div ref={moviesSectionRef} style={{ scrollMarginTop: '20px' }}>
-        <MovieAll 
-          currentPage={currentPage} 
-          onMoviesLoaded={(count: number) => setTotalItems(count)} 
+        <MovieAll
+          currentPage={currentPage}
+          onMoviesLoaded={(count: number) => setTotalItems(count)}
         />
       </div>
-      <Pagination 
+      <Pagination
         currentPage={currentPage}
         totalPages={totalPages}
         totalItems={totalItems}

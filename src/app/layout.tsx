@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Кіношрот — Дивитись фільми онлайн українською",
   description: "Найкраща добірка з 50 топових фільмів у високій якості. Тільки якісний український дубляж на Кіношрот.",
   keywords: ["кіношрот", "фільми українською", "дивитись онлайн", "топ 50 фільмів"],
-  
+
   openGraph: {
     title: "Кіношрот — Найкращі фільми українською",
     description: "Збірка з 50 топових фільмів у високій якості. Дивись онлайн на Кіношрот.",
@@ -42,9 +42,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="uk">
-      <body 
-        style={{ 
-          fontFamily: "var(--font-body)", 
+      <head>
+        <link rel="preconnect" href="https://image.tmdb.org" />
+        <link rel="dns-prefetch" href="https://image.tmdb.org" />
+      </head>
+      <body
+        style={{
+          fontFamily: "var(--font-body)",
           backgroundColor: "var(--bg-color)",
           color: "var(--text-color)",
           minHeight: "100vh",
@@ -56,7 +60,7 @@ export default function RootLayout({
           <Suspense fallback={null}>
             <Header />
           </Suspense>
-          
+
           <main style={{ flex: 1 }}>
             {children}
           </main>

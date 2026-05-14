@@ -14,11 +14,17 @@ interface Movie {
   vote_average: number;
 }
 
-export default function Hero() {
-  const [movie, setMovie] = useState<Movie | null>(null);
+interface Props {
+  initialMovie?: Movie | null;
+}
+
+export default function Hero({ initialMovie = null }: Props) {
+  const [movie, setMovie] = useState<Movie | null>(initialMovie);
   const router = useRouter();
 
   useEffect(() => {
+    if (movie) return;
+
     const fetchTrendingMovie = async () => {
       try {
         const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
@@ -34,12 +40,11 @@ export default function Hero() {
             }
           }
         );
-        
+
         if (!res.ok) return;
 
         const data = await res.json();
         if (data.results && data.results.length > 0) {
-          // Беремо випадковий фільм з першої десятки
           const randomIndex = Math.floor(Math.random() * 10);
           setMovie(data.results[randomIndex]);
         }
@@ -49,30 +54,24 @@ export default function Hero() {
     };
 
     fetchTrendingMovie();
-  }, []);
-
-  const handleNavigate = () => {
-    if (movie) {
-      router.push(`/movie/${movie.id}`);
-    }
-  };
+  }, [movie]);
 
   if (!movie) return <div className={styles.loader}></div>;
 
-  const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
+  const backdropUrl = `https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`;
 
   return (
     <section className={styles.hero}>
       <div className={styles.imageWrapper}>
-<Image
-  src={backdropUrl}
-  alt={movie.title}
-  fill
-  priority
-  fetchPriority="high"
-  className={styles.backgroundImage}
-  sizes="100vw"
-/>
+        <Image
+          src={backdropUrl}
+          alt={movie.title}
+          fill
+          priority
+          fetchPriority="high"
+          className={styles.backgroundImage}
+          sizes="100vw"
+        />
       </div>
 
       <div className={styles.overlay}>
@@ -81,15 +80,15 @@ export default function Hero() {
             <div className={styles.badge}>У тренді цього тижня</div>
             <h1 className={styles.title}>{movie.title}</h1>
             <p className={styles.description}>
-              {movie.overview.length > 200 
-                ? movie.overview.substring(0, 200) + "..." 
+              {movie.overview.length > 200
+                ? movie.overview.substring(0, 200) + "..."
                 : movie.overview}
             </p>
             <div className={styles.actions}>
-              <Button variant="primary" onClick={handleNavigate}>
+              <Button variant="primary" onClick={() => router.push(`/movie/${movie.id}`)}>
                 Дивитися зараз
               </Button>
-              <Button variant="secondary" onClick={handleNavigate}>
+              <Button variant="secondary" onClick={() => router.push(`/movie/${movie.id}`)}>
                 Про фільм
               </Button>
             </div>
