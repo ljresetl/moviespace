@@ -56,6 +56,11 @@ export default function NewReleases() {
             loop={true}
             freeMode={true}
             grabCursor={true}
+            centeredSlides={true}
+            breakpoints={{
+              1024: { spaceBetween: 20 },
+              1280: { spaceBetween: 24 },
+            }}
             navigation={{
               prevEl: '.swiper-prev-custom',
               nextEl: '.swiper-next-custom',
