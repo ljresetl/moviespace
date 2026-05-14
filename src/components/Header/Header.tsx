@@ -7,6 +7,7 @@ import { Search, X, Loader2 } from 'lucide-react';
 import { Button } from '../Buttons/Buttons';
 import AuthModal from '../AuthModal/AuthModal';
 import { useAuth } from '../AuthModal/context/AuthContext';
+import ThemeToggle from '../ThemeToggle/ThemeToggle';
 import styles from './Header.module.css';
 
 interface SearchResult {
@@ -86,7 +87,6 @@ export default function Header() {
     closeModal();
   }, [closeModal]);
 
-  // Клік зовні — закрити dropdown
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const target = e.target as Node;
@@ -101,7 +101,6 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Пошук через onChange + debounce ref (без useEffect)
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setSearchQuery(val);
@@ -118,13 +117,9 @@ export default function Header() {
     setSearching(true);
 
     searchTimer.current = setTimeout(async () => {
-      const token = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
-      if (!token) { setSearching(false); return; }
-
       try {
         const res = await fetch(
-          `https://api.themoviedb.org/3/search/movie?language=uk-UA&query=${encodeURIComponent(val.trim())}&page=1`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          `/api/tmdb/search/movie?language=uk-UA&query=${encodeURIComponent(val.trim())}&page=1`
         );
         if (res.ok) {
           const data = await res.json();
@@ -200,6 +195,7 @@ export default function Header() {
           <nav className={styles.desktopNav}>
             <Link href="#popular" className={styles.navLink}>Популярні</Link>
             <Link href="#new" className={styles.navLink}>Новинки</Link>
+            <ThemeToggle />
 
             {isAuthenticated ? (
               <Link href="/profile" className={styles.profileLink}>
@@ -217,7 +213,8 @@ export default function Header() {
           </nav>
 
           <button
-            className={`${styles.burgerBtn} aria-label="Відкрити меню" ${isMenuOpen ? styles.burgerActive : ''}`}
+            className={`${styles.burgerBtn} ${isMenuOpen ? styles.burgerActive : ''}`}
+            aria-label="Відкрити меню"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <span className={styles.burgerLine}></span>
@@ -265,6 +262,7 @@ export default function Header() {
           )}
         </nav>
         <div className={styles.mobileActions}>
+          <ThemeToggle />
           {!isAuthenticated && (
             <Button onClick={() => { openModal(); setIsMenuOpen(false); }} className={styles.wideBtn}>
               Реєстрація

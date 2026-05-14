@@ -5,17 +5,17 @@
   margin: 0;
 }
 
-/* --- 2. ДИЗАЙН-СИСТЕМА (MOKRYI ASFALT) --- */
+/* --- 2. ДИЗАЙН-СИСТЕМА --- */
 :root {
-  /* Основна палітра */
-  --bg-color: #121417; /* Глибокий асфальт */
-  --bg-darker: #0a0c0e; /* Тінь асфальту */
-  --card-bg: #1c1f24; /* Мокрий асфальт (світліший) */
-  --text-color: #f1f3f5; /* Чистий світлий текст */
-  --accent-color: #ff5c00; /* Фірмовий помаранчевий */
+  /* За замовчуванням — Темна (Мокрий Асфальт) */
+  --bg-color: #121417;
+  --bg-darker: #0a0c0e;
+  --card-bg: #1c1f24;
+  --text-color: #f1f3f5;
+  --accent-color: #ff5c00;
   --accent-hover: #e65200;
-  --gray: #9ba3af; /* Колір пилу/другорядний текст */
-  --border-color: #2e343d; /* Колір швів на асфальті */
+  --gray: #9ba3af;
+  --border-color: #2e343d;
 
   /* Шрифти та розміри */
   --font-header: "Segoe UI", Roboto, sans-serif;
@@ -26,6 +26,93 @@
   --container-px: 16px;
 }
 
+/* ═══ АВТО: Світла системна тема ═══ */
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg-color: #f5f6f8;
+    --bg-darker: #e8eaed;
+    --card-bg: #ffffff;
+    --text-color: #1a1c20;
+    --accent-color: #ff5c00;
+    --accent-hover: #e65200;
+    --gray: #6b7280;
+    --border-color: #d1d5db;
+  }
+}
+
+/* ═══ ТЕМА: Темна (Мокрий Асфальт) ═══ */
+:root[data-theme="dark"] {
+  --bg-color: #121417;
+  --bg-darker: #0a0c0e;
+  --card-bg: #1c1f24;
+  --text-color: #f1f3f5;
+  --accent-color: #ff5c00;
+  --accent-hover: #e65200;
+  --gray: #9ba3af;
+  --border-color: #2e343d;
+}
+
+/* ═══ ТЕМА: Світла ═══ */
+:root[data-theme="light"] {
+  --bg-color: #f5f6f8;
+  --bg-darker: #e8eaed;
+  --card-bg: #ffffff;
+  --text-color: #1a1c20;
+  --accent-color: #ff5c00;
+  --accent-hover: #e65200;
+  --gray: #6b7280;
+  --border-color: #d1d5db;
+}
+
+/* ═══ ТЕМА: Кіно-ніч (Midnight) ═══ */
+:root[data-theme="midnight"] {
+  --bg-color: #0b1120;
+  --bg-darker: #060a15;
+  --card-bg: #111b30;
+  --text-color: #e0e8f5;
+  --accent-color: #4d9fff;
+  --accent-hover: #3580e0;
+  --gray: #7b8ba8;
+  --border-color: #1e2d4a;
+}
+
+/* ═══ ТЕМА: Червоний килим (Crimson) ═══ */
+:root[data-theme="crimson"] {
+  --bg-color: #1a0a0e;
+  --bg-darker: #10060a;
+  --card-bg: #2a1018;
+  --text-color: #f5e0e4;
+  --accent-color: #e63946;
+  --accent-hover: #c5202e;
+  --gray: #a88a8e;
+  --border-color: #3d1a22;
+}
+
+/* ═══ ТЕМА: Смарагд (Emerald) ═══ */
+:root[data-theme="emerald"] {
+  --bg-color: #0a1510;
+  --bg-darker: #060e0a;
+  --card-bg: #102a1c;
+  --text-color: #e0f5ea;
+  --accent-color: #2ec471;
+  --accent-hover: #1fa85d;
+  --gray: #7ba893;
+  --border-color: #1a3d2a;
+}
+
+/* ═══ ТЕМА: Бурштин (Amber) ═══ */
+:root[data-theme="amber"] {
+  --bg-color: #171210;
+  --bg-darker: #0e0b08;
+  --card-bg: #261e18;
+  --text-color: #f5efe8;
+  --accent-color: #f59e0b;
+  --accent-hover: #d48806;
+  --gray: #a89880;
+  --border-color: #3d3020;
+}
+
+/* --- АДАПТИВНІ РОЗМІРИ --- */
 @media (min-width: 768px) {
   :root {
     --fs-h1: 2.8rem;
@@ -50,6 +137,9 @@ body {
   font-family: var(--font-body);
   overflow-x: hidden;
   line-height: 1.6;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 section {
@@ -80,7 +170,7 @@ ul {
   list-style: none;
 }
 
-/* Кастомний скролл під стиль */
+/* --- СКРОЛБАР --- */
 ::-webkit-scrollbar {
   width: 10px;
 }

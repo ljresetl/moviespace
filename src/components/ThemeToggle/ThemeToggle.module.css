@@ -1,0 +1,85 @@
+.wrap {
+  position: relative;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--gray);
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: 0.25s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  color: var(--accent-color);
+  border-color: var(--accent-color);
+}
+
+.label {
+  font-size: 0.75rem;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  z-index: 9999;
+  min-width: 160px;
+  padding: 6px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--text-color);
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.option:hover {
+  background: rgba(255, 92, 0, 0.08);
+  color: var(--accent-color);
+}
+
+.active {
+  background: rgba(255, 92, 0, 0.12);
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+.check {
+  margin-left: auto;
+  font-size: 0.8rem;
+}
