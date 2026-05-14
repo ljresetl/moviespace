@@ -51,7 +51,7 @@ export default function NewReleases() {
         <div className={styles.sliderWrapper}>
           <Swiper
             modules={[Navigation, FreeMode]}
-            spaceBetween={20}
+            spaceBetween={12}
             slidesPerView={'auto'}
             loop={true}
             freeMode={true}

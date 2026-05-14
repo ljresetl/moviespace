@@ -22,14 +22,16 @@
   position: relative;
   width: 100%;
   overflow: visible !important;
+  padding: 0 var(--container-px);
 }
 
 .slider {
   overflow: visible !important;
 }
 
+/* Мобіль: 3 картки з урахуванням padding */
 .slide {
-  width: calc((100vw - 40px) / 3);
+  width: calc((100vw - var(--container-px) * 2 - 24px) / 3);
 }
 
 .card {
@@ -123,7 +125,7 @@
 /* ══════════════════════════════════════════════════════════════ */
 @media (min-width: 640px) {
   .slide {
-    width: calc((100vw - 100px) / 6);
+    width: calc((100vw - var(--container-px) * 2 - 60px) / 6);
   }
 
   .controls button {
@@ -149,13 +151,13 @@
 /* ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1024px) {
   .slide {
-    width: calc((100vw - 120px) / 9);
-    max-width: 145px;
+    width: calc((min(100vw, var(--container-width)) - 96px) / 9);
+    max-width: 130px;
   }
 }
 
 @media (min-width: 1440px) {
   .slide {
-    width: 135px;
+    width: 125px;
   }
 }

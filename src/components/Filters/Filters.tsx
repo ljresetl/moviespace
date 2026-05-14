@@ -9,23 +9,45 @@ interface FiltersProps {
 }
 
 const categories = [
-  { id: 'all', name: 'Всі' },
-  { id: '28', name: 'Бойовики' },
-  { id: '35', name: 'Комедії' },
-  { id: '18', name: 'Драми' },
-  { id: '27', name: 'Жахи' },
-  { id: '878', name: 'Фантастика' },
-  { id: '16', name: 'Мультфільми' },
+  { id: 'all',   name: 'Всі' },
+  { id: '28',    name: 'Бойовики' },
+  { id: '12',    name: 'Пригоди' },
+  { id: '16',    name: 'Мультфільми' },
+  { id: '35',    name: 'Комедії' },
+  { id: '80',    name: 'Кримінал' },
+  { id: '99',    name: 'Документальні' },
+  { id: '18',    name: 'Драми' },
+  { id: '10751', name: 'Сімейні' },
+  { id: '14',    name: 'Фентезі' },
+  { id: '36',    name: 'Історичні' },
+  { id: '27',    name: 'Жахи' },
+  { id: '10402', name: 'Музичні' },
+  { id: '9648',  name: 'Детективи' },
+  { id: '10749', name: 'Мелодрами' },
+  { id: '878',   name: 'Фантастика' },
+  { id: '53',    name: 'Трилери' },
+  { id: '10752', name: 'Воєнні' },
+  { id: '37',    name: 'Вестерни' },
 ];
 
 const years = Array.from({ length: 30 }, (_, i) => (new Date().getFullYear() - i).toString());
 
 const countries = [
-  { code: '', name: 'Всі країни' },
+  { code: '',   name: 'Всі країни' },
   { code: 'US', name: 'США' },
   { code: 'UA', name: 'Україна' },
-  { code: 'FR', name: 'Франція' },
   { code: 'GB', name: 'Велика Британія' },
+  { code: 'FR', name: 'Франція' },
+  { code: 'DE', name: 'Німеччина' },
+  { code: 'IT', name: 'Італія' },
+  { code: 'ES', name: 'Іспанія' },
+  { code: 'JP', name: 'Японія' },
+  { code: 'KR', name: 'Корея' },
+  { code: 'IN', name: 'Індія' },
+  { code: 'TR', name: 'Туреччина' },
+  { code: 'PL', name: 'Польща' },
+  { code: 'CA', name: 'Канада' },
+  { code: 'AU', name: 'Австралія' },
 ];
 
 export default function Filters({ onFilterChange }: FiltersProps) {
