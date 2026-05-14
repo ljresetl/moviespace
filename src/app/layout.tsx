@@ -1,7 +1,8 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import Header from "@/components/Header/Header";
 import Footer from "@/components/Footer/Footer";
-import Providers from "@/components/Providers"; // Імпортуємо провайдер сесії
+import Providers from "@/components/Providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -51,9 +52,10 @@ export default function RootLayout({
           flexDirection: "column"
         }}
       >
-        {/* Обгортка Providers дозволяє використовувати useSession() у будь-якому компоненті */}
         <Providers>
-          <Header />
+          <Suspense fallback={null}>
+            <Header />
+          </Suspense>
           
           <main style={{ flex: 1 }}>
             {children}
