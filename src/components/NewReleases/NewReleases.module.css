@@ -13,7 +13,7 @@
 .title {
   font-size: clamp(1.4rem, 4vw, 1.8rem);
   font-weight: 800;
-  color: #fff;
+  color: var(--text-color);
   border-left: 4px solid var(--accent-color);
   padding-left: 15px;
 }
@@ -28,7 +28,6 @@
   overflow: visible !important;
 }
 
-/* Мобіль: рівно 3 картки */
 .slide {
   width: calc((100vw - 40px) / 3);
 }
@@ -58,7 +57,7 @@
 .cardOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(18, 20, 23, 0.7);
+  background: color-mix(in srgb, var(--bg-color) 70%, transparent);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,6 +78,11 @@
   opacity: 1;
 }
 
+.playBtn {
+  color: var(--accent-color);
+  font-size: 1.5rem;
+}
+
 .movieTitle {
   margin-top: 8px;
   font-size: 0.8rem;
@@ -90,7 +94,7 @@
   text-align: center;
 }
 
-/* ── Кнопки гортання — видно завжди ───────────────────────── */
+/* ── Кнопки гортання ──────────────────────────────────────── */
 .controls {
   display: flex;
   gap: 8px;
@@ -99,7 +103,7 @@
 .controls button {
   background: var(--bg-darker);
   border: 1px solid var(--border-color);
-  color: #fff;
+  color: var(--text-color);
   width: 32px;
   height: 32px;
   border-radius: 8px;
@@ -116,9 +120,7 @@
   color: var(--accent-color);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   TABLET — 640px+ : 6 карток
-   ══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════ */
 @media (min-width: 640px) {
   .slide {
     width: calc((100vw - 100px) / 6);
@@ -144,9 +146,7 @@
   }
 }
 
-/* ══════════════════════════════════════════════════════════════
-   DESKTOP — 1024px+ : 9 карток
-   ══════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1024px) {
   .slide {
     width: calc((100vw - 120px) / 9);
