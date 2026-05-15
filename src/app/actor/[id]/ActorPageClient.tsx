@@ -2,9 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { ArrowLeft, Loader2 } from 'lucide-react';
 import Link from 'next/link';
-import type { ActorDetails, ActorMovieCredit } from '../../../../lib/types';
+import dynamic from 'next/dynamic';
+import type { ActorDetails, ActorMovieCredit, ExtendedSession } from '../../../../lib/types';
 
 import ActorPhoto from './_components/ActorPhoto';
 import ActorBio from './_components/ActorBio';
@@ -12,6 +14,8 @@ import ActorFilmography from './_components/ActorFilmography';
 import ActorFAQ from './_components/ActorFAQ';
 import { DossierStamp, DossierDivider, DossierFooter } from './_components/DossierShell';
 import styles from './page.module.css';
+
+const MovieComments = dynamic(() => import('../../movie/[id]/_components/MovieComments'), { ssr: false });
 
 function transliterate(text: string): string {
   const map: Record<string, string> = {
@@ -34,6 +38,9 @@ export default function ActorPageClient() {
   const params = useParams();
   const rawId = params?.id as string;
   const actorId = rawId?.split('-')[0];
+  const { data: sessionData, status: authStatus } = useSession();
+  const session = sessionData as ExtendedSession | null;
+  const isLoggedIn = authStatus === 'authenticated';
 
   const [actor, setActor] = useState<ActorDetails | null>(null);
   const [movies, setMovies] = useState<ActorMovieCredit[]>([]);
@@ -82,7 +89,6 @@ export default function ActorPageClient() {
     fetchActor();
   }, [actorId]);
 
-  // Slug в URL: /actor/8783-denzel-washington
   useEffect(() => {
     if (actor) {
       const slug = transliterate(actor.name)
@@ -176,6 +182,10 @@ export default function ActorPageClient() {
 
       <DossierDivider text="ДОВІДКА" />
       <ActorFAQ actorName={actor.name} aboutText={aboutText} movies={movies} birthdayFormatted={birthdayFormatted} age={age} />
+
+      <DossierDivider text="КОМЕНТАРІ" />
+      <MovieComments tmdbId={`actor_${actorId}`} isLoggedIn={isLoggedIn} userEmail={session?.user?.email || null} />
+
       <DossierFooter actorId={actorId} />
     </>
   );
