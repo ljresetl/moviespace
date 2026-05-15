@@ -8,6 +8,7 @@ import Filters from '@/components/Filters/Filters';
 import MovieAll from '@/components/MovieAll/MovieAll';
 import Pagination from '@/components/Pagination/Pagination';
 import TextBlock from '@/components/TextBlock/TextBlock';
+import SeoBlock from './SeoBlock/SeoBlock';
 
 interface Movie {
   id: number;
@@ -57,6 +58,8 @@ export default function HomePage({ heroMovie = null }: Props) {
         onPageChange={handlePageChange}
       />
       <TextBlock />
+      <SeoBlock />
+    
     </>
   );
 }
