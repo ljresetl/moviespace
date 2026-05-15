@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import HomePage from '@/components/HomePage';
+import SeoBlock from '@/components/SeoBlock/SeoBlock';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,8 +28,11 @@ export default async function Page() {
   const heroMovie = await getTrendingMovie();
 
   return (
-    <Suspense fallback={null}>
-      <HomePage heroMovie={heroMovie} />
-    </Suspense>
+    <>
+      <Suspense fallback={null}>
+        <HomePage heroMovie={heroMovie} />
+      </Suspense>
+      <SeoBlock />
+    </>
   );
 }

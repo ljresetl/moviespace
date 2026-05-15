@@ -10,7 +10,6 @@ import type { MovieDetails, ExtendedSession } from '../../../../lib/types';
 import MovieHero from './_components/MovieHero';
 import MovieDescription from './_components/MovieDescription';
 import styles from './page.module.css';
-import SeoBlock from '@/components/SeoBlock/SeoBlock';
 
 const MoviePlayer = dynamic(() => import('./_components/MoviePlayer'), { ssr: false });
 const MovieTrailer = dynamic(() => import('./_components/MovieTrailer'), { ssr: false });
@@ -165,7 +164,7 @@ export default function MoviePageClient() {
       <MovieCast cast={cast} movieTitle={movie.title} />
       <MovieComments tmdbId={tmdbId} isLoggedIn={isLoggedIn} userEmail={session?.user?.email || null} />
       <MovieFAQ movieTitle={movie.title} rating={movie.vote_average.toFixed(1)} genres={genreNames} year={year} castNames={castNames} />
-    <SeoBlock movieId={tmdbId} />
+    
     </div>
   );
 }

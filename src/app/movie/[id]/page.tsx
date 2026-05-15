@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import MoviePageClient from "./MoviePageClient";
+import SeoBlock from "@/components/SeoBlock/SeoBlock";
 
 const SITE_URL = "https://kinoshrot.com";
 const TMDB_TOKEN = process.env.TMDB_ACCESS_TOKEN;
@@ -75,6 +76,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default function MoviePage() {
-  return <MoviePageClient />;
+export default async function MoviePage({ params }: Props) {
+  const { id } = await params;
+  const tmdbId = id.split("-")[0];
+
+  return (
+    <>
+      <MoviePageClient />
+      <SeoBlock movieId={tmdbId} />
+    </>
+  );
 }

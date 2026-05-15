@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import styles from './SeoBlock.module.css';
 
@@ -33,47 +30,49 @@ function getSlug(movie: Movie): string {
   return `${movie.id}-${slug}`;
 }
 
-export default function SeoBlock({ movieId }: Props) {
-  const [movies, setMovies] = useState<Movie[]>([]);
+const TMDB_TOKEN = process.env.TMDB_ACCESS_TOKEN;
 
-  useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        let url: string;
+async function fetchMovies(movieId?: string): Promise<Movie[]> {
+  try {
+    const headers = { Authorization: `Bearer ${TMDB_TOKEN}` };
 
-        if (movieId) {
-          url = `/api/tmdb/movie/${movieId}/similar?language=uk-UA&page=1`;
-        } else {
-          url = '/api/tmdb/trending/movie/week?language=uk-UA';
-        }
+    if (movieId) {
+      const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}/similar?language=uk-UA&page=1`,
+        { headers, next: { revalidate: 86400 } }
+      );
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data.results || [])
+        .filter((m: Movie) => m.id.toString() !== movieId)
+        .slice(0, 30);
+    }
 
-        const res = await fetch(url);
-        if (!res.ok) return;
-        const data = await res.json();
+    const [trendingRes, nowPlayingRes] = await Promise.all([
+      fetch('https://api.themoviedb.org/3/trending/movie/week?language=uk-UA', {
+        headers, next: { revalidate: 86400 },
+      }),
+      fetch('https://api.themoviedb.org/3/movie/now_playing?language=uk-UA&page=1', {
+        headers, next: { revalidate: 86400 },
+      }),
+    ]);
 
-        let results: Movie[] = data.results || [];
+    const trending = trendingRes.ok ? await trendingRes.json() : { results: [] };
+    const nowPlaying = nowPlayingRes.ok ? await nowPlayingRes.json() : { results: [] };
 
-        if (!movieId) {
-          const nowRes = await fetch('/api/tmdb/movie/now_playing?language=uk-UA&page=1');
-          if (nowRes.ok) {
-            const nowData = await nowRes.json();
-            results = [...results, ...(nowData.results || [])] as Movie[];
-          }
-        }
+    const all: Movie[] = [...(trending.results || []), ...(nowPlaying.results || [])];
+    const unique: Movie[] = Array.from(
+      new Map<number, Movie>(all.map((m) => [m.id, m])).values()
+    ).slice(0, 50);
 
-        const unique: Movie[] = Array.from(
-          new Map<number, Movie>(results.map((m) => [m.id, m])).values()
-        )
-          .filter((m) => m.id.toString() !== movieId)
-          .slice(0, 50);
+    return unique;
+  } catch {
+    return [];
+  }
+}
 
-        setMovies(unique);
-      } catch {
-        /* silent */
-      }
-    };
-    fetchMovies();
-  }, [movieId]);
+export default async function SeoBlock({ movieId }: Props) {
+  const movies = await fetchMovies(movieId);
 
   if (movies.length === 0) return null;
 
