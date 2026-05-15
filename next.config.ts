@@ -10,9 +10,15 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'image.tmdb.org', // Додаємо також для постерів фільмів
+        hostname: 'image.tmdb.org',
         port: '',
         pathname: '/t/p/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.youtube.com',
+        port: '',
+        pathname: '/vi/**',
       },
     ],
   },
