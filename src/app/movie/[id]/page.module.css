@@ -2,24 +2,6 @@
   padding-bottom: 40px;
 }
 
-.loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 80vh;
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-  color: var(--accent-color);
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .error {
   display: flex;
   flex-direction: column;
@@ -58,4 +40,175 @@
 .backBtn:hover {
   color: var(--accent-color);
   border-color: var(--accent-color);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   СКЕЛЕТОН
+   ══════════════════════════════════════════════════════════════ */
+@keyframes shimmer {
+  0% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0.4;
+  }
+}
+
+.skeletonBack {
+  width: 100px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonHero {
+  padding: 20px 0;
+}
+
+.skeletonGrid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.skeletonPoster {
+  width: 100%;
+  max-width: 400px;
+  aspect-ratio: 2/3;
+  border-radius: 10px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonInfo {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.skeletonTitle {
+  width: 70%;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonSubtitle {
+  width: 40%;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonTags {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.skeletonTags span {
+  width: 70px;
+  height: 26px;
+  border-radius: 16px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonMeta {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.skeletonMeta span {
+  width: 120px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonText {
+  width: 90%;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+.skeletonText:last-of-type {
+  width: 60%;
+}
+
+.skeletonActions {
+  display: flex;
+  gap: 8px;
+}
+
+.skeletonActions span {
+  width: 140px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Скелетон десктоп ─────────────────────────────────────── */
+@media (min-width: 768px) {
+  .skeletonGrid {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 28px;
+  }
+
+  .skeletonPoster {
+    width: 200px;
+    max-width: 200px;
+    flex-shrink: 0;
+  }
+
+  .skeletonInfo {
+    align-items: flex-start;
+  }
+
+  .skeletonTags {
+    justify-content: flex-start;
+  }
+
+  .skeletonMeta {
+    justify-content: flex-start;
+  }
+}
+
+@media (min-width: 1024px) {
+  .skeletonPoster {
+    width: 260px;
+    max-width: 260px;
+  }
+
+  .skeletonTitle {
+    height: 36px;
+  }
+
+  .skeletonMeta span {
+    width: 140px;
+    height: 46px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .skeletonPoster {
+    width: 300px;
+    max-width: 300px;
+  }
 }

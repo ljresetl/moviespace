@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import type { MovieDetails, ExtendedSession } from '../../../../lib/types';
 
@@ -11,7 +11,6 @@ import MovieHero from './_components/MovieHero';
 import MovieDescription from './_components/MovieDescription';
 import styles from './page.module.css';
 
-// Ліниві компоненти — вантажаться тільки коли потрібні
 const MoviePlayer = dynamic(() => import('./_components/MoviePlayer'), { ssr: false });
 const MovieTrailer = dynamic(() => import('./_components/MovieTrailer'), { ssr: false });
 const MovieCast = dynamic(() => import('./_components/MovieCast'), { ssr: false });
@@ -84,8 +83,34 @@ export default function MoviePageClient() {
   }, [movie, tmdbId]);
 
   if (loading) return (
-    <div className={styles.loader}>
-      <Loader2 className={styles.spinner} size={50} />
+    <div className={styles.page}>
+      <section className={styles.navSection}>
+        <div className="container">
+          <div className={styles.skeletonBack}></div>
+        </div>
+      </section>
+      <section className={styles.skeletonHero}>
+        <div className="container">
+          <div className={styles.skeletonGrid}>
+            <div className={styles.skeletonPoster}></div>
+            <div className={styles.skeletonInfo}>
+              <div className={styles.skeletonTitle}></div>
+              <div className={styles.skeletonSubtitle}></div>
+              <div className={styles.skeletonTags}>
+                <span></span><span></span><span></span>
+              </div>
+              <div className={styles.skeletonMeta}>
+                <span></span><span></span><span></span>
+              </div>
+              <div className={styles.skeletonText}></div>
+              <div className={styles.skeletonText}></div>
+              <div className={styles.skeletonActions}>
+                <span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 
