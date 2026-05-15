@@ -1,5 +1,6 @@
 .section {
   padding: 20px 0;
+  min-height: 520px;
 }
 
 .toast {
@@ -249,11 +250,12 @@
 }
 
 /* ══════════════════════════════════════════════════════════════
-   TABLET — 768px+ → row layout
+   TABLET — 768px+
    ══════════════════════════════════════════════════════════════ */
 @media (min-width: 768px) {
   .section {
     padding: 28px 0;
+    min-height: 340px;
   }
 
   .grid {
@@ -287,16 +289,20 @@
   .tags {
     justify-content: flex-start;
   }
+
   .metaGrid {
     justify-content: flex-start;
     gap: 10px;
   }
+
   .metaItem {
     padding: 8px 14px;
   }
+
   .metaLabel {
     font-size: 0.6rem;
   }
+
   .metaValue {
     font-size: 0.82rem;
   }
@@ -329,18 +335,24 @@
    DESKTOP — 1024px+
    ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1024px) {
+  .section {
+    min-height: 420px;
+  }
+
   .grid {
     gap: 36px;
   }
+
   .posterWrap {
-    border-radius: 12px;
     width: 260px;
     max-width: 260px;
     border-radius: 12px;
   }
+
   .title {
     font-size: 2.2rem;
   }
+
   .info {
     gap: 16px;
   }
@@ -354,9 +366,11 @@
   .metaItem {
     padding: 10px 14px;
   }
+
   .metaLabel {
     font-size: 0.62rem;
   }
+
   .metaValue {
     font-size: 0.85rem;
   }
@@ -377,10 +391,15 @@
    WIDE — 1280px+
    ══════════════════════════════════════════════════════════════ */
 @media (min-width: 1280px) {
+  .section {
+    min-height: 480px;
+  }
+
   .posterWrap {
     width: 300px;
     max-width: 300px;
   }
+
   .title {
     font-size: 2.5rem;
   }
