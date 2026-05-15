@@ -1,8 +1,9 @@
 .footer {
   padding: 30px 0;
-  background-color: var(--bg-darker); /* Тінь асфальту */
+  background-color: var(--bg-darker);
   border-top: 1px solid var(--border-color);
   margin-top: auto;
+  min-height: 200px;
 }
 
 .wrapper {
@@ -13,7 +14,6 @@
   text-align: center;
 }
 
-/* Логотип у стилі Header */
 .logo {
   font-family: var(--font-header);
   font-size: 1.5rem;
@@ -34,7 +34,7 @@
 }
 
 .divider {
-  display: none; /* Ховаємо роздільник на мобільних */
+  display: none;
   color: var(--border-color);
 }
 
@@ -66,8 +66,11 @@
   color: #ff4d4d;
 }
 
-/* --- TABLETS & DESKTOPS --- */
 @media (min-width: 768px) {
+  .footer {
+    min-height: 70px;
+  }
+
   .wrapper {
     flex-direction: row;
     justify-content: space-between;
