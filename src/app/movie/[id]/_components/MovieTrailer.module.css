@@ -40,6 +40,52 @@
   border: none;
 }
 
+/* ── Превʼю замість iframe ────────────────────────────────── */
+.preview {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bg-darker);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  padding: 0;
+  display: block;
+}
+
+.thumbnail {
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.preview:hover .thumbnail {
+  transform: scale(1.03);
+}
+
+.playOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  transition: background 0.3s ease;
+}
+
+.preview:hover .playOverlay {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.playBtn {
+  transition: transform 0.2s ease;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4));
+}
+
+.preview:hover .playBtn {
+  transform: scale(1.1);
+}
+
 @media (min-width: 768px) {
   .heading {
     font-size: 1.2rem;

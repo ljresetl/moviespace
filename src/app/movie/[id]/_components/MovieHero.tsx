@@ -39,12 +39,15 @@ export default function MovieHero({ movie }: Props) {
         <div className={styles.grid}>
 
           <div className={styles.posterWrap}>
-            <Image
-              src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/no-poster.png'}
-              alt={`Постер ${movie.title} (${year})`}
-              fill priority className={styles.posterImg}
-              sizes="(max-width: 768px) 160px, 280px"
-            />
+<Image
+  src={movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : '/no-poster.png'}
+  alt={`Постер ${movie.title} (${year})`}
+  fill
+  priority
+  fetchPriority="high"
+  className={styles.posterImg}
+  sizes="(max-width: 768px) 160px, 280px"
+/>
             <div className={styles.ratingBadge}>
               ⭐ {movie.vote_average.toFixed(1)}
             </div>

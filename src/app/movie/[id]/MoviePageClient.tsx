@@ -4,16 +4,19 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { ArrowLeft, Loader2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import type { MovieDetails, ExtendedSession } from '../../../../lib/types';
 
 import MovieHero from './_components/MovieHero';
 import MovieDescription from './_components/MovieDescription';
-import MoviePlayer from './_components/MoviePlayer';
-import MovieTrailer from './_components/MovieTrailer';
-import MovieCast from './_components/MovieCast';
-import MovieComments from './_components/MovieComments';
-import MovieFAQ from './_components/MovieFAQ';
 import styles from './page.module.css';
+
+// Ліниві компоненти — вантажаться тільки коли потрібні
+const MoviePlayer = dynamic(() => import('./_components/MoviePlayer'), { ssr: false });
+const MovieTrailer = dynamic(() => import('./_components/MovieTrailer'), { ssr: false });
+const MovieCast = dynamic(() => import('./_components/MovieCast'), { ssr: false });
+const MovieComments = dynamic(() => import('./_components/MovieComments'), { ssr: false });
+const MovieFAQ = dynamic(() => import('./_components/MovieFAQ'), { ssr: false });
 
 function transliterate(text: string): string {
   const map: Record<string, string> = {
