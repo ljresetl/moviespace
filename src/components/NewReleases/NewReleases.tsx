@@ -71,14 +71,15 @@ export default function NewReleases() {
               <SwiperSlide key={movie.id} className={styles.slide}>
                 <Link href={`/movie/${movie.id}`} className={styles.card}>
                   <div className={styles.posterWrapper}>
-                    <Image
-                      src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
-                      alt={movie.title}
-                      fill
-                      sizes="(max-width: 768px) 120px, 135px"
-                      className={styles.poster}
-                      priority={false}
-                    />
+<Image
+  src={`https://image.tmdb.org/t/p/w185${movie.poster_path}`}
+  alt={movie.title}
+  fill
+  sizes="(max-width: 768px) 100px, 130px"
+  className={styles.poster}
+  priority={false}
+  quality={75}
+/>
                     <div className={styles.cardOverlay}>
                       <span className={styles.playBtn}>▶</span>
                     </div>

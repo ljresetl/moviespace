@@ -92,13 +92,14 @@ export default function MovieAll({ currentPage, onMoviesLoaded }: MovieAllProps)
             {displayedMovies.map((movie) => (
               <Link href={`/movie/${movie.id}`} key={movie.id} className={styles.card}>
                 <div className={styles.posterWrapper}>
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w400${movie.poster_path}`}
-                    alt={movie.title}
-                    fill
-                    sizes="(max-width: 480px) 50vw, (max-width: 1024px) 25vw, 200px"
-                    className={styles.poster}
-                  />
+<Image
+  src={`https://image.tmdb.org/t/p/w342${movie.poster_path}`}
+  alt={movie.title}
+  fill
+  sizes="(max-width: 480px) 45vw, (max-width: 1024px) 20vw, 160px"
+  className={styles.poster}
+  quality={75}
+/>
                   <div className={styles.rating}>{movie.vote_average.toFixed(1)}</div>
                 </div>
                 <div className={styles.info}>
