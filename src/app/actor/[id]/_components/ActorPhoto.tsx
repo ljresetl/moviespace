@@ -21,14 +21,15 @@ export default function ActorPhoto({ actor, age, moviesCount, topMovies }: Props
 
           <div className={styles.photoCol}>
             <div className={styles.photo}>
-              <Image
-                src={actor.profile_path ? `https://image.tmdb.org/t/p/w500${actor.profile_path}` : '/no-avatar.png'}
-                alt={`${actor.name} — фото`}
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 240px, 280px"
-                className={styles.img}
-              />
+<Image
+  src={actor.profile_path ? `https://image.tmdb.org/t/p/w500${actor.profile_path}` : '/no-avatar.png'}
+  alt={`${actor.name} — фото`}
+  fill
+  priority
+  fetchPriority="high"
+  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 240px, 280px"
+  className={styles.img}
+/>
               <div className={styles.popularityBadge}>
                 <Star size={12} />
                 <span>{actor.popularity.toFixed(0)}</span>
